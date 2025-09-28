@@ -10,7 +10,6 @@ cuda-samples/
 *.vscode
 *.png
 *.jpg
-*.obj
 *.mtl
 *.wav
 *.bmp
