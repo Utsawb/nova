@@ -271,13 +271,13 @@ static void video_output() {
 
             // Dynamically construct command
             unsigned int cmd_size = static_cast<unsigned int>(cmd_format.size() + std::to_string(vid_width).size() + 
-                std::to_string(vid_height).size() + video_name.size() - 6); // -6 accounts for each %_
+                std::to_string(vid_height).size() + video_name.size() - 6) + 1; // -6 accounts for each %_ // JH: +1 added to avoid writing 1 byte out of bounds
             char *cmd = new char[cmd_size]; 
-            sprintf(cmd, cmd_format.c_str(), vid_width, vid_height, video_name.c_str());
+            snprintf(cmd, cmd_size, cmd_format.c_str(), vid_width, vid_height, video_name.c_str()); // use snprintf to avoid writing out of bounds
 
             ffmpeg = popen_macro(cmd, "wb");
             if (!ffmpeg) { cerr << "ffmpeg error" << endl; } // TODO add error handling?
-
+      
             delete[] cmd;
             pixels.resize(vid_width * vid_height * 3);
         }

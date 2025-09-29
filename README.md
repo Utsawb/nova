@@ -135,3 +135,4 @@ There should be hosted Doxygen documentation for the repository through GitHub a
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - Various other libraries as found in files (GLFW, GLEW, GLM, Eigen, CMake, dv-processing, fmt, ffmpeg, etc.)
 - [Dr. Shinjiro Sueda](https://people.engr.tamu.edu/sueda/index.html) for teaching us graphics and for any course-given skeleton code used in any cited files headers
+  - resources/sphere.obj is from Dr. Sueda's export of a sphere from Blender
