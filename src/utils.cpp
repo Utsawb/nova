@@ -535,7 +535,7 @@ static void spaceWindowWrapper(bool &dSpaceWindow, shared_ptr<EventData> &evtDat
 
 void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameSceneFBO, shared_ptr<EventData> &evtData, std::string& datafilepath,
-    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile) {
+    std::string &video_name, bool &recording, std::string &datadirectory, bool &loadFile, bool &dataStreamed) {
 
     drawGUIDockspace();
 
@@ -581,12 +581,25 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
             string newFilePath=OpenFileDialog(datadirectory);
             if(isValidFilePath(newFilePath)){
                 loadFile = true;
+                dataStreamed = false;
                 datafilepath=std::move(newFilePath);
             }
         }
         ImGui::Text("Event Frequency");    
         ImGui::SliderInt("##modFreq", (int *) &EventData::modFreq, 1, 1000);
-        EventData::modFreq = std::max((uint) 1, EventData::modFreq);
+        EventData::modFreq = std::max((uint) 1, EventData::modFreq); 
+
+        ImGui::Text("Streaming File:");
+        if (ImGui::Button("Open File To Stream"))
+        {
+            // dFile = true;
+            string newFilePath = OpenFileDialog(datadirectory);
+            if (isValidFilePath(newFilePath)) {
+                datafilepath = std::move(newFilePath);
+                dataStreamed = true;
+                loadFile = false;
+            }
+        }
 
 
         // TODO: Cache recent files and state?

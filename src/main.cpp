@@ -29,7 +29,8 @@ bool g_isMainviewportHovered(false);
 bool g_keyToggles[256] = {false};
 float g_fps, g_lastRenderTime(0.0f);
 string g_resourceDir, g_dataFilepath, g_dataDir;
-bool loadFile;
+bool g_loadFile;
+bool g_dataStreamed;
 
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;
@@ -51,18 +52,38 @@ shared_ptr<EventData> g_eventData;
 
 float g_particleScale(0.75f);
 
+// Move this stuff into a function since it is called 3 times
+static void initCamera()
+{
+    // Camera //
+    g_camera = Camera();
+    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
+    g_camera.setEvtCenter(g_eventData->getCenter());
+}
+
+// New function for streaming data from a file
+static void streamEvtDataAndCamera() {
+
+    int retVal{ g_eventData->initStreamingParticlesFromFile(g_dataFilepath) };
+    if (retVal == -1)
+    {
+        g_dataStreamed = false;
+    }
+    else if (retVal == 1) // Indicates first time batch, need to set up camera
+    {
+        initCamera();
+    }
+}
+
 static void updateEvtDataAndCamera() {
     // Load .aedat events into EventData object //
     g_eventData = make_shared<EventData>();
     g_eventData->initParticlesFromFile(g_dataFilepath);
     g_eventData->initInstancing(g_progInst);
 
-    // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void initEvtDataAndCamera() {
@@ -72,11 +93,9 @@ static void initEvtDataAndCamera() {
     g_eventData->initInstancing(g_progInst);
 
     // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void init() {
@@ -244,7 +263,7 @@ static void render() {
         ImGui::NewFrame();
         
         drawGUI(g_camera, g_fps, g_particleScale, g_isMainviewportHovered, g_mainSceneFBO, 
-            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, loadFile);
+            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed);
     
     // Render ImGui //
         ImGui::Render();
@@ -353,17 +372,24 @@ int main(int argc, char** argv) {
 
     string curFilepath = g_dataFilepath;
     while (!glfwWindowShouldClose(g_window)) {
-        render();
         
-        if (loadFile) {
+        // This path should execute when reading file
+        if (g_loadFile) {
             curFilepath = g_dataFilepath;
             updateEvtDataAndCamera();
         }
 
+        // This path should execute when streaming from file
+        if (g_dataStreamed)
+        {
+            streamEvtDataAndCamera();
+        }
+        
         glfwSwapBuffers(g_window);
         glfwPollEvents();
 
         video_output();
+        render();
     }
 
     // Cleanup //

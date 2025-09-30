@@ -10,6 +10,7 @@
 #include "BPMaterial.h"
 #include "Mesh.h"
 #include <dv-processing/io/mono_camera_recording.hpp>
+#include <memory>
 
 /*
     We can treat the data processed from dv-processing as particles in 3D space
@@ -44,6 +45,12 @@ class EventData {
          * @param filename 
          */
         void initParticlesFromFile(const std::string &filename);
+
+        /**
+         * @brief Initializes particles from a file in a streaming manner. The file should be in the format aedat4.
+         * @return -1 for finished, 0 for continuing, 1 for first batch received
+         */
+        int initStreamingParticlesFromFile(const std::string &filename);
 
         /**
          * @brief Initializes the EventData object in an empty state; upon initialization, no particles are loaded.
@@ -192,6 +199,8 @@ class EventData {
 
         bool isPositiveOnly;
         int unitType;
+
+        std::shared_ptr<dv::io::MonoCameraRecording> liveStreamReader;
 };
 
 #endif // EVENT_DATA_H
