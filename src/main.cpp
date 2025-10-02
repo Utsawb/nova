@@ -30,7 +30,7 @@ bool g_keyToggles[256] = {false};
 float g_fps, g_lastRenderTime(0.0f);
 string g_resourceDir, g_dataFilepath, g_dataDir;
 bool g_loadFile;
-bool g_dataStreamed;
+bool g_dataStreamed; // Global to track if data is being streamed
 
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;

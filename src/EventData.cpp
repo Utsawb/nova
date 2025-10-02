@@ -134,17 +134,22 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
     camera_resolution = glm::vec2(reader.getEventResolution().value().width, reader.getEventResolution().value().height);
 
 
-    // For each frame, we get a batch of data from the live stream.
-    // This batch is added to the evtParticles vector only after each particle
-    // in the evtParticles vector is shifted by time range taken up by this batch.
-    // Essentially, think of shifting the already existing particles in the 
-    // bounding wire frame back along the time axis to make room for the new 
-    // batch of data.
+    /* For each frame, we get a batch of data from the live stream.
+     * This batch is added to the evtParticles vector after its timestamps
+     * have been adjusted by subtracting the latest time calculated in this batch 
+     * from all timestamps in the batch.
+     */
+    
+    /* Each event particle is adjusted by adding to each timestamp
+     * the difference between the latest timestamp calculated this batch
+     * and the latest timestamp calculated in the last batch.
+     */
     std::vector<glm::vec4> batchData{};
 
-    bool localEarliestTimestampFlag{ false };
-    long long localEarliestTimestamp = -1;
-    long long localLatestTimestamp = -1;
+    
+
+    // Calculate latest timestamps for this batch only.
+    long long batchLatestTimestamp = -1;
 
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
@@ -154,17 +159,19 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
                 if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
 
                 long long evtTimestamp = evt.timestamp();
-                if (!localEarliestTimestampFlag)
+                
+                // Find earliest global time
+                if (evtParticles.empty() && batchData.empty())
                 {
-                    localEarliestTimestamp = evtTimestamp;
-                    localEarliestTimestampFlag = true;
+                    earliestTimestamp = evtTimestamp;
+                    latestTimestamp = evtTimestamp;
                 }
 
                 // Assumedly the last event batch and event has the latest timestamp, but not sure - so use max(...)
-                localLatestTimestamp = std::max(localLatestTimestamp, evtTimestamp);
+                batchLatestTimestamp = std::max(batchLatestTimestamp, evtTimestamp);
 
                 // We can sort of "normalize" the timestamp to start at 0 this way.
-                float relativeTimestamp = static_cast<float>(evtTimestamp - localEarliestTimestamp);
+                float relativeTimestamp = static_cast<float>(evtTimestamp - earliestTimestamp);
                 glm::vec4 evt_xytp = glm::vec4(
                     static_cast<float>(evt.x()),
                     static_cast<float>(evt.y()),
@@ -180,8 +187,14 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
                /* minXYZ = glm::min(minXYZ, glm::vec3(evt_xytp));
                 maxXYZ = glm::max(maxXYZ, glm::vec3(evt_xytp));*/
 
-                //cout << "X: " << evt_xytp[0] << " Y: " << evt_xytp[1] << endl;
+                
             }
+        }
+        else
+        {
+            // code path executes when finished streaming data from file
+            liveStreamReader.reset();
+            return -1;
         }
     }
     else
@@ -190,14 +203,23 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
         liveStreamReader.reset();
         return -1;
     }
-       
+    
+    // Earliest data should show up further along the box
+    // Latest data in batch should be at zero position
+    for (glm::vec4 &evt_xytp : batchData)
+    {
+        evt_xytp.z = static_cast<float>(batchLatestTimestamp - earliestTimestamp) - evt_xytp.z;
+    }
+
     // Shift existing event particles back to make room for new batch of event particles for this frame
     for (glm::vec4 &evt_xytp : evtParticles)
     {
-        evt_xytp.z += localLatestTimestamp - localEarliestTimestamp;
+        evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow
     }
 
     evtParticles.insert(std::end(evtParticles), std::begin(batchData), std::end(batchData));
+
+    latestTimestamp = batchLatestTimestamp; 
 
     // Hard code fixed bounding wireframe box
     minXYZ = glm::vec3(0.0, 0.0, 0.0);
