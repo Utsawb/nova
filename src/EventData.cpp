@@ -121,7 +121,12 @@ void EventData::initParticlesFromFile(const std::string &filename) {
     printf("Loaded %zu particles from %s\n", evtParticles.size(), filename.c_str());
 }
 
-int EventData::initStreamingParticlesFromFile(const std::string& filename)
+void EventData::resetStream()
+{
+    liveStreamReader.reset();
+}
+
+int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, bool pauseStream, float particleTimeDensity)
 {
 
     int returnCode = 0;
@@ -157,7 +162,7 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
 
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
-    if (reader.isRunning()) {
+    if (reader.isRunning() && !pauseStream) {
         if (const auto events = reader.getNextEventBatch(); events.has_value()) {
             for (auto& evt : events.value()) {
                 if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
@@ -193,56 +198,62 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
 
                 
             }
+            
+            // Earliest data should show up further along the box
+            // Latest data in batch should be at zero position
+            for (glm::vec4 &evt_xytp : batchData)
+            {
+                evt_xytp.z = static_cast<float>(batchLatestTimestamp - earliestTimestamp) - evt_xytp.z;
+            }
+
+            // Shift existing event particles back to make room for new batch of event particles for this frame
+            for (size_t i{0}; i < streamEvtParticles.size(); ++i)
+            {
+                glm::vec4 &evt_xytp{ streamEvtParticles[i] };
+                evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow  
+            }
+
+            streamEvtParticles.insert(std::end(streamEvtParticles), std::begin(batchData), std::end(batchData));
         }
         else
         {
             // code path executes when finished streaming data from file
-            liveStreamReader.reset();
-            return -1;
+            //liveStreamReader.reset();
+            returnCode = -1;
         }
     }
     else
     {
         // code path executes when finished streaming data from file
-        liveStreamReader.reset();
-        return -1;
+        //liveStreamReader.reset();
+        returnCode = -1;
     }
     
     // Hard code fixed bounding wireframe box
     minXYZ = glm::vec3(0.0, 0.0, 0.0);
-    maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], 100000);
-
-
-    // Earliest data should show up further along the box
-    // Latest data in batch should be at zero position
-    for (glm::vec4 &evt_xytp : batchData)
-    {
-        evt_xytp.z = static_cast<float>(batchLatestTimestamp - earliestTimestamp) - evt_xytp.z;
-    }
-
-    // Shift existing event particles back to make room for new batch of event particles for this frame
-    for (size_t i{0}; i < streamEvtParticles.size(); ++i)
-    {
-        glm::vec4 &evt_xytp{ streamEvtParticles[i] };
-        evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow  
-    }
-
-    
-
-    streamEvtParticles.insert(std::end(streamEvtParticles), std::begin(batchData), std::end(batchData));
+    maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], maxZ);
 
     // Track particles beyond box boundary along time axis
     long long updatedCutoffIndex = -1;
 
     // Use an iterator to avoid narrow conversion issues with iterating in reverse
-    for (auto iter{ streamEvtParticles.end() - 1 }; iter >= streamEvtParticles.begin(); --iter)
+    for (auto iter{ streamEvtParticles.end()}; iter >= streamEvtParticles.begin(); --iter)
     {
+        // Don't start at .end() - 1 in case of empty list
+        if (iter == streamEvtParticles.end())
+        {
+            // list is empty
+            if (iter == streamEvtParticles.begin())
+            {
+                break;
+            }
+            continue;
+        }
         glm::vec4& evt_xytp{ *iter };
         
         if (evt_xytp.z > maxXYZ.z)
         {
             updatedCutoffIndex = iter - streamEvtParticles.begin();
-            cout << updatedCutoffIndex << endl;
             break;
         }
         // Ensure iterator does not go past begin
@@ -271,7 +282,7 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
     // Apply scale
     this->diffScale = 0.5f;
     for (auto& evt : evtParticles) {
-        evt.z *= diffScale;
+        evt.z *= diffScale * particleTimeDensity;
     }
 
     

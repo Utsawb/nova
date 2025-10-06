@@ -32,6 +32,8 @@ string g_resourceDir, g_dataFilepath, g_dataDir;
 bool g_loadFile;
 bool g_dataStreamed; // Global to track if data is being streamed
 
+bool g_resetStream; // Set to reset the stream on next render
+
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;
 
@@ -52,6 +54,11 @@ shared_ptr<EventData> g_eventData;
 
 float g_particleScale(0.75f);
 
+float g_maxZ{ 10000.0f }; // Control z axis when streaming
+bool g_pauseStream{ false }; // Pause streaming
+float g_particleTimeDensity{ 1.0f }; // Controls particle scaling along z (time) axis
+
+
 // Move this stuff into a function since it is called 3 times
 static void initCamera()
 {
@@ -64,12 +71,15 @@ static void initCamera()
 // New function for streaming data from a file
 static void streamEvtDataAndCamera() {
 
-    int retVal{ g_eventData->initStreamingParticlesFromFile(g_dataFilepath) };
-    if (retVal == -1)
+    if (g_resetStream)
     {
-        g_dataStreamed = false;
+        g_eventData->resetStream();
+        g_resetStream = false;
+        g_pauseStream = false; // If stream is paused when resetting, user gets no output
     }
-    else if (retVal == 1) // Indicates first time batch, need to set up camera
+
+    int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ, g_pauseStream, g_particleTimeDensity) };
+    if (retVal == 1) // Indicates first time batch, need to set up camera
     {
         initCamera();
     }
@@ -262,8 +272,8 @@ static void render() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
-        drawGUI(g_camera, g_fps, g_particleScale, g_isMainviewportHovered, g_mainSceneFBO, 
-            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed);
+        drawGUI(g_camera, g_fps, g_particleScale, g_maxZ, g_isMainviewportHovered, g_mainSceneFBO, 
+            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_particleTimeDensity);
     
     // Render ImGui //
         ImGui::Render();

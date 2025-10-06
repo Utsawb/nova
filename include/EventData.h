@@ -47,10 +47,15 @@ class EventData {
         void initParticlesFromFile(const std::string &filename);
 
         /**
-         * @brief Initializes particles from a file in a streaming manner. The file should be in the format aedat4.
+          * @brief Resets streaming.
+          */
+        void resetStream();
+
+        /**
+         * @brief Streams particles from a file in a streaming manner. The file should be in the format aedat4.
          * @return -1 for finished, 0 for continuing, 1 for first batch received
          */
-        int initStreamingParticlesFromFile(const std::string &filename);
+        int streamParticlesFromFile(const std::string &filename, float maxZ, bool pauseStream, float particleTimeDensity);
 
         /**
          * @brief Initializes the EventData object in an empty state; upon initialization, no particles are loaded.
@@ -171,6 +176,8 @@ class EventData {
         std::vector<glm::vec4> streamEvtParticles; // event particles captured in a stream
 
         size_t cutoffIndex; // Index to cutoff data at for streaming purposes. Determines what index of evtParticles to start drawing from
+
+        //bool streamDone; // If true, indicates stream is finished
 
         long long earliestTimestamp;
         long long latestTimestamp;
