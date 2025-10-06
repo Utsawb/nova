@@ -28,6 +28,9 @@ EventData::~EventData() {
 void EventData::reset() {
     // TODO: Do we want to free the memory? Because if we go from like 100'000 particles -> 10 we should. Otherwise, better to keep
     evtParticles.clear();
+
+    streamEvtParticles.clear(); // Clear stream particles, might move to another method later
+
     earliestTimestamp = 0;
     latestTimestamp = 0;
     minXYZ = glm::vec3(std::numeric_limits<float>::max());
@@ -45,7 +48,7 @@ void EventData::reset() {
 
 void EventData::initInstancing(Program &progInst) {
     // Generate / initialize a VBO here. GL_STATIC_DRAW may be better, should test
-    genVBO(instVBO, evtParticles.size() * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
+    genVBO(instVBO, (evtParticles.size() - cutoffIndex) * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, instVBO);
     GLint aInstPos = progInst.getAttribute("aInstPos");
@@ -56,7 +59,7 @@ void EventData::initInstancing(Program &progInst) {
     glVertexAttribDivisor(aInstPos, 1); // Update once per instance (not per vertex)
     
     // Pass in the existing data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, evtParticles.size() * sizeof(glm::vec4), evtParticles.data());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (evtParticles.size() - cutoffIndex) * sizeof(glm::vec4), evtParticles.data() + cutoffIndex);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -100,6 +103,7 @@ void EventData::initParticlesFromFile(const std::string &filename) {
         }
     }
 
+    cutoffIndex = 0; // cutoff index defines how many event particles are drawn (from stream implementation)
     // TODO: This is arbitrary, we can should define as a constant somewhere
     // Apply scale
     this->diffScale = 5000.0f / static_cast<float>(latestTimestamp - earliestTimestamp);
@@ -161,7 +165,7 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
                 long long evtTimestamp = evt.timestamp();
                 
                 // Find earliest global time
-                if (evtParticles.empty() && batchData.empty())
+                if (streamEvtParticles.empty() && batchData.empty())
                 {
                     earliestTimestamp = evtTimestamp;
                     latestTimestamp = evtTimestamp;
@@ -204,6 +208,11 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
         return -1;
     }
     
+    // Hard code fixed bounding wireframe box
+    minXYZ = glm::vec3(0.0, 0.0, 0.0);
+    maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], 100000);
+
+
     // Earliest data should show up further along the box
     // Latest data in batch should be at zero position
     for (glm::vec4 &evt_xytp : batchData)
@@ -212,27 +221,60 @@ int EventData::initStreamingParticlesFromFile(const std::string& filename)
     }
 
     // Shift existing event particles back to make room for new batch of event particles for this frame
-    for (glm::vec4 &evt_xytp : evtParticles)
+    for (size_t i{0}; i < streamEvtParticles.size(); ++i)
     {
-        evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow
+        glm::vec4 &evt_xytp{ streamEvtParticles[i] };
+        evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow  
     }
 
-    evtParticles.insert(std::end(evtParticles), std::begin(batchData), std::end(batchData));
+    
+
+    streamEvtParticles.insert(std::end(streamEvtParticles), std::begin(batchData), std::end(batchData));
+
+    // Track particles beyond box boundary along time axis
+    long long updatedCutoffIndex = -1;
+
+    // Use an iterator to avoid narrow conversion issues with iterating in reverse
+    for (auto iter{ streamEvtParticles.end() - 1 }; iter >= streamEvtParticles.begin(); --iter)
+    {
+        glm::vec4& evt_xytp{ *iter };
+        
+        if (evt_xytp.z > maxXYZ.z)
+        {
+            updatedCutoffIndex = iter - streamEvtParticles.begin();
+            cout << updatedCutoffIndex << endl;
+            break;
+        }
+        // Ensure iterator does not go past begin
+        if (iter == streamEvtParticles.begin())
+        {
+            break;
+        }
+    }
+
+    // Update cutoff index to not draw particles beyond box boundary
+    if (updatedCutoffIndex != -1)
+    {
+        this->cutoffIndex = updatedCutoffIndex;
+    }
+    else
+    {
+        this->cutoffIndex = 0;
+    }
 
     latestTimestamp = batchLatestTimestamp; 
 
-    // Hard code fixed bounding wireframe box
-    minXYZ = glm::vec3(0.0, 0.0, 0.0);
-    maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], 100000);
-
+   
+    evtParticles = streamEvtParticles; // Probably really inefficient, patch solution for now. 
     // 
     // TODO: Understand what this does and why it is necessary (artifact from basing code off of initParticlesFromFile())
     // Apply scale
-    this->diffScale = 5000.0f / static_cast<float>(100000);
-    //for (auto& evt : evtParticles) {
-    //    evt.z *= diffScale;
-    //}
+    this->diffScale = 0.5f;
+    for (auto& evt : evtParticles) {
+        evt.z *= diffScale;
+    }
 
+    
     // Normalize the timestamp of the min/max XYZ for bounding box
     this->minXYZ.z *= diffScale;
     this->maxXYZ.z *= diffScale;
@@ -251,6 +293,8 @@ void EventData::initParticlesEmpty() {
     reset();
 
     evtParticles.push_back(glm::vec4(0.0f,0.0f,1.0f,0.0f));
+
+    cutoffIndex = 0;
 
     earliestTimestamp=1.0f;
     latestTimestamp=1.0f;
@@ -406,7 +450,7 @@ void EventData::drawInstanced(MatrixStack &MV, MatrixStack &P, Program &progInst
         return;
     }
 
-    size_t instCt = std::max(1ULL, evtParticles.size());
+    size_t instCt = std::max(1ULL, evtParticles.size() - cutoffIndex);
 
     // glBindVertexArray(meshSphere.getVAOID());
 

@@ -168,6 +168,9 @@ class EventData {
         // TODO: Might be better to just store a std::bitset for polarity, and something dynamic like a color
         // indicator for a (although we would need a vec3 for a full RGB)
         std::vector<glm::vec4> evtParticles; // x, y, t, polarity (false=0.0, true=1.0)
+        std::vector<glm::vec4> streamEvtParticles; // event particles captured in a stream
+
+        size_t cutoffIndex; // Index to cutoff data at for streaming purposes. Determines what index of evtParticles to start drawing from
 
         long long earliestTimestamp;
         long long latestTimestamp;
