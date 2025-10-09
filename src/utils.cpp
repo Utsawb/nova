@@ -125,6 +125,27 @@ bool isValidFilePath(string filePath) {
     return true;
 }
 
+Program genTextureProg(const string& resource_dir)
+{
+    Program prog = Program();
+    prog.setShaderNames(resource_dir + "texture.vsh", resource_dir + "texture.fsh");
+    prog.setVerbose(true);
+    prog.init();
+
+    prog.addUniform("P");
+    prog.addUniform("MV");
+    prog.addUniform("MV_it");
+
+    prog.addAttribute("aPos");
+    prog.addAttribute("aNor");
+    prog.addAttribute("aTexCoordinate");
+
+    prog.addUniform("inTexture");
+
+
+    return prog;
+}
+
 Program genPhongProg(const string &resource_dir) {
     Program prog = Program();
     prog.setShaderNames(resource_dir + "phong.vsh", resource_dir + "phong.fsh");
@@ -186,6 +207,15 @@ Program genBasicProg(const string &resource_dir) {
     // prog.setVerbose(false);
 
     return prog;
+}
+
+void sendToTextureShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV)
+{
+
+    glUniformMatrix4fv(prog.getUniform("P"), 1, GL_FALSE, glm::value_ptr(P.topMatrix()));
+    glUniformMatrix4fv(prog.getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV.topMatrix()));
+    glUniformMatrix4fv(prog.getUniform("MV_it"), 1, GL_FALSE, glm::value_ptr(glm::inverse(glm::transpose(MV.topMatrix()))));
+
 }
 
 void sendToPhongShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV, const vec3& lightPos, const vec3& lightCol, const BPMaterial& mat) {

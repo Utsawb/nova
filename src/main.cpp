@@ -44,7 +44,7 @@ FILE *ffmpeg;
 vector<unsigned char> pixels;
 
 Mesh g_meshSphere;
-Program g_progBasic, g_progInst, g_progFrame;
+Program g_progBasic, g_progInst, g_progFrame, g_progTexture; // g_progTexture is texture shader
 
 glm::vec3 g_lightPos, g_lightCol;
 BPMaterial g_lightMat;
@@ -142,6 +142,9 @@ static void init() {
         g_progInst = genInstProg(g_resourceDir);
         g_progFrame = genBasicProg(g_resourceDir); 
 
+        // Texture shader
+        g_progTexture = genTextureProg(g_resourceDir);
+
     // Initialize data + camera and set its center //
         initEvtDataAndCamera();
 
@@ -204,6 +207,9 @@ static void render() {
         g_eventData->drawInstanced(MV, P, g_progInst,
             g_progBasic, g_particleScale
         );
+    
+    // Draw frame data
+    g_eventData->drawFrameData(MV, P, g_progTexture);
 
     P.popMatrix();
     MV.popMatrix();

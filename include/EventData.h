@@ -12,6 +12,9 @@
 #include <dv-processing/io/mono_camera_recording.hpp>
 #include <memory>
 
+// opencv
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 /*
     We can treat the data processed from dv-processing as particles in 3D space
     where the x and y coordinates are the position in the image plane and the z
@@ -61,6 +64,11 @@ class EventData {
          * @brief Initializes the EventData object in an empty state; upon initialization, no particles are loaded.
          */
         void initParticlesEmpty();
+
+        /**
+         *
+         */
+        void drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture);
 
         /**
          * @brief Draw the bounding box wireframe for the event data.
@@ -174,10 +182,8 @@ class EventData {
         // indicator for a (although we would need a vec3 for a full RGB)
         std::vector<glm::vec4> evtParticles; // x, y, t, polarity (false=0.0, true=1.0)
         std::vector<glm::vec4> streamEvtParticles; // event particles captured in a stream
-
+        std::vector<std::pair<cv::Mat, float>> imageFrameData; // Camera frame data, first pair element contains pointer to image data, second contains time
         size_t cutoffIndex; // Index to cutoff data at for streaming purposes. Determines what index of evtParticles to start drawing from
-
-        //bool streamDone; // If true, indicates stream is finished
 
         long long earliestTimestamp;
         long long latestTimestamp;

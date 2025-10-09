@@ -142,7 +142,6 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     dv::io::MonoCameraRecording& reader(*liveStreamReader);
     camera_resolution = glm::vec2(reader.getEventResolution().value().width, reader.getEventResolution().value().height);
 
-
     /* For each frame, we get a batch of data from the live stream.
      * This batch is added to the evtParticles vector after its timestamps
      * have been adjusted by subtracting the latest time calculated in this batch 
@@ -163,6 +162,15 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
     if (reader.isRunning() && !pauseStream) {
+        if (const auto frameData = reader.getNextFrame(); frameData.has_value())
+        {
+            cv::imshow("ye", frameData->image);
+
+            cv::Mat out;
+            cv::cvtColor(frameData->image, out, cv::COLOR_BGR2RGB); // Convert from BGR to RGB
+            //cv::flip(out, out, 0); // Flip
+            imageFrameData.push_back({ out.clone(), frameData->timestamp}); // clone to ensure data is always continuous
+        }
         if (const auto events = reader.getNextEventBatch(); events.has_value()) {
             for (auto& evt : events.value()) {
                 if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
@@ -328,6 +336,95 @@ void EventData::initParticlesEmpty() {
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
 
     printf("Loaded 0 particles\n");
+}
+
+void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture)
+{
+    
+    if(!imageFrameData.empty())
+    {
+        auto &imageData{ imageFrameData[imageFrameData.size() - 1]};
+        progTexture.bind();
+        MV.pushMatrix();
+
+        // https://learnopengl.com/Getting-started/Textures
+        float squareVertices[] = {
+            this->minXYZ.x, this->minXYZ.y, 2.0f, 0.0f, 0.0f, // Bottom left looking down positive z axis
+            this->maxXYZ.x, this->minXYZ.y, 2.0f, 1.0f, 0.0f, // Bottom right
+            this->maxXYZ.x, this->maxXYZ.y, 2.0f, 1.0f, 1.0f, // Top right
+            this->minXYZ.x, this->maxXYZ.y, 2.0f, 0.0f, 1.0f // Top left
+        };
+
+        unsigned int textureVAO{};
+        glGenVertexArrays(1, &textureVAO);
+
+        // Bind VAO and update VBO
+        glBindVertexArray(textureVAO);
+        // Generate square vertex buffer
+        unsigned int squareVBO{};
+        glGenBuffers(1, &squareVBO);
+
+       
+
+        // Bind and pass square vertex buffer to vertex shader as attribute
+        glBindBuffer(GL_ARRAY_BUFFER, squareVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(squareVertices), squareVertices, GL_STATIC_DRAW);
+
+        // Send as attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+
+        // Send as attribute
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(progTexture.getAttribute("aTexCoordinate"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        // Generate element buffer
+        unsigned int EBOIndices[] = { 0, 1, 2, 0, 2, 3 };
+        unsigned int EBOId{};
+        glGenBuffers(1, &EBOId);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(EBOIndices), EBOIndices, GL_STATIC_DRAW);
+
+        
+    
+
+        unsigned int textureId{};
+        // Generate and attach texture
+        glGenTextures(1, &textureId);
+
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+       
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Tightly packed due to the fact that image data was cloned
+                                               // https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html#a03d2a2570d06dcae378f788725789aa4
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageData.first.cols, imageData.first.rows, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData.first.data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+
+        sendToTextureShader(progTexture, P, MV);
+        glDrawElements(GL_TRIANGLES, sizeof(EBOIndices), GL_UNSIGNED_INT, 0);
+
+        MV.popMatrix();
+        progTexture.unbind();
+
+        glDeleteVertexArrays(1, &textureVAO);
+        glDeleteBuffers(1, &squareVBO);
+        glDeleteBuffers(1, &EBOId);
+        glDeleteTextures(1, &textureId);
+
+
+        
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
 
 // TODO: Move precalculable things to an init
