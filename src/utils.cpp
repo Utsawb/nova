@@ -584,8 +584,8 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
                 datafilepath=std::move(newFilePath);
             }
         }
-        ImGui::Text("Event Frequency");    
-        ImGui::SliderInt("##modFreq", (int *) &EventData::modFreq, 1, 1000);
+        ImGui::Text("Event Odds");
+        ImGui::SliderInt("##modFreq", (int *) &EventData::modFreq, 1, 10000, "%d", 1 << 5);
         EventData::modFreq = std::max((uint) 1, EventData::modFreq);
 
 
