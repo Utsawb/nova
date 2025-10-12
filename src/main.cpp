@@ -52,11 +52,11 @@ BPMaterial g_lightMat;
 // TODO: Maybe we want unique_ptr
 shared_ptr<EventData> g_eventData;
 
-float g_particleScale(0.75f);
+float g_particleScale(3.0f);
 
 float g_maxZ{ 10000.0f }; // Control z axis when streaming
 bool g_pauseStream{ false }; // Pause streaming
-float g_particleTimeDensity{ 1.0f }; // Controls particle scaling along z (time) axis
+float g_particleTimeDensity{ 0.05f }; // Controls particle scaling along z (time) axis
 
 
 // Move this stuff into a function since it is called 3 times
@@ -64,7 +64,7 @@ static void initCamera()
 {
     // Camera //
     g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
+    g_camera.setInitPos(300.0f, 100.0f, 600.0f);
     g_camera.setEvtCenter(g_eventData->getCenter());
 }
 

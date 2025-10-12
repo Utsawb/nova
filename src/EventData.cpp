@@ -48,7 +48,7 @@ void EventData::reset() {
 
 void EventData::initInstancing(Program &progInst) {
     // Generate / initialize a VBO here. GL_STATIC_DRAW may be better, should test
-    genVBO(instVBO, (evtParticles.size() - cutoffIndex) * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
+    genVBO(instVBO, (evtParticles.size()) * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, instVBO);
     GLint aInstPos = progInst.getAttribute("aInstPos");
@@ -59,7 +59,7 @@ void EventData::initInstancing(Program &progInst) {
     glVertexAttribDivisor(aInstPos, 1); // Update once per instance (not per vertex)
     
     // Pass in the existing data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, (evtParticles.size() - cutoffIndex) * sizeof(glm::vec4), evtParticles.data() + cutoffIndex);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (evtParticles.size()) * sizeof(glm::vec4), evtParticles.data());
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -103,7 +103,6 @@ void EventData::initParticlesFromFile(const std::string &filename) {
         }
     }
 
-    cutoffIndex = 0; // cutoff index defines how many event particles are drawn (from stream implementation)
     // TODO: This is arbitrary, we can should define as a constant somewhere
     // Apply scale
     this->diffScale = 5000.0f / static_cast<float>(latestTimestamp - earliestTimestamp);
@@ -142,35 +141,26 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     dv::io::MonoCameraRecording& reader(*liveStreamReader);
     camera_resolution = glm::vec2(reader.getEventResolution().value().width, reader.getEventResolution().value().height);
 
-    /* For each frame, we get a batch of data from the live stream.
-     * This batch is added to the evtParticles vector after its timestamps
-     * have been adjusted by subtracting the latest time calculated in this batch 
-     * from all timestamps in the batch.
-     */
-    
-    /* Each event particle is adjusted by adding to each timestamp
-     * the difference between the latest timestamp calculated this batch
-     * and the latest timestamp calculated in the last batch.
-     */
-    std::vector<glm::vec4> batchData{};
-
-    
-
-    // Calculate latest timestamps for this batch only.
-    long long batchLatestTimestamp = -1;
 
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
-    if (reader.isRunning() && !pauseStream) {
+    if (reader.isRunning("events") && !pauseStream) {
+
+        // Read frame data, might move to its own method
         if (const auto frameData = reader.getNextFrame(); frameData.has_value())
         {
-            cv::imshow("ye", frameData->image);
 
-            cv::Mat out;
-            cv::cvtColor(frameData->image, out, cv::COLOR_BGR2RGB); // Convert from BGR to RGB
-            //cv::flip(out, out, 0); // Flip
-            imageFrameData.push_back({ out.clone(), frameData->timestamp}); // clone to ensure data is always continuous
+            long long frameRelativeTimestamp = frameData->timestamp - earliestTimestamp; // Subtract earliest timestamp of event data to get relative timestamp
+
+            if (frameRelativeTimestamp >= 0) // Positive timestamp indicates frame data can be inserted into event data
+            {
+                cv::Mat out;
+                cv::cvtColor(frameData->image, out, cv::COLOR_BGR2RGB); // Convert from BGR to RGB
+    
+                streamFrameCameraData.push_back({ out.clone(), frameRelativeTimestamp}); // clone to ensure data is always continuous
+            }
         }
+        // Read event data batch from file
         if (const auto events = reader.getNextEventBatch(); events.has_value()) {
             for (auto& evt : events.value()) {
                 if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
@@ -178,14 +168,16 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
                 long long evtTimestamp = evt.timestamp();
                 
                 // Find earliest global time
-                if (streamEvtParticles.empty() && batchData.empty())
+                if (streamEvtParticles.empty())
                 {
+
                     earliestTimestamp = evtTimestamp;
                     latestTimestamp = evtTimestamp;
+
                 }
 
                 // Assumedly the last event batch and event has the latest timestamp, but not sure - so use max(...)
-                batchLatestTimestamp = std::max(batchLatestTimestamp, evtTimestamp);
+                latestTimestamp = std::max(latestTimestamp, evtTimestamp);
 
                 // We can sort of "normalize" the timestamp to start at 0 this way.
                 float relativeTimestamp = static_cast<float>(evtTimestamp - earliestTimestamp);
@@ -196,44 +188,20 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
                     static_cast<float>(evt.polarity()) // (float)true == 1.0f, (float)false == 0.0f
                 );
 
-                // Batched data is stored first in this temporary vector
-                batchData.push_back(evt_xytp);
-
-                // Artifact from basing code off of initParticlesFromFile()
-                // glm::min/max does componentwise; .x = min(.x, candidate_x), .y = min(.y, candidate_y), ... 
-               /* minXYZ = glm::min(minXYZ, glm::vec3(evt_xytp));
-                maxXYZ = glm::max(maxXYZ, glm::vec3(evt_xytp));*/
-
-                
-            }
+                // streamEvtParticles stores streamed data with relative timestamps
+                streamEvtParticles.push_back(evt_xytp);    
+            } 
             
-            // Earliest data should show up further along the box
-            // Latest data in batch should be at zero position
-            for (glm::vec4 &evt_xytp : batchData)
-            {
-                evt_xytp.z = static_cast<float>(batchLatestTimestamp - earliestTimestamp) - evt_xytp.z;
-            }
-
-            // Shift existing event particles back to make room for new batch of event particles for this frame
-            for (size_t i{0}; i < streamEvtParticles.size(); ++i)
-            {
-                glm::vec4 &evt_xytp{ streamEvtParticles[i] };
-                evt_xytp.z += static_cast<float>((batchLatestTimestamp - earliestTimestamp) - (latestTimestamp - earliestTimestamp)); // Do not change the parenthesis unless you want overflow  
-            }
-
-            streamEvtParticles.insert(std::end(streamEvtParticles), std::begin(batchData), std::end(batchData));
         }
         else
         {
             // code path executes when finished streaming data from file
-            //liveStreamReader.reset();
             returnCode = -1;
         }
     }
     else
     {
         // code path executes when finished streaming data from file
-        //liveStreamReader.reset();
         returnCode = -1;
     }
     
@@ -241,66 +209,41 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     minXYZ = glm::vec3(0.0, 0.0, 0.0);
     maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], maxZ);
 
-    // Track particles beyond box boundary along time axis
-    long long updatedCutoffIndex = -1;
-
-    // Use an iterator to avoid narrow conversion issues with iterating in reverse
-    for (auto iter{ streamEvtParticles.end()}; iter >= streamEvtParticles.begin(); --iter)
-    {
-        // Don't start at .end() - 1 in case of empty list
-        if (iter == streamEvtParticles.end())
-        {
-            // list is empty
-            if (iter == streamEvtParticles.begin())
-            {
-                break;
-            }
-            continue;
-        }
-        glm::vec4& evt_xytp{ *iter };
-        
-        if (evt_xytp.z > maxXYZ.z)
-        {
-            updatedCutoffIndex = iter - streamEvtParticles.begin();
-            break;
-        }
-        // Ensure iterator does not go past begin
-        if (iter == streamEvtParticles.begin())
-        {
-            break;
-        }
-    }
-
-    // Update cutoff index to not draw particles beyond box boundary
-    if (updatedCutoffIndex != -1)
-    {
-        this->cutoffIndex = updatedCutoffIndex;
-    }
-    else
-    {
-        this->cutoffIndex = 0;
-    }
-
-    latestTimestamp = batchLatestTimestamp; 
-
-   
-    evtParticles = streamEvtParticles; // Probably really inefficient, patch solution for now. 
-    // 
-    // TODO: Understand what this does and why it is necessary (artifact from basing code off of initParticlesFromFile())
-    // Apply scale
     this->diffScale = 0.5f;
-    for (auto& evt : evtParticles) {
-        evt.z *= diffScale * particleTimeDensity;
-    }
 
-    
     // Normalize the timestamp of the min/max XYZ for bounding box
     this->minXYZ.z *= diffScale;
     this->maxXYZ.z *= diffScale;
     this->center = 0.5f * (minXYZ + maxXYZ);
 
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
-   
+
+    // Earliest data should show up further along the box
+    // Latest data in batch should be at zero position
+    evtParticles.clear(); // Stores the actual particles to be drawn in the box
+    for (glm::vec4 &evt_xytp : streamEvtParticles)
+    {
+        // streamTime is adjusted time such that the latest particles show up at z = 0
+        // Accomplished by subtracting relative timestamp from event particles relative timestamp
+        float streamTime = static_cast<float>(latestTimestamp - earliestTimestamp) - evt_xytp[2];
+        streamTime *= diffScale * particleTimeDensity;
+        if (streamTime <= maxXYZ.z && streamTime >= minXYZ.z)
+        {
+            evtParticles.push_back(glm::vec4(evt_xytp[0], evt_xytp[1], streamTime, evt_xytp[3]));
+        }
+    }
+
+    frameCameraData.clear(); // Stores the actual frames to be drawn as textures in the box
+    for (auto& frameDatum : streamFrameCameraData)
+    {
+        // streamTime is adjusted time such that latest frames show up at z = 0
+        float streamTime = static_cast<float>(latestTimestamp - earliestTimestamp) - frameDatum.second;
+        streamTime *= diffScale * particleTimeDensity;
+        if (streamTime <= maxXYZ.z && streamTime >= minXYZ.z)
+        {
+            frameCameraData.push_back({ frameDatum.first, streamTime });
+        }
+    }
 
     printf("Loaded %zu particles from %s\n", evtParticles.size(), filename.c_str());
 
@@ -312,8 +255,6 @@ void EventData::initParticlesEmpty() {
     reset();
 
     evtParticles.push_back(glm::vec4(0.0f,0.0f,1.0f,0.0f));
-
-    cutoffIndex = 0;
 
     earliestTimestamp=1.0f;
     latestTimestamp=1.0f;
@@ -341,18 +282,19 @@ void EventData::initParticlesEmpty() {
 void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture)
 {
     
-    if(!imageFrameData.empty())
+    // Draw frame data as textures
+    for(auto& imageData : frameCameraData)
     {
-        auto &imageData{ imageFrameData[imageFrameData.size() - 1]};
+        float imageDataTimestamp = imageData.second;
         progTexture.bind();
         MV.pushMatrix();
 
         // https://learnopengl.com/Getting-started/Textures
         float squareVertices[] = {
-            this->minXYZ.x, this->minXYZ.y, 2.0f, 0.0f, 0.0f, // Bottom left looking down positive z axis
-            this->maxXYZ.x, this->minXYZ.y, 2.0f, 1.0f, 0.0f, // Bottom right
-            this->maxXYZ.x, this->maxXYZ.y, 2.0f, 1.0f, 1.0f, // Top right
-            this->minXYZ.x, this->maxXYZ.y, 2.0f, 0.0f, 1.0f // Top left
+            this->minXYZ.x, this->minXYZ.y, imageDataTimestamp, 0.0f, 0.0f, // Bottom left looking down positive z axis
+            this->maxXYZ.x, this->minXYZ.y, imageDataTimestamp, 1.0f, 0.0f, // Bottom right
+            this->maxXYZ.x, this->maxXYZ.y, imageDataTimestamp, 1.0f, 1.0f, // Top right
+            this->minXYZ.x, this->maxXYZ.y, imageDataTimestamp, 0.0f, 1.0f // Top left
         };
 
         unsigned int textureVAO{};
@@ -408,6 +350,7 @@ void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progText
 
 
         sendToTextureShader(progTexture, P, MV);
+
         glDrawElements(GL_TRIANGLES, sizeof(EBOIndices), GL_UNSIGNED_INT, 0);
 
         MV.popMatrix();
@@ -558,7 +501,7 @@ void EventData::drawInstanced(MatrixStack &MV, MatrixStack &P, Program &progInst
         return;
     }
 
-    size_t instCt = std::max(1ULL, evtParticles.size() - cutoffIndex);
+    size_t instCt = std::max(1ULL, evtParticles.size());
 
     // glBindVertexArray(meshSphere.getVAOID());
 

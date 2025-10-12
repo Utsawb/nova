@@ -642,7 +642,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         }
 
         // Control particle density along time axis
-        ImGui::SliderFloat("Particle Time Density", &particleTimeDensity, 0.1f, 1.0f);
+        ImGui::SliderFloat("Particle Time Density", &particleTimeDensity, 0.01f, 1.0f);
 
 
 
@@ -652,7 +652,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
     ImGui::Begin("Info");
         ImGui::Text("Camera (World): (%.3f, %.3f, %.3f)", cam_pos.x, cam_pos.y, cam_pos.z);
         ImGui::Separator();
-        ImGui::SliderFloat("Particle Scale", &particle_scale, 0.1f, 2.5f);
+        ImGui::SliderFloat("Particle Scale", &particle_scale, 0.1f, 6.0f);
         ImGui::Separator();
         ImGui::ColorEdit3("Negative Polarity Color", (float *) &evtData->getNegColor());
         ImGui::ColorEdit3("Positive Polarity Color", (float *) &evtData->getPosColor());
