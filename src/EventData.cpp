@@ -170,13 +170,11 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
                 // Find earliest global time
                 if (streamEvtParticles.empty())
                 {
-
                     earliestTimestamp = evtTimestamp;
                     latestTimestamp = evtTimestamp;
-
                 }
 
-                // Assumedly the last event batch and event has the latest timestamp, but not sure - so use max(...)
+                // SUPPOSEDLY the last event batch and event has the latest timestamp, but not sure - so use max(...)
                 latestTimestamp = std::max(latestTimestamp, evtTimestamp);
 
                 // We can sort of "normalize" the timestamp to start at 0 this way.
@@ -188,7 +186,7 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
                     static_cast<float>(evt.polarity()) // (float)true == 1.0f, (float)false == 0.0f
                 );
 
-                // streamEvtParticles stores streamed data with relative timestamps
+                // streamEvtParticles stores streamed data with relative (normalized) timestamps
                 streamEvtParticles.push_back(evt_xytp);    
             } 
             
@@ -224,7 +222,7 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     for (glm::vec4 &evt_xytp : streamEvtParticles)
     {
         // streamTime is adjusted time such that the latest particles show up at z = 0
-        // Accomplished by subtracting relative timestamp from event particles relative timestamp
+        // Accomplished by subtracting latest relative timestamp from each event particle's relative timestamp
         float streamTime = static_cast<float>(latestTimestamp - earliestTimestamp) - evt_xytp[2];
         streamTime *= diffScale * particleTimeDensity;
         if (streamTime <= maxXYZ.z && streamTime >= minXYZ.z)

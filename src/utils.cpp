@@ -619,6 +619,13 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         ImGui::SliderInt("##modFreq", (int *) &EventData::modFreq, 1, 1000);
         EventData::modFreq = std::max((uint) 1, EventData::modFreq); 
 
+
+
+        // TODO: Cache recent files and state?
+    ImGui::End();
+
+    // Add control scheme for streaming data
+    ImGui::Begin("Streaming");
         ImGui::Text("Streaming File:");
         if (ImGui::Button("Open File To Stream"))
         {
@@ -644,9 +651,6 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         // Control particle density along time axis
         ImGui::SliderFloat("Particle Time Density", &particleTimeDensity, 0.01f, 1.0f);
 
-
-
-        // TODO: Cache recent files and state?
     ImGui::End();
 
     ImGui::Begin("Info");
