@@ -231,6 +231,9 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
         }
     }
 
+    // This is a patch solution. The evtParticles vector must be sorted from ascending order of timestamps to work.
+    std::reverse(evtParticles.begin(), evtParticles.end()); // Necessary to ensure digital coded exposure functionality works
+
     frameCameraData.clear(); // Stores the actual frames to be drawn as textures in the box
     for (auto& frameDatum : streamFrameCameraData)
     {
