@@ -34,6 +34,8 @@ bool g_dataStreamed; // Global to track if data is being streamed
 
 bool g_resetStream; // Set to reset the stream on next render
 
+bool g_showFrameData{ true }; // Set to draw frame data inside the box when streaming
+
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;
 
@@ -209,7 +211,10 @@ static void render() {
         );
     
     // Draw frame data
-    g_eventData->drawFrameData(MV, P, g_progTexture);
+    if (g_showFrameData)
+    {
+        g_eventData->drawFrameData(MV, P, g_progTexture);
+    }
 
     P.popMatrix();
     MV.popMatrix();
@@ -279,7 +284,7 @@ static void render() {
         ImGui::NewFrame();
         
         drawGUI(g_camera, g_fps, g_particleScale, g_maxZ, g_isMainviewportHovered, g_mainSceneFBO, 
-            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_particleTimeDensity);
+            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_showFrameData, g_particleTimeDensity);
     
     // Render ImGui //
         ImGui::Render();

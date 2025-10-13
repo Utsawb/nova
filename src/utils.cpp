@@ -565,7 +565,7 @@ static void spaceWindowWrapper(bool &dSpaceWindow, shared_ptr<EventData> &evtDat
 
 void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameSceneFBO, shared_ptr<EventData> &evtData, std::string& datafilepath,
-    std::string &video_name, bool &recording, std::string &datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, float &particleTimeDensity) {
+    std::string &video_name, bool &recording, std::string &datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, bool &showFrameData, float &particleTimeDensity) {
 
     drawGUIDockspace();
 
@@ -650,6 +650,9 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
 
         // Control particle density along time axis
         ImGui::SliderFloat("Particle Time Density", &particleTimeDensity, 0.01f, 1.0f);
+
+        // Control if frame data shows up in streamed data
+        ImGui::Checkbox("Show Frame Data", &showFrameData);
 
     ImGui::End();
 
