@@ -459,9 +459,10 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
     }
 
     float rollingX(0), rollingY(0);
-    std::vector<float> total;
     float f = freq / 1000000 / diffScale;
 
+    GLuint outputCount = 0;
+    
     // Use GPU compute shader for event processing
     if (computeInitialized && !evtParticles.empty() && eventBound_L <= eventBound_R)
     {
@@ -504,74 +505,68 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
         
         GLSL::checkError(GET_FILE_LINE);
 
+        // Memory barrier to ensure compute shader writes are visible
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
+
         computeProg.unbind();
 
-        // Read back results
+        // Read back only the counters (small data - not a bottleneck)
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, countersSSBO);
         GLuint counters[3];
         glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, 3 * sizeof(GLuint), counters);
-        GLuint outputCount = counters[0];
+        outputCount = counters[0];
         rollingX = *reinterpret_cast<float*>(&counters[1]);
         rollingY = *reinterpret_cast<float*>(&counters[2]);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-        // Read output data
-        if (outputCount > 0)
-        {
-            std::vector<glm::vec3> outputVec(outputCount);
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputDataSSBO);
-            glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, outputCount * sizeof(glm::vec3), outputVec.data());
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-            // Convert to flat float array for rendering
-            total.reserve(outputCount * 3);
-            for (const auto& v : outputVec)
-            {
-                total.push_back(v.x);
-                total.push_back(v.y);
-                total.push_back(v.z);
-            }
-        }
     }
 
-    // Load data points
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, total.size() * sizeof(float), total.data(), GL_STATIC_DRAW);
-
-    prog.bind();
-
-    int pos = prog.getAttribute("pos");
-    glEnableVertexAttribArray(pos);
-    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0);
-    glVertexAttribDivisor(pos, 1);
-
-    glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
-    glUniformMatrix4fv(prog.getUniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glDrawArraysInstanced(GL_POINTS, 0, 1, static_cast<GLsizei>(total.size()));
-
-    prog.unbind();
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    if (pca)
+    // Render directly from GPU buffer (no CPU readback!)
+    if (outputCount > 0)
     {
-        // Calculate covariance
+        glBindVertexArray(VAO);
+        
+        // Bind the SSBO as a vertex buffer - no data copy needed!
+        glBindBuffer(GL_ARRAY_BUFFER, outputDataSSBO);
 
-        // TODO: inverse change? (make sure to always update when new files are used)
-        float inverseNumElems = 3.0f / total.size();
+        prog.bind();
+
+        int pos = prog.getAttribute("pos");
+        glEnableVertexAttribArray(pos);
+        glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0);
+        glVertexAttribDivisor(pos, 1);
+
+        glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
+        glUniformMatrix4fv(prog.getUniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glDrawArraysInstanced(GL_POINTS, 0, 1, static_cast<GLsizei>(outputCount));
+
+        prog.unbind();
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    if (pca && outputCount > 0)
+    {
+        // PCA requires CPU-side data - read back only when needed
+        std::vector<glm::vec3> pcaData(outputCount);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputDataSSBO);
+        glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, outputCount * sizeof(glm::vec3), pcaData.data());
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        
+        // Calculate mean
+        float inverseNumElems = 1.0f / static_cast<float>(outputCount);
         float mean_x = rollingX * inverseNumElems;
         float mean_y = rollingY * inverseNumElems;
 
+        // Calculate covariance
         float cov_x_x(0.0f), cov_x_y(0.0f), cov_y_y(0.0f);
 #pragma omp parallel
         {
 #pragma omp for reduction(+ : cov_x_y) reduction(+ : cov_x_x) reduction(+ : cov_y_y)
-            for (int i = 0; i < (int)total.size(); i += 3)
+            for (int i = 0; i < (int)outputCount; i++)
             {
-                float x = total[i];
-                float y = total[i + 1];
+                float x = pcaData[i].x;
+                float y = pcaData[i].y;
 
                 cov_x_y += (x - mean_x) * (y - mean_y);
                 cov_x_x += (x - mean_x) * (x - mean_x);
@@ -579,12 +574,12 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
             }
         }
 
-        inverseNumElems = 1.0f / (total.size() / 3.0f - 1);
+        inverseNumElems = 1.0f / (static_cast<float>(outputCount) - 1.0f);
         cov_x_y *= inverseNumElems;
         cov_x_x *= inverseNumElems;
         cov_y_y *= inverseNumElems;
 
-        // Matrix
+        // Eigenvalue calculation
         float a = 1;
         float b = -(cov_x_x + cov_y_y);
         float c = cov_x_x * cov_y_y - cov_x_y * cov_x_y;
@@ -592,21 +587,23 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
         float eigen1 = (-b + std::sqrt(b * b - 4 * a * c)) / (2 * a);
         float eigen2 = (-b - std::sqrt(b * b - 4 * a * c)) / (2 * a);
 
-        // Eigen vectors
+        // Eigenvectors
         std::vector<glm::vec3> eigenvectors;
         eigenvectors.push_back(std::sqrt(eigen1) * glm::normalize(glm::vec3(eigen1 - cov_y_y, cov_x_y, 1)));
         eigenvectors.push_back(std::sqrt(eigen2) * glm::normalize(glm::vec3(eigen2 - cov_y_y, cov_x_y, 1)));
 
-        // define position of mean and eigenvectors in cameraview
+        // Transform to camera space
+        glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
         glm::vec4 mean_cameraspace(mean_x, mean_y, 1.0f, 1.0f);
         mean_cameraspace = projection * mean_cameraspace;
         eigenvectors.at(0) = projection * glm::vec4(eigenvectors.at(0).x, eigenvectors.at(0).y, 0.0f, 0.0f);
         eigenvectors.at(1) = projection * glm::vec4(eigenvectors.at(1).x, eigenvectors.at(1).y, 0.0f, 0.0f);
 
-        // add initial position to eigenvalues
+        // Add mean position to eigenvectors
         eigenvectors.at(0) += glm::vec3(mean_cameraspace);
         eigenvectors.at(1) += glm::vec3(mean_cameraspace);
 
+        // Draw eigenvector lines
         glDisable(GL_BLEND); // Line should be opaque
         glLineWidth(5.0f);   // Could make setable
         glBegin(GL_LINES);

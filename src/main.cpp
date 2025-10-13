@@ -71,6 +71,7 @@ static void initEvtDataAndCamera() {
     g_eventData = make_shared<EventData>();
     g_eventData->initParticlesEmpty();
     g_eventData->initInstancing(g_progInst);
+    g_eventData->setResourceDir(g_resourceDir);
 
     // Camera //
     g_camera = Camera();
@@ -295,13 +296,13 @@ static void video_output() {
 
 int main(int argc, char** argv) {
     // resources/ data/ 
-    if (argc < 3) {
-        cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
-        return 0;
-    }
+    //if (argc < 3) {
+    //    cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
+    //    return 0;
+    //}
 
-    g_resourceDir = argv[1] + string("/");
-    g_dataDir = argv[2];
+    g_resourceDir = "C:/Users/utsaw/Documents/nova/resources/";
+    g_dataDir = "../../data/";
 
     glfwSetErrorCallback(error_callback);
 
