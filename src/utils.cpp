@@ -125,6 +125,27 @@ bool isValidFilePath(string filePath) {
     return true;
 }
 
+Program genTextureProg(const string& resource_dir)
+{
+    Program prog = Program();
+    prog.setShaderNames(resource_dir + "texture.vsh", resource_dir + "texture.fsh");
+    prog.setVerbose(true);
+    prog.init();
+
+    prog.addUniform("P");
+    prog.addUniform("MV");
+    prog.addUniform("MV_it");
+
+    prog.addAttribute("aPos");
+    prog.addAttribute("aNor");
+    prog.addAttribute("aTexCoordinate");
+
+    prog.addUniform("inTexture");
+
+
+    return prog;
+}
+
 Program genPhongProg(const string &resource_dir) {
     Program prog = Program();
     prog.setShaderNames(resource_dir + "phong.vsh", resource_dir + "phong.fsh");
@@ -186,6 +207,15 @@ Program genBasicProg(const string &resource_dir) {
     // prog.setVerbose(false);
 
     return prog;
+}
+
+void sendToTextureShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV)
+{
+
+    glUniformMatrix4fv(prog.getUniform("P"), 1, GL_FALSE, glm::value_ptr(P.topMatrix()));
+    glUniformMatrix4fv(prog.getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV.topMatrix()));
+    glUniformMatrix4fv(prog.getUniform("MV_it"), 1, GL_FALSE, glm::value_ptr(glm::inverse(glm::transpose(MV.topMatrix()))));
+
 }
 
 void sendToPhongShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV, const vec3& lightPos, const vec3& lightCol, const BPMaterial& mat) {
@@ -533,9 +563,9 @@ static void spaceWindowWrapper(bool &dSpaceWindow, shared_ptr<EventData> &evtDat
     evtData->getSpaceWindow().w = std::clamp(evtData->getSpaceWindow().w, evtData->getMin_XYZ().x, evtData->getMax_XYZ().x); 
 }
 
-void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_mainViewportHovered,
+void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameSceneFBO, shared_ptr<EventData> &evtData, std::string& datafilepath,
-    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile) {
+    std::string &video_name, bool &recording, std::string &datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, float &particleTimeDensity) {
 
     drawGUIDockspace();
 
@@ -581,21 +611,52 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
             string newFilePath=OpenFileDialog(datadirectory);
             if(isValidFilePath(newFilePath)){
                 loadFile = true;
+                dataStreamed = false;
                 datafilepath=std::move(newFilePath);
             }
         }
         ImGui::Text("Event Frequency");    
         ImGui::SliderInt("##modFreq", (int *) &EventData::modFreq, 1, 1000);
-        EventData::modFreq = std::max((uint) 1, EventData::modFreq);
+        EventData::modFreq = std::max((uint) 1, EventData::modFreq); 
+
 
 
         // TODO: Cache recent files and state?
     ImGui::End();
 
+    // Add control scheme for streaming data
+    ImGui::Begin("Streaming");
+        ImGui::Text("Streaming File:");
+        if (ImGui::Button("Open File To Stream"))
+        {
+            // dFile = true;
+            string newFilePath = OpenFileDialog(datadirectory);
+            if (isValidFilePath(newFilePath)) {
+                datafilepath = std::move(newFilePath);
+                dataStreamed = true;
+                resetStream = true;
+                loadFile = false;
+            }
+        }
+
+        // Control z-axis dimension of box
+        ImGui::SliderFloat("Time Axis Maximum", &maxZ, 0.1f, 100000.0f);
+        
+        // Pause or resume stream
+        if (ImGui::Button("Pause/Resume"))
+        {
+            pauseStream = !pauseStream;
+        }
+
+        // Control particle density along time axis
+        ImGui::SliderFloat("Particle Time Density", &particleTimeDensity, 0.01f, 1.0f);
+
+    ImGui::End();
+
     ImGui::Begin("Info");
         ImGui::Text("Camera (World): (%.3f, %.3f, %.3f)", cam_pos.x, cam_pos.y, cam_pos.z);
         ImGui::Separator();
-        ImGui::SliderFloat("Particle Scale", &particle_scale, 0.1f, 2.5f);
+        ImGui::SliderFloat("Particle Scale", &particle_scale, 0.1f, 6.0f);
         ImGui::Separator();
         ImGui::ColorEdit3("Negative Polarity Color", (float *) &evtData->getNegColor());
         ImGui::ColorEdit3("Positive Polarity Color", (float *) &evtData->getPosColor());
@@ -652,7 +713,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
             float frameLength_T = evtData->getTimeWindow_R() - evtData->getTimeWindow_L();
             dProcessingOptions |= ImGui::SliderFloat(unitLabels[shutterInitial].c_str(), &evtData->getTimeShutterWindow_L(), 0, frameLength_T, "%.4f"); 
             dProcessingOptions |= ImGui::SliderFloat(unitLabels[shutterFinal].c_str(), &evtData->getTimeShutterWindow_R(), 0, frameLength_T, "%.4f");  
-            
+
             evtData->getTimeShutterWindow_L() = std::clamp(evtData->getTimeShutterWindow_L(), 0.0f, frameLength_T);
             evtData->getTimeShutterWindow_R() = std::clamp(evtData->getTimeShutterWindow_R(), evtData->getTimeShutterWindow_L(), frameLength_T);
         }

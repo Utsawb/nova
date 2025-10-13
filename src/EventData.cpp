@@ -16,7 +16,7 @@ EventData::EventData() : camera_resolution(0.0f), diffScale(0.0f),
     timeShutterWindow_L(0.0f), timeShutterWindow_R(0.0f), eventShutterWindow_L(0),
     eventShutterWindow_R(0), spaceWindow(0.0f), minXYZ(std::numeric_limits<float>::max()),
     maxXYZ(std::numeric_limits<float>::lowest()), center(0.0f), negColor({1.0f, 0.0f, 0.0f}), 
-    posColor({0.0f, 1.0f, 0.0f}), isPositiveOnly(false), unitType(1) {}
+    posColor({0.0f, 1.0f, 0.0f}), isPositiveOnly(false), unitType(1), liveStreamReader() {}
 
 EventData::~EventData() {
     if (instVBO) {
@@ -28,6 +28,9 @@ EventData::~EventData() {
 void EventData::reset() {
     // TODO: Do we want to free the memory? Because if we go from like 100'000 particles -> 10 we should. Otherwise, better to keep
     evtParticles.clear();
+
+    streamEvtParticles.clear(); // Clear stream particles, might move to another method later
+
     earliestTimestamp = 0;
     latestTimestamp = 0;
     minXYZ = glm::vec3(std::numeric_limits<float>::max());
@@ -45,7 +48,7 @@ void EventData::reset() {
 
 void EventData::initInstancing(Program &progInst) {
     // Generate / initialize a VBO here. GL_STATIC_DRAW may be better, should test
-    genVBO(instVBO, evtParticles.size() * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
+    genVBO(instVBO, (evtParticles.size()) * sizeof(glm::vec4), GL_DYNAMIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, instVBO);
     GLint aInstPos = progInst.getAttribute("aInstPos");
@@ -56,7 +59,7 @@ void EventData::initInstancing(Program &progInst) {
     glVertexAttribDivisor(aInstPos, 1); // Update once per instance (not per vertex)
     
     // Pass in the existing data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, evtParticles.size() * sizeof(glm::vec4), evtParticles.data());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (evtParticles.size()) * sizeof(glm::vec4), evtParticles.data());
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -117,6 +120,137 @@ void EventData::initParticlesFromFile(const std::string &filename) {
     printf("Loaded %zu particles from %s\n", evtParticles.size(), filename.c_str());
 }
 
+void EventData::resetStream()
+{
+    liveStreamReader.reset();
+}
+
+int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, bool pauseStream, float particleTimeDensity)
+{
+
+    int returnCode = 0;
+
+    // Ensures reader is persistent across multiple function calls
+    if (!liveStreamReader)
+    {
+        returnCode = 1; // Indicates that this is the first batch being captured
+        reset();
+        liveStreamReader = std::make_shared<dv::io::MonoCameraRecording>(filename);
+    }
+
+    dv::io::MonoCameraRecording& reader(*liveStreamReader);
+    camera_resolution = glm::vec2(reader.getEventResolution().value().width, reader.getEventResolution().value().height);
+
+
+    // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
+    uint counter = 0; // Necessary for modFreq;
+    if (reader.isRunning("events") && !pauseStream) {
+
+        // Read frame data, might move to its own method
+        if (const auto frameData = reader.getNextFrame(); frameData.has_value())
+        {
+
+            long long frameRelativeTimestamp = frameData->timestamp - earliestTimestamp; // Subtract earliest timestamp of event data to get relative timestamp
+
+            if (frameRelativeTimestamp >= 0) // Positive timestamp indicates frame data can be inserted into event data
+            {
+                cv::Mat out;
+                cv::cvtColor(frameData->image, out, cv::COLOR_BGR2RGB); // Convert from BGR to RGB
+    
+                streamFrameCameraData.push_back({ out.clone(), frameRelativeTimestamp}); // clone to ensure data is always continuous
+            }
+        }
+        // Read event data batch from file
+        if (const auto events = reader.getNextEventBatch(); events.has_value()) {
+            for (auto& evt : events.value()) {
+                if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
+
+                long long evtTimestamp = evt.timestamp();
+                
+                // Find earliest global time
+                if (streamEvtParticles.empty())
+                {
+                    earliestTimestamp = evtTimestamp;
+                    latestTimestamp = evtTimestamp;
+                }
+
+                // SUPPOSEDLY the last event batch and event has the latest timestamp, but not sure - so use max(...)
+                latestTimestamp = std::max(latestTimestamp, evtTimestamp);
+
+                // We can sort of "normalize" the timestamp to start at 0 this way.
+                float relativeTimestamp = static_cast<float>(evtTimestamp - earliestTimestamp);
+                glm::vec4 evt_xytp = glm::vec4(
+                    static_cast<float>(evt.x()),
+                    static_cast<float>(evt.y()),
+                    relativeTimestamp,
+                    static_cast<float>(evt.polarity()) // (float)true == 1.0f, (float)false == 0.0f
+                );
+
+                // streamEvtParticles stores streamed data with relative (normalized) timestamps
+                streamEvtParticles.push_back(evt_xytp);    
+            } 
+            
+        }
+        else
+        {
+            // code path executes when finished streaming data from file
+            returnCode = -1;
+        }
+    }
+    else
+    {
+        // code path executes when finished streaming data from file
+        returnCode = -1;
+    }
+    
+    // Hard code fixed bounding wireframe box
+    minXYZ = glm::vec3(0.0, 0.0, 0.0);
+    maxXYZ = glm::vec3(camera_resolution[0], camera_resolution[1], maxZ);
+
+    this->diffScale = 0.5f;
+
+    // Normalize the timestamp of the min/max XYZ for bounding box
+    this->minXYZ.z *= diffScale;
+    this->maxXYZ.z *= diffScale;
+    this->center = 0.5f * (minXYZ + maxXYZ);
+
+    this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
+
+    // Earliest data should show up further along the box
+    // Latest data in batch should be at zero position
+    evtParticles.clear(); // Stores the actual particles to be drawn in the box
+    for (glm::vec4 &evt_xytp : streamEvtParticles)
+    {
+        // streamTime is adjusted time such that the latest particles show up at z = 0
+        // Accomplished by subtracting latest relative timestamp from each event particle's relative timestamp
+        float streamTime = static_cast<float>(latestTimestamp - earliestTimestamp) - evt_xytp[2];
+        streamTime *= diffScale * particleTimeDensity;
+        if (streamTime <= maxXYZ.z && streamTime >= minXYZ.z)
+        {
+            evtParticles.push_back(glm::vec4(evt_xytp[0], evt_xytp[1], streamTime, evt_xytp[3]));
+        }
+    }
+
+    // This is a patch solution. The evtParticles vector must be sorted from ascending order of timestamps to work.
+    std::reverse(evtParticles.begin(), evtParticles.end()); // Necessary to ensure digital coded exposure functionality works
+
+    frameCameraData.clear(); // Stores the actual frames to be drawn as textures in the box
+    for (auto& frameDatum : streamFrameCameraData)
+    {
+        // streamTime is adjusted time such that latest frames show up at z = 0
+        float streamTime = static_cast<float>(latestTimestamp - earliestTimestamp) - frameDatum.second;
+        streamTime *= diffScale * particleTimeDensity;
+        if (streamTime <= maxXYZ.z && streamTime >= minXYZ.z)
+        {
+            frameCameraData.push_back({ frameDatum.first, streamTime });
+        }
+    }
+
+    printf("Loaded %zu particles from %s\n", evtParticles.size(), filename.c_str());
+
+    return returnCode;
+}
+
 void EventData::initParticlesEmpty() {
     // If someone calls init again, we should always reset
     reset();
@@ -144,6 +278,97 @@ void EventData::initParticlesEmpty() {
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
 
     printf("Loaded 0 particles\n");
+}
+
+void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture)
+{
+    
+    // Draw frame data as textures
+    for(auto& imageData : frameCameraData)
+    {
+        float imageDataTimestamp = imageData.second;
+        progTexture.bind();
+        MV.pushMatrix();
+
+        // https://learnopengl.com/Getting-started/Textures
+        float squareVertices[] = {
+            this->minXYZ.x, this->minXYZ.y, imageDataTimestamp, 0.0f, 0.0f, // Bottom left looking down positive z axis
+            this->maxXYZ.x, this->minXYZ.y, imageDataTimestamp, 1.0f, 0.0f, // Bottom right
+            this->maxXYZ.x, this->maxXYZ.y, imageDataTimestamp, 1.0f, 1.0f, // Top right
+            this->minXYZ.x, this->maxXYZ.y, imageDataTimestamp, 0.0f, 1.0f // Top left
+        };
+
+        unsigned int textureVAO{};
+        glGenVertexArrays(1, &textureVAO);
+
+        // Bind VAO and update VBO
+        glBindVertexArray(textureVAO);
+        // Generate square vertex buffer
+        unsigned int squareVBO{};
+        glGenBuffers(1, &squareVBO);
+
+       
+
+        // Bind and pass square vertex buffer to vertex shader as attribute
+        glBindBuffer(GL_ARRAY_BUFFER, squareVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(squareVertices), squareVertices, GL_STATIC_DRAW);
+
+        // Send as attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+
+        // Send as attribute
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(progTexture.getAttribute("aTexCoordinate"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        // Generate element buffer
+        unsigned int EBOIndices[] = { 0, 1, 2, 0, 2, 3 };
+        unsigned int EBOId{};
+        glGenBuffers(1, &EBOId);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(EBOIndices), EBOIndices, GL_STATIC_DRAW);
+
+        
+    
+
+        unsigned int textureId{};
+        // Generate and attach texture
+        glGenTextures(1, &textureId);
+
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+       
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Tightly packed due to the fact that image data was cloned
+                                               // https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html#a03d2a2570d06dcae378f788725789aa4
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageData.first.cols, imageData.first.rows, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData.first.data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+
+        sendToTextureShader(progTexture, P, MV);
+
+        glDrawElements(GL_TRIANGLES, sizeof(EBOIndices), GL_UNSIGNED_INT, 0);
+
+        MV.popMatrix();
+        progTexture.unbind();
+
+        glDeleteVertexArrays(1, &textureVAO);
+        glDeleteBuffers(1, &squareVBO);
+        glDeleteBuffers(1, &EBOId);
+        glDeleteTextures(1, &textureId);
+
+
+        
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
 
 // TODO: Move precalculable things to an init
@@ -271,6 +496,8 @@ void EventData::draw(MatrixStack &MV, MatrixStack &P, Program &prog,
 void EventData::drawInstanced(MatrixStack &MV, MatrixStack &P, Program &progInst, Program &progBasic,
     float particleScale) {
     
+    initInstancing(progInst); // Necessary to generate new vertex array for streamed data
+
     if (evtParticles.empty() || modFreq == 0) {
         return;
     }
@@ -283,6 +510,7 @@ void EventData::drawInstanced(MatrixStack &MV, MatrixStack &P, Program &progInst
     GLint aInstPos = progInst.getAttribute("aInstPos");
     if (aInstPos >= 0) {
         glEnableVertexAttribArray(aInstPos);
+        
         glVertexAttribPointer(aInstPos, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), nullptr);
         glVertexAttribDivisor(aInstPos, 1);
     }
@@ -374,22 +602,25 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
         std::vector<float> localTotal;
         #pragma omp for reduction(+ : rollingX) reduction(+ : rollingY)
         for (int i = eventBound_L; i <= eventBound_R; ++i) {
-            float x(evtParticles[i].x), y(evtParticles[i].y), t(evtParticles[i].z);
-            float polarity = evtParticles[i].w;
+            if (i < evtParticles.size()) // IDK if this will break the digital coded exposure, but this crashes often due to out of bounds
+            {
+                float x(evtParticles[i].x), y(evtParticles[i].y), t(evtParticles[i].z);
+                float polarity = evtParticles[i].w;
 
-            contributionFunc->setX(x);
-            contributionFunc->setY(y);
-            contributionFunc->setT(t);
-            contributionFunc->setPolarity(polarity);
+                contributionFunc->setX(x);
+                contributionFunc->setY(y);
+                contributionFunc->setT(t);
+                contributionFunc->setPolarity(polarity);
 
-            if (polarity == 1 || not isPositiveOnly) {
-                if (within_inc(x, spaceWindow.w, spaceWindow.y) && within_inc(y, spaceWindow.x, spaceWindow.z)) {
-                    localTotal.push_back(x);
-                    localTotal.push_back(y);
-                    localTotal.push_back(contributionFunc->getWeight());
+                if (polarity == 1 || not isPositiveOnly) {
+                    if (within_inc(x, spaceWindow.w, spaceWindow.y) && within_inc(y, spaceWindow.x, spaceWindow.z)) {
+                        localTotal.push_back(x);
+                        localTotal.push_back(y);
+                        localTotal.push_back(contributionFunc->getWeight());
 
-                    rollingX += x;
-                    rollingY += y;
+                        rollingX += x;
+                        rollingY += y;
+                    }
                 }
             }
         }

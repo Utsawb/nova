@@ -29,7 +29,10 @@ bool g_isMainviewportHovered(false);
 bool g_keyToggles[256] = {false};
 float g_fps, g_lastRenderTime(0.0f);
 string g_resourceDir, g_dataFilepath, g_dataDir;
-bool loadFile;
+bool g_loadFile;
+bool g_dataStreamed; // Global to track if data is being streamed
+
+bool g_resetStream; // Set to reset the stream on next render
 
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;
@@ -41,7 +44,7 @@ FILE *ffmpeg;
 vector<unsigned char> pixels;
 
 Mesh g_meshSphere;
-Program g_progBasic, g_progInst, g_progFrame;
+Program g_progBasic, g_progInst, g_progFrame, g_progTexture; // g_progTexture is texture shader
 
 glm::vec3 g_lightPos, g_lightCol;
 BPMaterial g_lightMat;
@@ -49,7 +52,38 @@ BPMaterial g_lightMat;
 // TODO: Maybe we want unique_ptr
 shared_ptr<EventData> g_eventData;
 
-float g_particleScale(0.75f);
+float g_particleScale(3.0f);
+
+float g_maxZ{ 10000.0f }; // Control z axis when streaming
+bool g_pauseStream{ false }; // Pause streaming
+float g_particleTimeDensity{ 0.05f }; // Controls particle scaling along z (time) axis
+
+
+// Move this stuff into a function since it is called 3 times
+static void initCamera()
+{
+    // Camera //
+    g_camera = Camera();
+    g_camera.setInitPos(300.0f, 100.0f, 600.0f);
+    g_camera.setEvtCenter(g_eventData->getCenter());
+}
+
+// New function for streaming data from a file
+static void streamEvtDataAndCamera() {
+
+    if (g_resetStream)
+    {
+        g_eventData->resetStream();
+        g_resetStream = false;
+        g_pauseStream = false; // If stream is paused when resetting, user gets no output
+    }
+
+    int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ, g_pauseStream, g_particleTimeDensity) };
+    if (retVal == 1) // Indicates first time batch, need to set up camera
+    {
+        initCamera();
+    }
+}
 
 static void updateEvtDataAndCamera() {
     // Load .aedat events into EventData object //
@@ -57,12 +91,9 @@ static void updateEvtDataAndCamera() {
     g_eventData->initParticlesFromFile(g_dataFilepath);
     g_eventData->initInstancing(g_progInst);
 
-    // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void initEvtDataAndCamera() {
@@ -72,11 +103,9 @@ static void initEvtDataAndCamera() {
     g_eventData->initInstancing(g_progInst);
 
     // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void init() {
@@ -112,6 +141,9 @@ static void init() {
         g_progBasic = genPhongProg(g_resourceDir);
         g_progInst = genInstProg(g_resourceDir);
         g_progFrame = genBasicProg(g_resourceDir); 
+
+        // Texture shader
+        g_progTexture = genTextureProg(g_resourceDir);
 
     // Initialize data + camera and set its center //
         initEvtDataAndCamera();
@@ -175,6 +207,9 @@ static void render() {
         g_eventData->drawInstanced(MV, P, g_progInst,
             g_progBasic, g_particleScale
         );
+    
+    // Draw frame data
+    g_eventData->drawFrameData(MV, P, g_progTexture);
 
     P.popMatrix();
     MV.popMatrix();
@@ -243,8 +278,8 @@ static void render() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
-        drawGUI(g_camera, g_fps, g_particleScale, g_isMainviewportHovered, g_mainSceneFBO, 
-            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, loadFile);
+        drawGUI(g_camera, g_fps, g_particleScale, g_maxZ, g_isMainviewportHovered, g_mainSceneFBO, 
+            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_particleTimeDensity);
     
     // Render ImGui //
         ImGui::Render();
@@ -353,17 +388,24 @@ int main(int argc, char** argv) {
 
     string curFilepath = g_dataFilepath;
     while (!glfwWindowShouldClose(g_window)) {
-        render();
         
-        if (loadFile) {
+        // This path should execute when reading file
+        if (g_loadFile) {
             curFilepath = g_dataFilepath;
             updateEvtDataAndCamera();
         }
 
+        // This path should execute when streaming from file
+        if (g_dataStreamed)
+        {
+            streamEvtDataAndCamera();
+        }
+        
         glfwSwapBuffers(g_window);
         glfwPollEvents();
 
         video_output();
+        render();
     }
 
     // Cleanup //
