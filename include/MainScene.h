@@ -12,25 +12,26 @@
 /**
  * @brief Base class for docking viewports using a Framebuffer Object (FBO) used for render to texture.
  */
-class BaseViewportFBO {
+class BaseViewportFBO
+{
 public:
     BaseViewportFBO();
     ~BaseViewportFBO();
 
     /**
      * @brief Initialize the FBO with the specifications of the GLFW frame.
-     * @param width 
-     * @param height 
-     * @param frame 
+     * @param width
+     * @param height
+     * @param frame
      * @return bool true if successful
      */
     bool initialize(int width, int height, bool frame = false);
 
     /**
      * @brief Resizes / reinitializes with the callback on user resize
-     * @param width 
-     * @param height 
-     * @param frame 
+     * @param width
+     * @param height
+     * @param frame
      */
     void resize(int width, int height, bool frame = false);
 
@@ -50,7 +51,7 @@ public:
 
     bool getDirtyBit() { return dirtyBit; }
     void setDirtyBit(bool x) { dirtyBit = x; }
-    
+
 private:
     GLuint fbo;
     GLuint colorTexture;

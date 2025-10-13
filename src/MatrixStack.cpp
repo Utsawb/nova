@@ -1,7 +1,7 @@
 /*
-    Original code from Dr. Shinjiro Sueda's computer graphics and animation courses.
+	Original code from Dr. Shinjiro Sueda's computer graphics and animation courses.
 
-    Retrieved and modified by Andrew Leach, 2025
+	Retrieved and modified by Andrew Leach, 2025
 */
 #include "MatrixStack.h"
 
@@ -17,7 +17,7 @@ using namespace std;
 
 MatrixStack::MatrixStack()
 {
-	mstack = make_shared< stack<glm::mat4> >();
+	mstack = make_shared<stack<glm::mat4>>();
 	mstack->push(glm::mat4(1.0));
 }
 
@@ -97,17 +97,21 @@ const glm::mat4 &MatrixStack::topMatrix() const
 
 void MatrixStack::print(const glm::mat4 &mat, const char *name)
 {
-	if(name) {
+	if (name)
+	{
 		printf("%s = [\n", name);
 	}
-	for(int i = 0; i < 4; ++i) {
-		for(int j = 0; j < 4; ++j) {
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
 			// mat[j] returns the jth column
 			printf("%- 5.2f ", mat[j][i]);
 		}
 		printf("\n");
 	}
-	if(name) {
+	if (name)
+	{
 		printf("];");
 	}
 	printf("\n");

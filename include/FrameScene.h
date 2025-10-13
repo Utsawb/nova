@@ -4,28 +4,29 @@
 
 /*
     Derived class of BaseViewportFBO.
-    Includes attributes and members (getters/setters) specifically relating to the digital 
+    Includes attributes and members (getters/setters) specifically relating to the digital
     coded exposure viewport.
 */
 
 /**
  * @brief Derived class of BaseViewportFBO. This class is used to render the digital coded exposure viewport.
  */
-class FrameViewportFBO : public BaseViewportFBO {
+class FrameViewportFBO : public BaseViewportFBO
+{
 public:
     FrameViewportFBO() : BaseViewportFBO::BaseViewportFBO(), morlet(false), pca(false),
-        autoUpdate(false), freq(0.01f), fps(0.0f), 
-        framePeriod_T(0.0f), framePeriod_E(0)  {}
+                         autoUpdate(false), freq(0.01f), fps(0.0f),
+                         framePeriod_T(0.0f), framePeriod_E(0) {}
     ~FrameViewportFBO() {}
 
     /**
      * @brief Calls BaseViewportFBO's initialize function and specifies the correct datatype to be used
-     * @param inputWidth 
-     * @param inputHeight 
+     * @param inputWidth
+     * @param inputHeight
      * @return boolean whether initialization succeeded
      */
     bool initialize(int inputWidth, int inputHeight) { return BaseViewportFBO::initialize(inputWidth, inputHeight, true); };
-    
+
     /**
      * @brief Used by utils/drawGUI to allow for changing back into time from specified unit of time
      * @param factor controls which unit the attributes are transformed from
@@ -45,8 +46,8 @@ public:
     float &getFramePeriod_T() { return framePeriod_T; }
     uint &getFramePeriod_E() { return framePeriod_E; }
 
-    float getLastRenderTime() const { return lastRenderTime; } 
-    void setLastRenderTime(float x) { lastRenderTime = x; } 
+    float getLastRenderTime() const { return lastRenderTime; }
+    void setLastRenderTime(float x) { lastRenderTime = x; }
 
     static const int MANUAL_UPDATE = 0;
     static const int EVENT_AUTO_UPDATE = 1;

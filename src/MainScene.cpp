@@ -4,21 +4,26 @@
 
 BaseViewportFBO::BaseViewportFBO() : fbo(0), colorTexture(0), depthRBO(0), width(0), height(0), dirtyBit(false) {}
 
-BaseViewportFBO::~BaseViewportFBO() {
-    if (fbo != 0) {
+BaseViewportFBO::~BaseViewportFBO()
+{
+    if (fbo != 0)
+    {
         glDeleteFramebuffers(1, &fbo);
     }
-    if (colorTexture != 0) {
+    if (colorTexture != 0)
+    {
         glDeleteTextures(1, &colorTexture);
     }
-    if (depthRBO != 0) {
+    if (depthRBO != 0)
+    {
         glDeleteRenderbuffers(1, &depthRBO);
     }
 }
 
-bool BaseViewportFBO::initialize(int w, int h, bool frame) {
+bool BaseViewportFBO::initialize(int w, int h, bool frame)
+{
     dirtyBit = true;
-    
+
     width = w;
     height = h;
 
@@ -28,13 +33,15 @@ bool BaseViewportFBO::initialize(int w, int h, bool frame) {
     glGenTextures(1, &colorTexture);
     glBindTexture(GL_TEXTURE_2D, colorTexture);
 
-    if (frame) {
+    if (frame)
+    {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height,
-            0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); // Note: GL_R32F possible if color does not change
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); // Note: GL_R32F possible if color does not change
     }
-    else { // TODO ask if better to just pick higher resolution
+    else
+    { // TODO ask if better to just pick higher resolution
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                    0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -48,7 +55,8 @@ bool BaseViewportFBO::initialize(int w, int h, bool frame) {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                               GL_RENDERBUFFER, depthRBO);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
         std::cerr << __LINE__ << ":" << __FILE__ << ": Framebuffer initialization failed" << std::endl;
         return false;
     }
@@ -56,18 +64,22 @@ bool BaseViewportFBO::initialize(int w, int h, bool frame) {
     return true;
 }
 
-void BaseViewportFBO::resize(int w, int h, bool frame) { // FIXME use overriding/hiding
+void BaseViewportFBO::resize(int w, int h, bool frame)
+{ // FIXME use overriding/hiding
     initialize(w, h, frame);
 }
 
-void BaseViewportFBO::bind() const {
+void BaseViewportFBO::bind() const
+{
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 }
 
-void BaseViewportFBO::unbind() const {
+void BaseViewportFBO::unbind() const
+{
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-GLuint BaseViewportFBO::getColorTexture() const {
+GLuint BaseViewportFBO::getColorTexture() const
+{
     return colorTexture;
 }

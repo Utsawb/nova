@@ -5,9 +5,9 @@
 //
 
 /*
-    Original code from Dr. Shinjiro Sueda's computer graphics and animation courses.
+	Original code from Dr. Shinjiro Sueda's computer graphics and animation courses.
 
-    Retrieved and modified by Andrew Leach, 2025
+	Retrieved and modified by Andrew Leach, 2025
 */
 
 #pragma once
@@ -32,7 +32,8 @@ std::string NumberToString(T x)
 #define GET_FILE_LINE (std::string(__FILE__) + ":" + NumberToString(__LINE__)).c_str()
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace GLSL {
+namespace GLSL
+{
 
 	void checkVersion();
 	void checkError(const char *str = 0);

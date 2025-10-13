@@ -18,61 +18,62 @@
 
 class MatrixStack;
 
-
 /**
  * @brief Handler class for movement, modelview and projection matrices, as well as user event callbacks.
  */
-class Camera {
-    enum {
-		ROTATE = 0,
-		TRANSLATE,
-		SCALE
-	};
-	
-    public:
-        Camera();
-        ~Camera();
-        
-        void setEvtCenter(const glm::vec3 &center);
-        void setInitPos(float x, float y, float z);
-        void setForward(const glm::vec3 &dir);
-        glm::vec3 calcForward() const;
+class Camera
+{
+    enum
+    {
+        ROTATE = 0,
+        TRANSLATE,
+        SCALE
+    };
 
-        void zoom(float amt);
-        void mouseClicked(float x, float y, bool shift, bool ctrl, bool alt);
-        void mouseMoved(float x, float y);
+public:
+    Camera();
+    ~Camera();
 
-        glm::mat4 calcLookAt() const;
+    void setEvtCenter(const glm::vec3 &center);
+    void setInitPos(float x, float y, float z);
+    void setForward(const glm::vec3 &dir);
+    glm::vec3 calcForward() const;
 
-        void applyProjectionMatrix(MatrixStack& P) const;
-        void applyOrthoMatrix(MatrixStack& P) const;
-        void applyViewMatrix(MatrixStack& MV) const;
-        void applyCameraMatrix(MatrixStack& MV) const;
+    void zoom(float amt);
+    void mouseClicked(float x, float y, bool shift, bool ctrl, bool alt);
+    void mouseMoved(float x, float y);
 
-        glm::vec3 pos;
-        float yaw;
-        float pitch;
-        float aspect;
-        glm::vec3 translations;
-    private:
-        float t_factor;
-        float r_factor;
-        float zoom_factor;
-        float scroll_zoom_factor;
+    glm::mat4 calcLookAt() const;
 
-        float fovy;
-        float znear;
-        float zfar;
+    void applyProjectionMatrix(MatrixStack &P) const;
+    void applyOrthoMatrix(MatrixStack &P) const;
+    void applyViewMatrix(MatrixStack &MV) const;
+    void applyCameraMatrix(MatrixStack &MV) const;
 
-        glm::vec2 rotations;
-        // glm::vec3 translations;
-        glm::vec2 mousePrev;
-        
-        // Center of bounding box
-        glm::vec3 evt_center;
+    glm::vec3 pos;
+    float yaw;
+    float pitch;
+    float aspect;
+    glm::vec3 translations;
 
-        int state;
+private:
+    float t_factor;
+    float r_factor;
+    float zoom_factor;
+    float scroll_zoom_factor;
+
+    float fovy;
+    float znear;
+    float zfar;
+
+    glm::vec2 rotations;
+    // glm::vec3 translations;
+    glm::vec2 mousePrev;
+
+    // Center of bounding box
+    glm::vec3 evt_center;
+
+    int state;
 };
-
 
 #endif // CAMERA_H

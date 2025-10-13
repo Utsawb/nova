@@ -35,11 +35,12 @@
 #include "Camera.h"
 #include "MatrixStack.h"
 #include "Program.h"
+#include "ComputeProgram.h"
 #include "Mesh.h"
 #include "BPMaterial.h"
 #include "EventData.h"
 #include "MainScene.h"
-#include "frameScene.h"
+#include "FrameScene.h"
 #include "ContributionFunc.h"
 
 // UTILS //
