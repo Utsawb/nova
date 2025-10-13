@@ -181,12 +181,12 @@ class EventData {
         // TODO: Might be better to just store a std::bitset for polarity, and something dynamic like a color
         // indicator for a (although we would need a vec3 for a full RGB)
         std::vector<glm::vec4> evtParticles; // x, y, t, polarity (false=0.0, true=1.0), stores particles to be drawn
-        std::vector<glm::vec4> streamEvtParticles; // event particles captured in a stream, stores particles with relative timestamps
+        std::deque<glm::vec4> streamEvtParticles; // event particles captured in a stream, stores particles with relative timestamps
         
         // WARNING: do not try to destroy streamFrameCameraData and then use frameCameraData.
         // frameCameraData contains shallow copies of cv::Mat from streamFrameCameraData.
         // This is bad practice but it works for now...
-        std::vector<std::pair<cv::Mat, float>> streamFrameCameraData; // Camera frame data, first pair element contains pointer to image data, second contains relative time
+        std::deque<std::pair<cv::Mat, float>> streamFrameCameraData; // Camera frame data, first pair element contains pointer to image data, second contains relative time
         std::vector<std::pair<cv::Mat, float>> frameCameraData; // Stores frame data to be drawn with adjusted time
 
         long long earliestTimestamp;

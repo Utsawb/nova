@@ -135,13 +135,12 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     {
         returnCode = 1; // Indicates that this is the first batch being captured
         reset();
-        liveStreamReader = std::make_shared<dv::io::MonoCameraRecording>(filename);
+        liveStreamReader = std::make_shared<dv::io::MonoCameraRecording>(filename); 
+        camera_resolution = glm::vec2(liveStreamReader -> getEventResolution().value().width, liveStreamReader -> getEventResolution().value().height);
     }
 
     dv::io::MonoCameraRecording& reader(*liveStreamReader);
-    camera_resolution = glm::vec2(reader.getEventResolution().value().width, reader.getEventResolution().value().height);
-
-
+   
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
     if (reader.isRunning("events") && !pauseStream) {
@@ -215,6 +214,31 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     this->center = 0.5f * (minXYZ + maxXYZ);
 
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
+
+    // Memory management for event data, cull old data from stream
+    size_t evtMaxElements{ std::min(evtParticles.max_size(), streamEvtParticles.max_size()) };
+    //size_t evtMaxElements{ 1000};
+    if (streamEvtParticles.size() >= static_cast<size_t>(0.8 * evtMaxElements)) // If there are more than 90% max number of events
+    {
+        // Ensures elements lower bound is met no matter the condition
+        while (streamEvtParticles.size() > static_cast<size_t>(0.5 * evtMaxElements))
+        {
+            streamEvtParticles.erase(streamEvtParticles.begin(), streamEvtParticles.begin() + static_cast<size_t>(0.3 * evtMaxElements)); // Should bring number of elements down to 50% of max elements
+        }
+    }
+       
+    // Memory management for frame data
+    size_t frameMaxElements{ std::min(frameCameraData.max_size(), streamFrameCameraData.max_size())};
+    //size_t frameMaxElements{ 10 };
+    if (streamFrameCameraData.size() >= static_cast<size_t>(0.8 * frameMaxElements))
+    {
+        while (streamFrameCameraData.size() > static_cast<size_t>(0.5 * frameMaxElements))
+        {
+            streamFrameCameraData.erase(streamFrameCameraData.begin(), streamFrameCameraData.begin() + static_cast<size_t>(0.3 * frameMaxElements));
+        }
+    }
+    //cout << "Test memory management: " << streamEvtParticles.size() << " " << streamFrameCameraData.size() << endl;
+
 
     // Earliest data should show up further along the box
     // Latest data in batch should be at zero position
