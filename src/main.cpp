@@ -83,6 +83,7 @@ static void streamEvtDataAndCamera() {
     int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ * EventData::TIME_CONVERSION, g_pauseStream) };
     if (retVal == 1) // Indicates first time batch, need to set up camera
     {
+        g_eventData->setResourceDir(g_resourceDir);
         initCamera();
     }
 }
@@ -191,6 +192,9 @@ static void render() {
 
     // Update particle time density
     g_eventData->setParticleTimeDensity(g_particleTimeDensity);
+
+    // Update isStreaming
+    g_eventData->setIsStreaming(g_dataStreamed);
 
     g_mainSceneFBO.bind();
     glViewport(0, 0, width, height);
