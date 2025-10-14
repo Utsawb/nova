@@ -296,13 +296,10 @@ static void video_output() {
 
 int main(int argc, char** argv) {
     // resources/ data/ 
-    //if (argc < 3) {
-    //    cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
-    //    return 0;
-    //}
-
-    g_resourceDir = "C:/Users/utsaw/Documents/nova/resources/";
-    g_dataDir = "../../data/";
+    if (argc < 3) {
+       cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
+       return 0;
+    }
 
     glfwSetErrorCallback(error_callback);
 
