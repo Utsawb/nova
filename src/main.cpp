@@ -56,7 +56,7 @@ shared_ptr<EventData> g_eventData;
 
 float g_particleScale(3.0f);
 
-float g_maxZ{ 10000.0f }; // Control z axis when streaming
+float g_maxZ{ 1000.0f }; // Control z axis when streaming
 bool g_pauseStream{ false }; // Pause streaming
 float g_particleTimeDensity{ 0.05f }; // Controls particle scaling along z (time) axis
 
@@ -80,7 +80,7 @@ static void streamEvtDataAndCamera() {
         g_pauseStream = false; // If stream is paused when resetting, user gets no output
     }
 
-    int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ, g_pauseStream, g_particleTimeDensity) };
+    int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ * EventData::TIME_CONVERSION, g_pauseStream) };
     if (retVal == 1) // Indicates first time batch, need to set up camera
     {
         initCamera();
@@ -187,6 +187,9 @@ static void render() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
+    // Update particle time density
+    g_eventData->setParticleTimeDensity(g_particleTimeDensity);
+
     g_mainSceneFBO.bind();
     glViewport(0, 0, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -211,7 +214,7 @@ static void render() {
         );
     
     // Draw frame data
-    if (g_showFrameData)
+    if (g_showFrameData && g_dataStreamed)
     {
         g_eventData->drawFrameData(MV, P, g_progTexture);
     }

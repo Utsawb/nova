@@ -103,16 +103,19 @@ void EventData::initParticlesFromFile(const std::string &filename) {
         }
     }
 
+    // Set particleTimeDensity to 1 to preserve bounding box calculations
+    this->particleTimeDensity = 1.0f;
+
     // TODO: This is arbitrary, we can should define as a constant somewhere
     // Apply scale
     this->diffScale = 5000.0f / static_cast<float>(latestTimestamp - earliestTimestamp);
     for (auto &evt : evtParticles) {
-        evt.z *= diffScale;
+        evt.z *= diffScale * particleTimeDensity;
     }
 
     // Normalize the timestamp of the min/max XYZ for bounding box
-    this->minXYZ.z *= diffScale;
-    this->maxXYZ.z *= diffScale;
+    this->minXYZ.z *= diffScale * particleTimeDensity;
+    this->maxXYZ.z *= diffScale * particleTimeDensity;
     this->center = 0.5f * (minXYZ + maxXYZ);
     
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
@@ -125,7 +128,7 @@ void EventData::resetStream()
     liveStreamReader.reset();
 }
 
-int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, bool pauseStream, float particleTimeDensity)
+int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, bool pauseStream)
 {
 
     int returnCode = 0;
@@ -209,8 +212,8 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     this->diffScale = 0.5f;
 
     // Normalize the timestamp of the min/max XYZ for bounding box
-    this->minXYZ.z *= diffScale;
-    this->maxXYZ.z *= diffScale;
+    this->minXYZ.z *= diffScale * particleTimeDensity;
+    this->maxXYZ.z *= diffScale * particleTimeDensity;
     this->center = 0.5f * (minXYZ + maxXYZ);
 
     this->spaceWindow = glm::vec4(minXYZ.y, maxXYZ.x, maxXYZ.y, minXYZ.x);
@@ -220,7 +223,7 @@ int EventData::streamParticlesFromFile(const std::string& filename, float maxZ, 
     //size_t evtMaxElements{ 1000};
     if (streamEvtParticles.size() >= static_cast<size_t>(0.8 * evtMaxElements)) // If there are more than 90% max number of events
     {
-        // Ensures elements lower bound is met no matter the condition
+        // Ensures upper bound is met no matter the condition
         while (streamEvtParticles.size() > static_cast<size_t>(0.5 * evtMaxElements))
         {
             streamEvtParticles.erase(streamEvtParticles.begin(), streamEvtParticles.begin() + static_cast<size_t>(0.3 * evtMaxElements)); // Should bring number of elements down to 50% of max elements
@@ -743,7 +746,7 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
 }
 
 void EventData::normalizeTime() {
-    float factor = diffScale * TIME_CONVERSION;
+    float factor = diffScale * particleTimeDensity * TIME_CONVERSION;
     minXYZ.z *= factor;
     maxXYZ.z *= factor;
     timeWindow_L *= factor;
@@ -753,7 +756,7 @@ void EventData::normalizeTime() {
 }
 
 void EventData::oddizeTime() {
-    float factor = diffScale * TIME_CONVERSION;
+    float factor = diffScale * particleTimeDensity * TIME_CONVERSION;
     minXYZ.z /= factor;
     maxXYZ.z /= factor;
     timeWindow_L /= factor;

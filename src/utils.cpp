@@ -640,7 +640,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         }
 
         // Control z-axis dimension of box
-        ImGui::SliderFloat("Time Axis Maximum", &maxZ, 0.1f, 100000.0f);
+        ImGui::SliderFloat("Time Axis Maximum (ms)", &maxZ, 0.1f, 10000.0f);
         
         // Pause or resume stream
         if (ImGui::Button("Pause/Resume"))
@@ -688,7 +688,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         ImGui::Separator();
 
         // Windows
-        float normFactor = evtData->getDiffScale() * EventData::TIME_CONVERSION;
+        float normFactor = evtData->getDiffScale() * evtData->getParticleTimeDensity() * EventData::TIME_CONVERSION;
         evtData->oddizeTime();
         frameSceneFBO.oddizeTime(normFactor);
 

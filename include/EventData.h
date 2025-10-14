@@ -56,9 +56,12 @@ class EventData {
 
         /**
          * @brief Streams particles from a file in a streaming manner. The file should be in the format aedat4.
+         * @param filename
+         * @param maxZ
+         * @param pauseStream
          * @return -1 for finished, 0 for continuing, 1 for first batch received
          */
-        int streamParticlesFromFile(const std::string &filename, float maxZ, bool pauseStream, float particleTimeDensity);
+        int streamParticlesFromFile(const std::string &filename, float maxZ, bool pauseStream);
 
         /**
          * @brief Initializes the EventData object in an empty state; upon initialization, no particles are loaded.
@@ -66,7 +69,11 @@ class EventData {
         void initParticlesEmpty();
 
         /**
-         *
+         * @brief Draws frame camera inside box. Frame data that is drawn is stored
+         *        in member variable frameCameraData.
+         * @param MV
+         * @param P
+         * @param progTexture
          */
         void drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture);
 
@@ -170,6 +177,9 @@ class EventData {
         glm::vec3 &getNegColor() { return negColor; }
         glm::vec3 &getPosColor() { return posColor; }
 
+        void setParticleTimeDensity(float _particleTimeDensity) { this->particleTimeDensity = _particleTimeDensity; }
+        float getParticleTimeDensity() { return particleTimeDensity; }
+        
         static inline int TIME_CONVERSION; 
         static const int TIME_SHUTTER = 0; // values must match ImGui::Combo order in utils.cpp
         static const int EVENT_SHUTTER = 1;
@@ -177,6 +187,8 @@ class EventData {
     private:
         glm::vec2 camera_resolution;
         float diffScale;
+
+        float particleTimeDensity; // Density of particles along time axis
 
         // TODO: Might be better to just store a std::bitset for polarity, and something dynamic like a color
         // indicator for a (although we would need a vec3 for a full RGB)
