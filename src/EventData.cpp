@@ -16,12 +16,32 @@ EventData::EventData() : camera_resolution(0.0f), diffScale(0.0f),
     timeShutterWindow_L(0.0f), timeShutterWindow_R(0.0f), eventShutterWindow_L(0),
     eventShutterWindow_R(0), spaceWindow(0.0f), minXYZ(std::numeric_limits<float>::max()),
     maxXYZ(std::numeric_limits<float>::lowest()), center(0.0f), negColor({1.0f, 0.0f, 0.0f}), 
-    posColor({0.0f, 1.0f, 0.0f}), isPositiveOnly(false), unitType(1), liveStreamReader() {}
+    posColor({0.0f, 1.0f, 0.0f}), isPositiveOnly(false), unitType(1), evtParticlesSSBO(0), outputDataSSBO(0), countersSSBO(0), computeInitialized(false), liveStreamReader() {}
 
 EventData::~EventData() {
     if (instVBO) {
         glDeleteBuffers(1, &instVBO);
         instVBO = 0;
+    }
+
+    if (instVBO) {
+        glDeleteBuffers(1, &instVBO);
+        instVBO = 0;
+    }
+    
+    if (evtParticlesSSBO) {
+        glDeleteBuffers(1, &evtParticlesSSBO);
+        evtParticlesSSBO = 0;
+    }
+    
+    if (outputDataSSBO) {
+        glDeleteBuffers(1, &outputDataSSBO);
+        outputDataSSBO = 0;
+    }
+    
+    if (countersSSBO) {
+        glDeleteBuffers(1, &countersSSBO);
+        countersSSBO = 0;
     }
 }
 
@@ -581,119 +601,227 @@ static inline bool within_inc(uint val, uint left, uint right) {
     return left <= val && val <= right;
 }
 
-void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool morlet, float freq, bool pca) {
-    float timeBound_L, timeBound_R; 
+void EventData::setResourceDir(const std::string &resource_dir) {
+    resourceDir = resource_dir;
+}
+
+void EventData::initComputeShader()
+{
+    if (computeInitialized)
+    {
+        return;
+    }
+
+    if (resourceDir.empty())
+    {
+        printf("Warning: resource directory not set, using default path\n");
+        resourceDir = "resources/";
+    }
+
+    computeProg.setShaderName(resourceDir + "digital_shutter.comp");
+    if (!computeProg.init())
+    {
+        printf("Failed to initialize compute shader\n");
+        return;
+    }
+
+    // Add uniforms
+    computeProg.bind();
+    computeProg.addUniform("eventBound_L");
+    computeProg.addUniform("eventBound_R");
+    computeProg.addUniform("spaceWindow");
+    computeProg.addUniform("isPositiveOnly");
+    computeProg.addUniform("useMorlet");
+    computeProg.addUniform("morletFreq");
+    computeProg.addUniform("morletCenterT");
+    computeProg.addUniform("morletH");
+    computeProg.addUniform("baseContribution");
+    computeProg.unbind();
+
+    computeInitialized = true;
+}
+
+void EventData::initComputeBuffers()
+{
+    if (evtParticles.empty())
+    {
+        return;
+    }
+
+    // Create/update event particles SSBO
+    if (evtParticlesSSBO == 0)
+    {
+        glGenBuffers(1, &evtParticlesSSBO);
+    }
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, evtParticlesSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, evtParticles.size() * sizeof(glm::vec4), 
+                 evtParticles.data(), GL_DYNAMIC_READ);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    // Create output data SSBO (max size = input size)
+    if (outputDataSSBO == 0)
+    {
+        glGenBuffers(1, &outputDataSSBO);
+    }
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputDataSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, evtParticles.size() * sizeof(glm::vec3), 
+                 nullptr, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    // Create counters SSBO (outputCount, rollingXBits, rollingYBits)
+    if (countersSSBO == 0)
+    {
+        glGenBuffers(1, &countersSSBO);
+    }
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, countersSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * sizeof(GLuint), nullptr, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    
+    GLSL::checkError(GET_FILE_LINE);
+}
+
+void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool morlet, float freq, bool pca)
+{
+    float timeBound_L, timeBound_R;
     int eventBound_L, eventBound_R;
 
     // Set up point size
-    float aspectWidth = viewport_resolution.x / static_cast<float>(camera_resolution.x); //FIXME change name camera_res
+    float aspectWidth = viewport_resolution.x / static_cast<float>(camera_resolution.x); // FIXME change name camera_res
     float aspectHeight = viewport_resolution.y / static_cast<float>(camera_resolution.y);
     glPointSize(1.0f * glm::max(aspectHeight, aspectWidth));
 
     // Generate buffers
     static GLuint VBO, VAO;
     static bool initialized = false;
-    if (!initialized) {
-        glGenBuffers(1, &VBO); 
-        glGenVertexArrays(1, &VAO); 
+    if (!initialized)
+    {
+        glGenBuffers(1, &VBO);
+        glGenVertexArrays(1, &VAO);
         initialized = true;
     }
 
     // Set up bounds
-    timeBound_L =  timeWindow_L + timeShutterWindow_L;
+    timeBound_L = timeWindow_L + timeShutterWindow_L;
     timeBound_R = timeWindow_L + timeShutterWindow_R;
     eventBound_L = eventWindow_L + eventShutterWindow_L;
     eventBound_R = eventWindow_L + eventShutterWindow_R;
 
-    // TODO fixme on god real.
-    // TODO critical section iterator and reduce totalSize
-    float rollingX(0), rollingY(0);
-    std::vector<float> total;
-    float f = freq / 1000000 / diffScale; // Not always needed but moved outside of threading to reduce divisions
-    #pragma omp parallel
+    // Initialize compute shader on first use
+    if (!computeInitialized)
     {
-        // Select contribution function
-        std::shared_ptr<BaseFunc> contributionFunc = nullptr;
-        int choice = morlet ? 1 : 0; // Can be expanded for new contribution functions
-        switch (choice) {
-            case 0:
-                contributionFunc = std::make_shared<BaseFunc>();
-                break;
-
-            case 1: 
-                float center_t = timeBound_L + (timeBound_R - timeBound_L) * 0.5f;;
-                contributionFunc = std::make_shared<MorletFunc>(f, center_t);
-                break;
-        }
-
-        std::vector<float> localTotal;
-        #pragma omp for reduction(+ : rollingX) reduction(+ : rollingY)
-        for (int i = eventBound_L; i <= eventBound_R; ++i) {
-            if (i < evtParticles.size()) // IDK if this will break the digital coded exposure, but this crashes often due to out of bounds
-            {
-                float x(evtParticles[i].x), y(evtParticles[i].y), t(evtParticles[i].z);
-                float polarity = evtParticles[i].w;
-
-                contributionFunc->setX(x);
-                contributionFunc->setY(y);
-                contributionFunc->setT(t);
-                contributionFunc->setPolarity(polarity);
-
-                if (polarity == 1 || not isPositiveOnly) {
-                    if (within_inc(x, spaceWindow.w, spaceWindow.y) && within_inc(y, spaceWindow.x, spaceWindow.z)) {
-                        localTotal.push_back(x);
-                        localTotal.push_back(y);
-                        localTotal.push_back(contributionFunc->getWeight());
-
-                        rollingX += x;
-                        rollingY += y;
-                    }
-                }
-            }
-        }
-
-        #pragma omp critical
-        {
-            total.insert(total.end(), std::make_move_iterator(localTotal.begin()), std::make_move_iterator(localTotal.end()));
-        }
+        initComputeShader();
+        initComputeBuffers();
     }
 
-    // Load data points
-    glBindVertexArray(VAO); 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, total.size() * sizeof(float), total.data(), GL_STATIC_DRAW);
+    float rollingX(0), rollingY(0);
+    float f = freq / 1000000 / diffScale;
 
-    prog.bind();
+    GLuint outputCount = 0;
+    
+    // Use GPU compute shader for event processing
+    if (computeInitialized && !evtParticles.empty() && eventBound_L <= eventBound_R)
+    {
+        // Bind SSBOs to their binding points
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, evtParticlesSSBO);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputDataSSBO);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, countersSSBO);
+        
+        // Reset counters
+        GLuint resetData[3] = {0, 0, 0};
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, countersSSBO);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, 3 * sizeof(GLuint), resetData);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    int pos = prog.getAttribute("pos");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0);
-    glVertexAttribDivisor(pos, 1);
+        // Bind compute shader and set uniforms
+        computeProg.bind();
+        
+        float center_t = timeBound_L + (timeBound_R - timeBound_L) * 0.5f;
+        
+        glUniform1i(computeProg.getUniform("eventBound_L"), eventBound_L);
+        glUniform1i(computeProg.getUniform("eventBound_R"), eventBound_R);
+        glUniform4fv(computeProg.getUniform("spaceWindow"), 1, glm::value_ptr(spaceWindow));
+        glUniform1i(computeProg.getUniform("isPositiveOnly"), isPositiveOnly ? 1 : 0);
+        glUniform1i(computeProg.getUniform("useMorlet"), morlet ? 1 : 0);
+        glUniform1f(computeProg.getUniform("morletFreq"), f);
+        glUniform1f(computeProg.getUniform("morletCenterT"), center_t);
+        glUniform1f(computeProg.getUniform("morletH"), MorletFunc::h);
+        glUniform1f(computeProg.getUniform("baseContribution"), BaseFunc::contribution);
 
-    glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
-    glUniformMatrix4fv(prog.getUniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glDrawArraysInstanced(GL_POINTS, 0, 1, static_cast<GLsizei>(total.size()));
+        // Dispatch compute shader
+        int numEvents = eventBound_R - eventBound_L + 1;
+        int numWorkGroups = (numEvents + 255) / 256; // 256 threads per work group
+        
+        GLSL::checkError(GET_FILE_LINE);
+        
+        if (numWorkGroups > 0)
+        {
+            computeProg.dispatch(numWorkGroups, 1, 1);
+        }
+        
+        GLSL::checkError(GET_FILE_LINE);
 
-    prog.unbind();
+        // Memory barrier to ensure compute shader writes are visible
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 
-    glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+        computeProg.unbind();
 
-    if (pca) {
-        // Calculate covariance
+        // Read back only the counters (small data - not a bottleneck)
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, countersSSBO);
+        GLuint counters[3];
+        glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, 3 * sizeof(GLuint), counters);
+        outputCount = counters[0];
+        rollingX = *reinterpret_cast<float*>(&counters[1]);
+        rollingY = *reinterpret_cast<float*>(&counters[2]);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    }
 
-        // TODO: inverse change? (make sure to always update when new files are used)
-        float inverseNumElems = 3.0f / total.size();
+    // Render directly from GPU buffer (no CPU readback!)
+    if (outputCount > 0)
+    {
+        glBindVertexArray(VAO);
+        
+        // Bind the SSBO as a vertex buffer - no data copy needed!
+        glBindBuffer(GL_ARRAY_BUFFER, outputDataSSBO);
+
+        prog.bind();
+
+        int pos = prog.getAttribute("pos");
+        glEnableVertexAttribArray(pos);
+        glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0);
+        glVertexAttribDivisor(pos, 1);
+
+        glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
+        glUniformMatrix4fv(prog.getUniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glDrawArraysInstanced(GL_POINTS, 0, 1, static_cast<GLsizei>(outputCount));
+
+        prog.unbind();
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    if (pca && outputCount > 0)
+    {
+        // PCA requires CPU-side data - read back only when needed
+        std::vector<glm::vec3> pcaData(outputCount);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputDataSSBO);
+        glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, outputCount * sizeof(glm::vec3), pcaData.data());
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        
+        // Calculate mean
+        float inverseNumElems = 1.0f / static_cast<float>(outputCount);
         float mean_x = rollingX * inverseNumElems;
         float mean_y = rollingY * inverseNumElems;
-        
+
+        // Calculate covariance
         float cov_x_x(0.0f), cov_x_y(0.0f), cov_y_y(0.0f);
-        #pragma omp parallel
+#pragma omp parallel
         {
-            #pragma omp for reduction(+ : cov_x_y) reduction(+ : cov_x_x) reduction(+ : cov_y_y)
-            for (int i = 0; i < (int) total.size(); i += 3) {
-                float x = total[i];
-                float y = total[i + 1];
+#pragma omp for reduction(+ : cov_x_y) reduction(+ : cov_x_x) reduction(+ : cov_y_y)
+            for (int i = 0; i < (int)outputCount; i++)
+            {
+                float x = pcaData[i].x;
+                float y = pcaData[i].y;
 
                 cov_x_y += (x - mean_x) * (y - mean_y);
                 cov_x_x += (x - mean_x) * (x - mean_x);
@@ -701,36 +829,38 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
             }
         }
 
-        inverseNumElems = 1.0f / (total.size() / 3.0f - 1);
+        inverseNumElems = 1.0f / (static_cast<float>(outputCount) - 1.0f);
         cov_x_y *= inverseNumElems;
         cov_x_x *= inverseNumElems;
         cov_y_y *= inverseNumElems;
 
-        // Matrix
+        // Eigenvalue calculation
         float a = 1;
         float b = -(cov_x_x + cov_y_y);
         float c = cov_x_x * cov_y_y - cov_x_y * cov_x_y;
 
-        float eigen1 = (-b + std::sqrt(b*b - 4 * a * c)) / (2 * a);
-        float eigen2 = (-b - std::sqrt(b*b - 4 * a * c)) / (2 * a);
+        float eigen1 = (-b + std::sqrt(b * b - 4 * a * c)) / (2 * a);
+        float eigen2 = (-b - std::sqrt(b * b - 4 * a * c)) / (2 * a);
 
-        // Eigen vectors
+        // Eigenvectors
         std::vector<glm::vec3> eigenvectors;
-        eigenvectors.push_back(std::sqrt(eigen1) * glm::normalize(glm::vec3(eigen1 - cov_y_y, cov_x_y, 1))); 
-        eigenvectors.push_back(std::sqrt(eigen2) * glm::normalize(glm::vec3(eigen2 - cov_y_y, cov_x_y, 1))); 
+        eigenvectors.push_back(std::sqrt(eigen1) * glm::normalize(glm::vec3(eigen1 - cov_y_y, cov_x_y, 1)));
+        eigenvectors.push_back(std::sqrt(eigen2) * glm::normalize(glm::vec3(eigen2 - cov_y_y, cov_x_y, 1)));
 
-        // define position of mean and eigenvectors in cameraview 
+        // Transform to camera space
+        glm::mat4 projection = glm::ortho(minXYZ.x, maxXYZ.x, minXYZ.y, maxXYZ.y);
         glm::vec4 mean_cameraspace(mean_x, mean_y, 1.0f, 1.0f);
         mean_cameraspace = projection * mean_cameraspace;
         eigenvectors.at(0) = projection * glm::vec4(eigenvectors.at(0).x, eigenvectors.at(0).y, 0.0f, 0.0f);
         eigenvectors.at(1) = projection * glm::vec4(eigenvectors.at(1).x, eigenvectors.at(1).y, 0.0f, 0.0f);
 
-        // add initial position to eigenvalues
+        // Add mean position to eigenvectors
         eigenvectors.at(0) += glm::vec3(mean_cameraspace);
         eigenvectors.at(1) += glm::vec3(mean_cameraspace);
 
+        // Draw eigenvector lines
         glDisable(GL_BLEND); // Line should be opaque
-        glLineWidth(5.0f); // Could make setable
+        glLineWidth(5.0f);   // Could make setable
         glBegin(GL_LINES);
         glColor3f(1.0f, 0.0f, 0.0f);
         glVertex3f(mean_cameraspace.x, mean_cameraspace.y, mean_cameraspace.z);
@@ -739,11 +869,11 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
         glVertex3f(mean_cameraspace.x, mean_cameraspace.y, mean_cameraspace.z);
         glVertex3f(eigenvectors[1].x, eigenvectors[1].y, 1.0f);
         glEnd();
-
     }
-	
+
     GLSL::checkError(GET_FILE_LINE);
 }
+
 
 void EventData::normalizeTime() {
     float factor = diffScale * particleTimeDensity * TIME_CONVERSION;
