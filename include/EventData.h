@@ -9,6 +9,7 @@
 #include "Program.h"
 #include "BPMaterial.h"
 #include "Mesh.h"
+#include "ComputeProgram.h"
 #include <dv-processing/io/mono_camera_recording.hpp>
 #include <memory>
 
@@ -122,6 +123,23 @@ class EventData {
         void drawFrame(Program &prog, glm::vec2 viewport_resolution, 
             bool morlet, float freq, bool pca);
 
+        
+        /**
+         * @brief Set the resource directory path for compute shader initialization
+         * @param resource_dir Path to resources directory
+         */
+        void setResourceDir(const std::string &resource_dir);
+
+        /**
+         * @brief Initialize GPU compute shader for event processing
+         */
+        void initComputeShader();
+
+        /**
+         * @brief Initialize GPU buffers for compute shader
+         */
+        void initComputeBuffers();
+
         /**
          * @brief Used by utils/drawGUI to allow for changing back into time from specified unit of time
          */
@@ -231,6 +249,14 @@ class EventData {
 
         bool isPositiveOnly;
         int unitType;
+
+        // GPU Compute resources
+        ComputeProgram computeProg;
+        GLuint evtParticlesSSBO;
+        GLuint outputDataSSBO;
+        GLuint countersSSBO;
+        bool computeInitialized;
+        std::string resourceDir;
 
         std::shared_ptr<dv::io::MonoCameraRecording> liveStreamReader;
 };

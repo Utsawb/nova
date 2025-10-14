@@ -90,6 +90,7 @@ static void streamEvtDataAndCamera() {
 static void updateEvtDataAndCamera() {
     // Load .aedat events into EventData object //
     g_eventData = make_shared<EventData>();
+    g_eventData->setResourceDir(g_resourceDir);
     g_eventData->initParticlesFromFile(g_dataFilepath);
     g_eventData->initInstancing(g_progInst);
 
@@ -103,6 +104,7 @@ static void initEvtDataAndCamera() {
     g_eventData = make_shared<EventData>();
     g_eventData->initParticlesEmpty();
     g_eventData->initInstancing(g_progInst);
+    g_eventData->setResourceDir(g_resourceDir);
 
     // Camera //
     initCamera();
@@ -118,50 +120,50 @@ static void init() {
     glEnable(GL_DEPTH_TEST);
 
     // ImGui //
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        io.Fonts->AddFontFromFileTTF(string(g_resourceDir + "/CascadiaCode.ttf").c_str(), 20.0f);
-    
-        // bbb2e9 hex R:187, G:178, B:233
-        ImGuiStyle &style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
+    io.Fonts->AddFontFromFileTTF(string(g_resourceDir + "/CascadiaCode.ttf").c_str(), 20.0f);
 
-        ImGui::StyleColorsDark(); 
-        ImGui_ImplGlfw_InitForOpenGL(g_window, true);
-        ImGui_ImplOpenGL3_Init("#version 430");
+    // bbb2e9 hex R:187, G:178, B:233
+    ImGuiStyle &style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
 
-        initImGuiStyle(style);
+    ImGui::StyleColorsDark(); 
+    ImGui_ImplGlfw_InitForOpenGL(g_window, true);
+    ImGui_ImplOpenGL3_Init("#version 430");
+
+    initImGuiStyle(style);
 
     // Shader Programs //
-        g_progBasic = genPhongProg(g_resourceDir);
-        g_progInst = genInstProg(g_resourceDir);
-        g_progFrame = genBasicProg(g_resourceDir); 
+    g_progBasic = genPhongProg(g_resourceDir);
+    g_progInst = genInstProg(g_resourceDir);
+    g_progFrame = genBasicProg(g_resourceDir); 
 
         // Texture shader
         g_progTexture = genTextureProg(g_resourceDir);
 
     // Initialize data + camera and set its center //
-        initEvtDataAndCamera();
+    initEvtDataAndCamera();
 
     // Load Shape(s) & Scene //
-        g_meshSphere.loadMesh(g_resourceDir + "sphere.obj");
-        g_meshSphere.init();
+    g_meshSphere.loadMesh(g_resourceDir + "sphere.obj");
+    g_meshSphere.init();
 
-        g_lightPos = glm::vec3(0.0f, 1000.0f, 0.0f);
-        g_lightCol = glm::vec3((187 / 255.0f), (178 / 255.0f), (233 / 255.0f));
-        g_lightMat = BPMaterial(g_lightCol, g_lightCol, g_lightCol, 100.0f);
+    g_lightPos = glm::vec3(0.0f, 1000.0f, 0.0f);
+    g_lightCol = glm::vec3((187 / 255.0f), (178 / 255.0f), (233 / 255.0f));
+    g_lightMat = BPMaterial(g_lightCol, g_lightCol, g_lightCol, 100.0f);
 
-        int width, height;
-        glfwGetFramebufferSize(g_window, &width, &height);
-        g_mainSceneFBO.initialize(width, height);
-        g_frameSceneFBO.initialize(width, height); // TODO consider GL_RGB32F
+    int width, height;
+    glfwGetFramebufferSize(g_window, &width, &height);
+    g_mainSceneFBO.initialize(width, height);
+    g_frameSceneFBO.initialize(width, height); // TODO consider GL_RGB32F
 
     GLSL::checkError();
 }
@@ -338,8 +340,8 @@ static void video_output() {
 int main(int argc, char** argv) {
     // resources/ data/ 
     if (argc < 3) {
-        cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
-        return 0;
+       cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
+       return 0;
     }
 
     g_resourceDir = argv[1] + string("/");
