@@ -39,7 +39,7 @@
 #include "BPMaterial.h"
 #include "EventData.h"
 #include "MainScene.h"
-#include "FrameScene.h"
+#include "frameScene.h"
 #include "ContributionFunc.h"
 
 // UTILS //
