@@ -66,7 +66,7 @@ void drawGUIDockspace();
  */
 void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameScenceFBO, std::shared_ptr<EventData> &evtData, std::string &datafilepath, 
-    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, float &particleTimeDensity);
+    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, bool &showFrameData, float &particleTimeDensity);
 
 float randFloat();
 glm::vec3 randXYZ();
