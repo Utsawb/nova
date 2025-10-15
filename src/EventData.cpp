@@ -16,7 +16,10 @@ EventData::EventData() : camera_resolution(0.0f), diffScale(0.0f),
     timeShutterWindow_L(0.0f), timeShutterWindow_R(0.0f), eventShutterWindow_L(0),
     eventShutterWindow_R(0), spaceWindow(0.0f), minXYZ(std::numeric_limits<float>::max()),
     maxXYZ(std::numeric_limits<float>::lowest()), center(0.0f), negColor({1.0f, 0.0f, 0.0f}), 
-    posColor({0.0f, 1.0f, 0.0f}), isPositiveOnly(false), unitType(1), evtParticlesSSBO(0), outputDataSSBO(0), countersSSBO(0), computeInitialized(false), liveStreamReader() {}
+    posColor({0.0f, 1.0f, 0.0f}),
+      isPositiveOnly(false), unitType(1), evtParticlesSSBO(0),
+      outputDataSSBO(0), countersSSBO(0), computeInitialized(false),
+      isStreaming{false}, liveStreamReader() {}
 
 EventData::~EventData() {
     if (instVBO) {
@@ -543,7 +546,11 @@ void EventData::draw(MatrixStack &MV, MatrixStack &P, Program &prog,
 void EventData::drawInstanced(MatrixStack &MV, MatrixStack &P, Program &progInst, Program &progBasic,
     float particleScale) {
     
-    initInstancing(progInst); // Necessary to generate new vertex array for streamed data
+    if (isStreaming) // If streaming, must update data sent to GPU
+    {
+        initInstancing(progInst); // Necessary to generate new vertex array for
+                                  // streamed data
+    }
 
     if (evtParticles.empty() || modFreq == 0) {
         return;
@@ -709,7 +716,12 @@ void EventData::drawFrame(Program &prog, glm::vec2 viewport_resolution, bool mor
     // Initialize compute shader on first use
     if (!computeInitialized)
     {
-        initComputeShader();
+        initComputeShader();    
+        initComputeBuffers();   
+    }
+   
+    if (computeInitialized || isStreaming) // If streaming, must update data
+    {
         initComputeBuffers();
     }
 

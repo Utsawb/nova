@@ -197,6 +197,8 @@ class EventData {
 
         void setParticleTimeDensity(float _particleTimeDensity) { this->particleTimeDensity = _particleTimeDensity; }
         float getParticleTimeDensity() { return particleTimeDensity; }
+
+        void setIsStreaming(bool _isStreaming) { isStreaming = _isStreaming; }
         
         static inline int TIME_CONVERSION; 
         static const int TIME_SHUTTER = 0; // values must match ImGui::Combo order in utils.cpp
@@ -207,6 +209,8 @@ class EventData {
         float diffScale;
 
         float particleTimeDensity; // Density of particles along time axis
+
+        bool isStreaming; // Flag to indicate if data is being streamed
 
         // TODO: Might be better to just store a std::bitset for polarity, and something dynamic like a color
         // indicator for a (although we would need a vec3 for a full RGB)
