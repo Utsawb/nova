@@ -42,7 +42,11 @@ Mesh::~Mesh() {
 }
 
 void Mesh::loadMesh(const string &meshName) {
-	// Load geometry
+        if (meshName.empty()) {
+            cout << "Error: Mesh name is empty" << endl;
+            return;
+        }
+        // Load geometry
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -120,35 +124,56 @@ void Mesh::fitToUnitBox() {
 }
 
 void Mesh::init() {
-    glGenVertexArrays(1, &vaoID);
-    glBindVertexArray(vaoID);
+        if (posBuf.empty()) {
+            cout << "Error: Mesh has no position buffer" << endl;
+            return;
+        }
 
-	// Send the position array to the GPU
-	glGenBuffers(1, &posBufID);
-	glBindBuffer(GL_ARRAY_BUFFER, posBufID);
-	glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
-	
-	// Send the normal array to the GPU
-	if(!norBuf.empty()) {
-		glGenBuffers(1, &norBufID);
-		glBindBuffer(GL_ARRAY_BUFFER, norBufID);
-		glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
-	}
+        glGenVertexArrays(1, &vaoID);
+        if (vaoID == 0) {
+            cout << "Error: Failed to generate VAO" << endl;
+            return;
+        }
+        glBindVertexArray(vaoID);
 
-	if(!texBuf.empty()) {
-		glGenBuffers(1, &texBufID);
-		glBindBuffer(GL_ARRAY_BUFFER, texBufID);
-		glBufferData(GL_ARRAY_BUFFER, texBuf.size()*sizeof(float), &texBuf[0], GL_STATIC_DRAW);
-	}
+        // Send the position array to the GPU
+        glGenBuffers(1, &posBufID);
+        if (posBufID == 0) {
+            cout << "Error: Failed to generate position buffer" << endl;
+            return;
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, posBufID);
+        glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
 
-    glGenBuffers(1, &eleBufID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eleBufID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuf.size() * sizeof(unsigned int), indexBuf.data(), GL_STATIC_DRAW);
+        // Send the normal array to the GPU
+        if(!norBuf.empty()) {
+	    glGenBuffers(1, &norBufID);
+            if (norBufID == 0) {
+                cout << "Warning: Failed to generate normal buffer" << endl;
+            } else {
+	        glBindBuffer(GL_ARRAY_BUFFER, norBufID);
+	        glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
+            }
+        }
 
-    // Unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if(!texBuf.empty()) {
+	    glGenBuffers(1, &texBufID);
+            if (texBufID == 0) {
+                cout << "Warning: Failed to generate texture buffer" << endl;
+            } else {
+	        glBindBuffer(GL_ARRAY_BUFFER, texBufID);
+	        glBufferData(GL_ARRAY_BUFFER, texBuf.size()*sizeof(float), &texBuf[0], GL_STATIC_DRAW);
+	    }
+        }
 
-    GLSL::checkError(GET_FILE_LINE);
+        glGenBuffers(1, &eleBufID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eleBufID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuf.size() * sizeof(unsigned int), indexBuf.data(), GL_STATIC_DRAW);
+
+        // Unbind
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        GLSL::checkError(GET_FILE_LINE);
 }
 
 // Unused

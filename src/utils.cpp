@@ -110,15 +110,22 @@ string OpenFileDialog(string& initialDirectory) {
 }
 
 bool isValidFilePath(string filePath) {
+    if (filePath.empty()) {
+        cout << "ERROR: Empty file path" << endl;
+        return false;
+    }
+
     // Check if the file exists
     std::ifstream file(filePath);
     if (!file) {
+        cout << "ERROR: File does not exist" << endl;
         return false;
     }
 
     // Check if the file extension is ".aedat4"
     size_t extensionPos = filePath.find_last_of('.');
     if (extensionPos == string::npos || filePath.substr(extensionPos) != ".aedat4") {
+        cout << "ERROR: File extension is not .aedat4" << endl;
         return false;
     }
 
