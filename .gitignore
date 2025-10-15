@@ -31,7 +31,7 @@ extra/
 build/
 
 build/*
-
+build-*
 out/
 output/
 .vs/
