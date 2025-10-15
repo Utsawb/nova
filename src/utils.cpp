@@ -591,7 +591,22 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
 
         // TODO: Cache recent files and state?
     ImGui::End();
+    ImGui::Begin("Debug");
+    // FPS
+        updateFPS(fps);
+        float avgFPS = calculateAverageFPS();
+        float minFPS = getMinFPS();
+        float maxFPS = getMaxFPS();
 
+        ImGui::Text("FPS: %.1f", fps);
+        ImGui::Text("Avg FPS: %.1f", avgFPS);
+        ImGui::Text("Min FPS: %.1f", minFPS);
+        ImGui::Text("Max FPS: %.1f", maxFPS);
+        ImGui::Separator();
+        ImGui::PlotLines("##FPS History", fps_historyBuf.data(), static_cast<int>(fps_historyBuf.size()), static_cast<int>(fps_bufIdx), nullptr, 0.0f, maxFPS + 10.0f, ImVec2(0, 80));
+        ImGui::Separator();
+    ImGui::End();
+    
     ImGui::Begin("Info");
         ImGui::Text("Camera (World): (%.3f, %.3f, %.3f)", cam_pos.x, cam_pos.y, cam_pos.z);
         ImGui::Separator();
@@ -609,19 +624,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_ma
         }
         ImGui::Separator();
 
-        // FPS
-        updateFPS(fps);
-        float avgFPS = calculateAverageFPS();
-        float minFPS = getMinFPS();
-        float maxFPS = getMaxFPS();
-
-        ImGui::Text("FPS: %.1f", fps);
-        ImGui::Text("Avg FPS: %.1f", avgFPS);
-        ImGui::Text("Min FPS: %.1f", minFPS);
-        ImGui::Text("Max FPS: %.1f", maxFPS);
-        ImGui::Separator();
-        ImGui::PlotLines("##FPS History", fps_historyBuf.data(), static_cast<int>(fps_historyBuf.size()), static_cast<int>(fps_bufIdx), nullptr, 0.0f, maxFPS + 10.0f, ImVec2(0, 80));
-        ImGui::Separator();
+        
 
         // Windows
         float normFactor = evtData->getDiffScale() * EventData::TIME_CONVERSION;
