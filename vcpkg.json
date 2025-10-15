@@ -1,0 +1,10 @@
+{
+  "dependencies": [
+    "dv-processing",
+    "eigen3",
+    "glew",
+    "glfw3",
+    "glm",
+    "imguizmo"
+  ]
+}

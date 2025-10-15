@@ -41,6 +41,7 @@
 #include "MainScene.h"
 #include "frameScene.h"
 #include "ContributionFunc.h"
+#include "Gizmo.h"
 
 // UTILS //
 #include "utils.h"
