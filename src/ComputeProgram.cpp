@@ -54,6 +54,10 @@ bool ComputeProgram::init() {
 
     // Create program and attach shader
     pid = glCreateProgram();
+    if (pid == 0) {
+        std::cerr << "Error creating compute shader program" << std::endl;
+        return false;
+    }
     glAttachShader(pid, cShader);
     glLinkProgram(pid);
 
@@ -85,11 +89,18 @@ void ComputeProgram::unbind() { glUseProgram(0); }
 void ComputeProgram::dispatch(GLuint numGroupsX, GLuint numGroupsY,
                               GLuint numGroupsZ) {
     glDispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+    if (numGroupsX == 0 || numGroupsY == 0 || numGroupsZ == 0) {
+        cout << "Warning: dispatching compute shader with zero work groups" << endl;
+    }
     // Memory barrier to ensure compute shader writes are visible
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
 void ComputeProgram::addUniform(const std::string &name) {
+    if (pid == 0) {
+        cout << "Error: program not initialized - cannot add uniform" << endl;
+        return;
+    }
     GLint loc = glGetUniformLocation(pid, name.c_str());
     if (loc < 0 && verbose) {
         std::cerr << "Warning: uniform '" << name
