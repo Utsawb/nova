@@ -90,7 +90,7 @@ void ComputeProgram::dispatch(GLuint numGroupsX, GLuint numGroupsY,
                               GLuint numGroupsZ) {
     glDispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
     if (numGroupsX == 0 || numGroupsY == 0 || numGroupsZ == 0) {
-        cout << "Warning: dispatching compute shader with zero work groups" << endl;
+        std::cout << "Warning: dispatching compute shader with zero work groups" << std::endl;
     }
     // Memory barrier to ensure compute shader writes are visible
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
@@ -98,7 +98,7 @@ void ComputeProgram::dispatch(GLuint numGroupsX, GLuint numGroupsY,
 
 void ComputeProgram::addUniform(const std::string &name) {
     if (pid == 0) {
-        cout << "Error: program not initialized - cannot add uniform" << endl;
+        std::cout << "Error: program not initialized - cannot add uniform" << std::endl;
         return;
     }
     GLint loc = glGetUniformLocation(pid, name.c_str());
