@@ -16,7 +16,7 @@
 using std::cout, std::endl, std::string;
 
 Camera::Camera() {
-    yaw = -(float)M_PI;
+    yaw = -(float)M_PI/2;
     pitch = 0.0f;
     aspect = 1.0f;
     
@@ -57,7 +57,7 @@ glm::vec3 Camera::calcForward() const {
     y = (float)(sin(pitch));
     z = (float)(sin(yaw) * cos(pitch));
 
-    return glm::vec3(x, y, z);
+    return glm::normalize(glm::vec3(x, y, z));
 }
 
 void Camera::zoom(float amt) {
@@ -119,8 +119,16 @@ glm::mat4 Camera::calcLookAt() const {
 	glm::vec3 eye = pos;
     glm::vec3 forward = calcForward();
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
 	return glm::lookAt(eye, eye + forward, up);
+}
+
+glm::mat4 Camera::calcProjectionMatrix() const {
+    return glm::perspective(
+        fovy,
+        aspect,
+        znear,
+        zfar
+    );
 }
 
 void Camera::applyProjectionMatrix(MatrixStack& P) const {
@@ -148,4 +156,22 @@ void Camera::applyViewMatrix(MatrixStack& MV) const {
 
 void Camera::applyCameraMatrix(MatrixStack& MV) const {
 	MV.multMatrix(glm::inverse(calcLookAt()));
+}
+
+void Camera::gizmoUpdate(glm::vec3 forward) {
+    rotations.x = atan2(forward.z, forward.x);
+    rotations.y = asin(forward.y);
+}
+
+void Camera::keyUpdate(char key) {
+    if (key == 'x') {
+        rotations.x = 0.0f;
+        rotations.y = 0.0f;
+    } else if (key == 'y') {
+        rotations.x = 0.0;
+        rotations.y = (float)M_PI/2;
+    } else if (key == 'z') {
+        rotations.x = (float) M_PI/2;
+        rotations.y = 0.0f;
+    }
 }

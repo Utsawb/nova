@@ -43,11 +43,15 @@ class Camera {
         void mouseMoved(float x, float y);
 
         glm::mat4 calcLookAt() const;
+        glm::mat4 calcProjectionMatrix() const;
 
         void applyProjectionMatrix(MatrixStack& P) const;
         void applyOrthoMatrix(MatrixStack& P) const;
         void applyViewMatrix(MatrixStack& MV) const;
         void applyCameraMatrix(MatrixStack& MV) const;
+
+        void gizmoUpdate(glm::vec3 forward);
+        void keyUpdate(char key);
 
         glm::vec3 pos;
         float yaw;

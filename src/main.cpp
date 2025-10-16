@@ -26,6 +26,7 @@ GLFWwindow *g_window;
 Camera g_camera;
 bool g_cursorVisible(false);
 bool g_isMainviewportHovered(false);
+bool g_isGizmoHovered(false);
 bool g_keyToggles[256] = {false};
 float g_fps, g_lastRenderTime(0.0f);
 string g_resourceDir, g_dataFilepath, g_dataDir;
@@ -367,7 +368,7 @@ int main(int argc, char** argv) {
     }
 
     // Placement above init() assumes parameters are initialized, and that wc has inf lifetime 
-    WindowContext wc = { &g_camera, &g_cursorVisible, g_keyToggles, &g_isMainviewportHovered, &g_mainSceneFBO, &g_frameSceneFBO }; 
+    WindowContext wc = { &g_camera, &g_cursorVisible, g_keyToggles, &g_isMainviewportHovered, &g_isGizmoHovered, &g_mainSceneFBO, &g_frameSceneFBO }; 
     glfwSetWindowUserPointer(g_window, &wc);
     glfwMakeContextCurrent(g_window);
 

@@ -10,8 +10,5 @@ using matrix_t = glm::mat4;
 
 class Gizmo {
     public:
-    // static void EditCamera(const Camera& camera, matrix_t& matrix);
-
-    static void BeginFrameDockerCompatable();
-    static void EditCamera(const Camera& camera, ImVec2 size);
+    static void EditCamera(Camera& camera, ImVec2 size);
 };
