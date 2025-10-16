@@ -95,10 +95,11 @@ void EventData::initParticlesFromFile(const std::string &filename) {
 
     // https://dv-processing.inivation.com/rel_1_7/reading_data.html#read-events-from-a-file
     uint counter = 0; // Necessary for modFreq;
+    float threshold = 1.0/modFreq;;
     while (reader.isRunning()) {
         if (const auto events = reader.getNextEventBatch(); events.has_value()) {
             for (auto &evt : events.value()) {
-                if (counter++ % modFreq != 0) { continue; } // TODO instead skip batch if possible
+                if (randFloat() > threshold) { continue; } // TODO instead skip batch if possible
 
                 long long evtTimestamp = evt.timestamp();
                 if (evtParticles.empty()) {
