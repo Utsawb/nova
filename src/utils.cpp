@@ -630,6 +630,20 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
 
         // TODO: Cache recent files and state?
     ImGui::End();
+    ImGui::Begin("Debug");
+    // FPS
+        updateFPS(fps);
+        float avgFPS = calculateAverageFPS();
+        float minFPS = getMinFPS();
+        float maxFPS = getMaxFPS();
+        ImGui::Text("FPS: %.1f", fps);
+        ImGui::Text("Avg FPS: %.1f", avgFPS);
+        ImGui::Text("Min FPS: %.1f", minFPS);
+        ImGui::Text("Max FPS: %.1f", maxFPS);
+        ImGui::Separator();
+        ImGui::PlotLines("##FPS History", fps_historyBuf.data(), static_cast<int>(fps_historyBuf.size()), static_cast<int>(fps_bufIdx), nullptr, 0.0f, maxFPS + 10.0f, ImVec2(0, 80));
+        ImGui::Separator();
+    ImGui::End();
 
     // Add control scheme for streaming data
     ImGui::Begin("Streaming");
@@ -680,19 +694,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
         }
         ImGui::Separator();
 
-        // FPS
-        updateFPS(fps);
-        float avgFPS = calculateAverageFPS();
-        float minFPS = getMinFPS();
-        float maxFPS = getMaxFPS();
-
-        ImGui::Text("FPS: %.1f", fps);
-        ImGui::Text("Avg FPS: %.1f", avgFPS);
-        ImGui::Text("Min FPS: %.1f", minFPS);
-        ImGui::Text("Max FPS: %.1f", maxFPS);
-        ImGui::Separator();
-        ImGui::PlotLines("##FPS History", fps_historyBuf.data(), static_cast<int>(fps_historyBuf.size()), static_cast<int>(fps_bufIdx), nullptr, 0.0f, maxFPS + 10.0f, ImVec2(0, 80));
-        ImGui::Separator();
+        
 
         // Windows
         float normFactor = evtData->getDiffScale() * evtData->getParticleTimeDensity() * EventData::TIME_CONVERSION;
