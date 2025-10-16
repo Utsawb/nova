@@ -30,7 +30,10 @@ Program genPhongProg(const std::string &resource_dir);
 Program genInstProg(const std::string &resource_dir);
 Program genBasicProg(const std::string &resource_dir);
 
+Program genTextureProg(const std::string &resource_dir);
+
 void sendToPhongShader(const Program &prog, const MatrixStack &P, const MatrixStack &MV, const vec3 &lightPos, const vec3 &lightCol, const BPMaterial &mat);
+void sendToTextureShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV);
 
 // GLFW Callbacks //
 void error_callback(int error, const char *description);
@@ -61,9 +64,9 @@ void drawGUIDockspace();
  * @param datadirectory 
  * @param loadFile 
  */
-void drawGUI(const Camera& camera, float fps, float &particle_scale, bool &is_mainViewportHovered,
+void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameScenceFBO, std::shared_ptr<EventData> &evtData, std::string &datafilepath, 
-    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile);
+    std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, bool &showFrameData, float &particleTimeDensity);
 
 float randFloat();
 glm::vec3 randXYZ();

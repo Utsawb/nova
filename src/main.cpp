@@ -29,7 +29,12 @@ bool g_isMainviewportHovered(false);
 bool g_keyToggles[256] = {false};
 float g_fps, g_lastRenderTime(0.0f);
 string g_resourceDir, g_dataFilepath, g_dataDir;
-bool loadFile;
+bool g_loadFile;
+bool g_dataStreamed; // Global to track if data is being streamed
+
+bool g_resetStream; // Set to reset the stream on next render
+
+bool g_showFrameData{ true }; // Set to draw frame data inside the box when streaming
 
 BaseViewportFBO g_mainSceneFBO;
 FrameViewportFBO g_frameSceneFBO;
@@ -41,7 +46,7 @@ FILE *ffmpeg;
 vector<unsigned char> pixels;
 
 Mesh g_meshSphere;
-Program g_progBasic, g_progInst, g_progFrame;
+Program g_progBasic, g_progInst, g_progFrame, g_progTexture; // g_progTexture is texture shader
 
 glm::vec3 g_lightPos, g_lightCol;
 BPMaterial g_lightMat;
@@ -49,20 +54,50 @@ BPMaterial g_lightMat;
 // TODO: Maybe we want unique_ptr
 shared_ptr<EventData> g_eventData;
 
-float g_particleScale(0.75f);
+float g_particleScale(3.0f);
+
+float g_maxZ{ 1000.0f }; // Control z axis when streaming
+bool g_pauseStream{ false }; // Pause streaming
+float g_particleTimeDensity{ 0.05f }; // Controls particle scaling along z (time) axis
+
+
+// Move this stuff into a function since it is called 3 times
+static void initCamera()
+{
+    // Camera //
+    g_camera = Camera();
+    g_camera.setInitPos(300.0f, 100.0f, 600.0f);
+    g_camera.setEvtCenter(g_eventData->getCenter());
+}
+
+// New function for streaming data from a file
+static void streamEvtDataAndCamera() {
+
+    if (g_resetStream)
+    {
+        g_eventData->resetStream();
+        g_resetStream = false;
+        g_pauseStream = false; // If stream is paused when resetting, user gets no output
+    }
+
+    int retVal{ g_eventData->streamParticlesFromFile(g_dataFilepath, g_maxZ * EventData::TIME_CONVERSION, g_pauseStream) };
+    if (retVal == 1) // Indicates first time batch, need to set up camera
+    {
+        g_eventData->setResourceDir(g_resourceDir);
+        initCamera();
+    }
+}
 
 static void updateEvtDataAndCamera() {
     // Load .aedat events into EventData object //
     g_eventData = make_shared<EventData>();
+    g_eventData->setResourceDir(g_resourceDir);
     g_eventData->initParticlesFromFile(g_dataFilepath);
     g_eventData->initInstancing(g_progInst);
 
-    // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void initEvtDataAndCamera() {
@@ -70,13 +105,12 @@ static void initEvtDataAndCamera() {
     g_eventData = make_shared<EventData>();
     g_eventData->initParticlesEmpty();
     g_eventData->initInstancing(g_progInst);
+    g_eventData->setResourceDir(g_resourceDir);
 
     // Camera //
-    g_camera = Camera();
-    g_camera.setInitPos(700.0f, 125.0f, 1500.0f);
-    g_camera.setEvtCenter(g_eventData->getCenter());
+    initCamera();
 
-    loadFile = false;
+    g_loadFile = false;
 }
 
 static void init() {
@@ -87,47 +121,50 @@ static void init() {
     glEnable(GL_DEPTH_TEST);
 
     // ImGui //
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        io.Fonts->AddFontFromFileTTF(string(g_resourceDir + "/CascadiaCode.ttf").c_str(), 20.0f);
-    
-        // bbb2e9 hex R:187, G:178, B:233
-        ImGuiStyle &style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
+    io.Fonts->AddFontFromFileTTF(string(g_resourceDir + "/CascadiaCode.ttf").c_str(), 20.0f);
 
-        ImGui::StyleColorsDark(); 
-        ImGui_ImplGlfw_InitForOpenGL(g_window, true);
-        ImGui_ImplOpenGL3_Init("#version 430");
+    // bbb2e9 hex R:187, G:178, B:233
+    ImGuiStyle &style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
 
-        initImGuiStyle(style);
+    ImGui::StyleColorsDark(); 
+    ImGui_ImplGlfw_InitForOpenGL(g_window, true);
+    ImGui_ImplOpenGL3_Init("#version 430");
+
+    initImGuiStyle(style);
 
     // Shader Programs //
-        g_progBasic = genPhongProg(g_resourceDir);
-        g_progInst = genInstProg(g_resourceDir);
-        g_progFrame = genBasicProg(g_resourceDir); 
+    g_progBasic = genPhongProg(g_resourceDir);
+    g_progInst = genInstProg(g_resourceDir);
+    g_progFrame = genBasicProg(g_resourceDir); 
+
+        // Texture shader
+        g_progTexture = genTextureProg(g_resourceDir);
 
     // Initialize data + camera and set its center //
-        initEvtDataAndCamera();
+    initEvtDataAndCamera();
 
     // Load Shape(s) & Scene //
-        g_meshSphere.loadMesh(g_resourceDir + "sphere.obj");
-        g_meshSphere.init();
+    g_meshSphere.loadMesh(g_resourceDir + "sphere.obj");
+    g_meshSphere.init();
 
-        g_lightPos = glm::vec3(0.0f, 1000.0f, 0.0f);
-        g_lightCol = glm::vec3((187 / 255.0f), (178 / 255.0f), (233 / 255.0f));
-        g_lightMat = BPMaterial(g_lightCol, g_lightCol, g_lightCol, 100.0f);
+    g_lightPos = glm::vec3(0.0f, 1000.0f, 0.0f);
+    g_lightCol = glm::vec3((187 / 255.0f), (178 / 255.0f), (233 / 255.0f));
+    g_lightMat = BPMaterial(g_lightCol, g_lightCol, g_lightCol, 100.0f);
 
-        int width, height;
-        glfwGetFramebufferSize(g_window, &width, &height);
-        g_mainSceneFBO.initialize(width, height);
-        g_frameSceneFBO.initialize(width, height); // TODO consider GL_RGB32F
+    int width, height;
+    glfwGetFramebufferSize(g_window, &width, &height);
+    g_mainSceneFBO.initialize(width, height);
+    g_frameSceneFBO.initialize(width, height); // TODO consider GL_RGB32F
 
     GLSL::checkError();
 }
@@ -153,6 +190,12 @@ static void render() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
+    // Update particle time density
+    g_eventData->setParticleTimeDensity(g_particleTimeDensity);
+
+    // Update isStreaming
+    g_eventData->setIsStreaming(g_dataStreamed);
+
     g_mainSceneFBO.bind();
     glViewport(0, 0, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -175,6 +218,12 @@ static void render() {
         g_eventData->drawInstanced(MV, P, g_progInst,
             g_progBasic, g_particleScale
         );
+    
+    // Draw frame data
+    if (g_showFrameData && g_dataStreamed)
+    {
+        g_eventData->drawFrameData(MV, P, g_progTexture);
+    }
 
     P.popMatrix();
     MV.popMatrix();
@@ -243,8 +292,8 @@ static void render() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
-        drawGUI(g_camera, g_fps, g_particleScale, g_isMainviewportHovered, g_mainSceneFBO, 
-            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, loadFile);
+        drawGUI(g_camera, g_fps, g_particleScale, g_maxZ, g_isMainviewportHovered, g_mainSceneFBO, 
+            g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_showFrameData, g_particleTimeDensity);
     
     // Render ImGui //
         ImGui::Render();
@@ -295,8 +344,8 @@ static void video_output() {
 int main(int argc, char** argv) {
     // resources/ data/ 
     if (argc < 3) {
-        cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
-        return 0;
+       cout << "Usage: ./NOVA <resource_dir> <data_dir>" << endl;
+       return 0;
     }
 
     g_resourceDir = argv[1] + string("/");
@@ -353,17 +402,24 @@ int main(int argc, char** argv) {
 
     string curFilepath = g_dataFilepath;
     while (!glfwWindowShouldClose(g_window)) {
-        render();
         
-        if (loadFile) {
+        // This path should execute when reading file
+        if (g_loadFile) {
             curFilepath = g_dataFilepath;
             updateEvtDataAndCamera();
         }
 
+        // This path should execute when streaming from file
+        if (g_dataStreamed)
+        {
+            streamEvtDataAndCamera();
+        }
+        
         glfwSwapBuffers(g_window);
         glfwPollEvents();
 
         video_output();
+        render();
     }
 
     // Cleanup //
