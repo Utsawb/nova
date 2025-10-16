@@ -581,9 +581,6 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
     bool dEventWindow = false;
     bool dSpaceWindow = false;
     bool dProcessingOptions = false;
-    ImGui::Begin("Gizmo");
-    Gizmo::EditCamera(camera, 500);
-    ImGui::End();
 
     ImGui::Begin("Main Viewport");
         const glm::vec3 &cam_pos = camera.pos;
@@ -602,10 +599,13 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
             // Height is fixed, adjust width
             final_sz = ImVec2(image_sz.y * fbo_aspect, image_sz.y);
         }
-        
 
+        
         ImGui::Image((ImTextureID)mainSceneFBO.getColorTexture(), final_sz, ImVec2(0, 1), ImVec2(1, 0));
         is_mainViewportHovered = ImGui::IsItemHovered();
+
+        Gizmo::EditCamera(camera, final_sz);
+
     ImGui::End();
 
     ImGui::Begin("Load");

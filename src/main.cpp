@@ -292,10 +292,8 @@ static void render() {
             g_frameSceneFBO, g_eventData, g_dataFilepath, video_name, recording, g_dataDir, g_loadFile, g_dataStreamed, g_resetStream, g_pauseStream, g_showFrameData, g_particleTimeDensity);
     
     // Render ImGui //
-        glDisable(GL_DEPTH_TEST);
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glEnable(GL_DEPTH_TEST);
 
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
