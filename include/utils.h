@@ -20,6 +20,7 @@ struct WindowContext {
     bool* is_cursorVisible;
     bool* key_toggles;
     bool* is_mainViewportHovered;
+    bool* is_gizmoHovered;
     BaseViewportFBO* mainSceneFBO;
     BaseViewportFBO* frameSceneFBO;
 };
@@ -64,7 +65,7 @@ void drawGUIDockspace();
  * @param datadirectory 
  * @param loadFile 
  */
-void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
+void drawGUI(Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameScenceFBO, std::shared_ptr<EventData> &evtData, std::string &datafilepath, 
     std::string &video_name, bool &recording, std::string& datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, bool &showFrameData, float &particleTimeDensity);
 

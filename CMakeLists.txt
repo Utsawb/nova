@@ -53,6 +53,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(dv-processing CONFIG REQUIRED)
+find_package(ImGuizmo CONFIG REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     GLEW::GLEW
@@ -60,6 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     glm::glm
     Eigen3::Eigen
     dv::processing
+    imguizmo::imguizmo
 )
 
 # OS specific options and libraries

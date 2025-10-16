@@ -266,6 +266,12 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         else if (action == GLFW_REPEAT) {
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
+    } else if (key == GLFW_KEY_X) {
+        wc->camera->keyUpdate('x');
+    } else if (key == GLFW_KEY_Y) {
+        wc->camera->keyUpdate('y');
+    } else if (key == GLFW_KEY_Z) {
+        wc->camera->keyUpdate('z');
     }
 }
 
@@ -570,7 +576,7 @@ static void spaceWindowWrapper(bool &dSpaceWindow, shared_ptr<EventData> &evtDat
     evtData->getSpaceWindow().w = std::clamp(evtData->getSpaceWindow().w, evtData->getMin_XYZ().x, evtData->getMax_XYZ().x); 
 }
 
-void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
+void drawGUI(Camera& camera, float fps, float &particle_scale, float &maxZ, bool &is_mainViewportHovered,
     BaseViewportFBO &mainSceneFBO, FrameViewportFBO &frameSceneFBO, shared_ptr<EventData> &evtData, std::string& datafilepath,
     std::string &video_name, bool &recording, std::string &datadirectory, bool &loadFile, bool &dataStreamed, bool &resetStream, bool &pauseStream, bool &showFrameData, float &particleTimeDensity) {
 
@@ -588,6 +594,7 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
     bool dEventWindow = false;
     bool dSpaceWindow = false;
     bool dProcessingOptions = false;
+
     ImGui::Begin("Main Viewport");
         const glm::vec3 &cam_pos = camera.pos;
         
@@ -606,8 +613,12 @@ void drawGUI(const Camera& camera, float fps, float &particle_scale, float &maxZ
             final_sz = ImVec2(image_sz.y * fbo_aspect, image_sz.y);
         }
 
+        
         ImGui::Image((ImTextureID)mainSceneFBO.getColorTexture(), final_sz, ImVec2(0, 1), ImVec2(1, 0));
         is_mainViewportHovered = ImGui::IsItemHovered();
+
+        // Gizmo::EditCamera(camera, final_sz); // comment in to use gizmo (IN PROGRESS)
+
     ImGui::End();
 
     ImGui::Begin("Load");
