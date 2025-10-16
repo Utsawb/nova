@@ -9,8 +9,13 @@
 #include "Program.h"
 #include "BPMaterial.h"
 #include "Mesh.h"
+#include "ComputeProgram.h"
 #include <dv-processing/io/mono_camera_recording.hpp>
+#include <memory>
 
+// opencv
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 /*
     We can treat the data processed from dv-processing as particles in 3D space
     where the x and y coordinates are the position in the image plane and the z
@@ -46,9 +51,32 @@ class EventData {
         void initParticlesFromFile(const std::string &filename);
 
         /**
+          * @brief Resets streaming.
+          */
+        void resetStream();
+
+        /**
+         * @brief Streams particles from a file in a streaming manner. The file should be in the format aedat4.
+         * @param filename
+         * @param maxZ
+         * @param pauseStream
+         * @return -1 for finished, 0 for continuing, 1 for first batch received
+         */
+        int streamParticlesFromFile(const std::string &filename, float maxZ, bool pauseStream);
+
+        /**
          * @brief Initializes the EventData object in an empty state; upon initialization, no particles are loaded.
          */
         void initParticlesEmpty();
+
+        /**
+         * @brief Draws frame camera inside box. Frame data that is drawn is stored
+         *        in member variable frameCameraData.
+         * @param MV
+         * @param P
+         * @param progTexture
+         */
+        void drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture);
 
         /**
          * @brief Draw the bounding box wireframe for the event data.
@@ -94,6 +122,23 @@ class EventData {
          */
         void drawFrame(Program &prog, glm::vec2 viewport_resolution, 
             bool morlet, float freq, bool pca);
+
+        
+        /**
+         * @brief Set the resource directory path for compute shader initialization
+         * @param resource_dir Path to resources directory
+         */
+        void setResourceDir(const std::string &resource_dir);
+
+        /**
+         * @brief Initialize GPU compute shader for event processing
+         */
+        void initComputeShader();
+
+        /**
+         * @brief Initialize GPU buffers for compute shader
+         */
+        void initComputeBuffers();
 
         /**
          * @brief Used by utils/drawGUI to allow for changing back into time from specified unit of time
@@ -150,6 +195,11 @@ class EventData {
         glm::vec3 &getNegColor() { return negColor; }
         glm::vec3 &getPosColor() { return posColor; }
 
+        void setParticleTimeDensity(float _particleTimeDensity) { this->particleTimeDensity = _particleTimeDensity; }
+        float getParticleTimeDensity() { return particleTimeDensity; }
+
+        void setIsStreaming(bool _isStreaming) { isStreaming = _isStreaming; }
+        
         static inline int TIME_CONVERSION; 
         static const int TIME_SHUTTER = 0; // values must match ImGui::Combo order in utils.cpp
         static const int EVENT_SHUTTER = 1;
@@ -158,9 +208,20 @@ class EventData {
         glm::vec2 camera_resolution;
         float diffScale;
 
+        float particleTimeDensity; // Density of particles along time axis
+
+        bool isStreaming; // Flag to indicate if data is being streamed
+
         // TODO: Might be better to just store a std::bitset for polarity, and something dynamic like a color
         // indicator for a (although we would need a vec3 for a full RGB)
-        std::vector<glm::vec4> evtParticles; // x, y, t, polarity (false=0.0, true=1.0)
+        std::vector<glm::vec4> evtParticles; // x, y, t, polarity (false=0.0, true=1.0), stores particles to be drawn
+        std::deque<glm::vec4> streamEvtParticles; // event particles captured in a stream, stores particles with relative timestamps
+        
+        // WARNING: do not try to destroy streamFrameCameraData and then use frameCameraData.
+        // frameCameraData contains shallow copies of cv::Mat from streamFrameCameraData.
+        // This is bad practice but it works for now...
+        std::deque<std::pair<cv::Mat, float>> streamFrameCameraData; // Camera frame data, first pair element contains pointer to image data, second contains relative time
+        std::vector<std::pair<cv::Mat, float>> frameCameraData; // Stores frame data to be drawn with adjusted time
 
         long long earliestTimestamp;
         long long latestTimestamp;
@@ -192,6 +253,16 @@ class EventData {
 
         bool isPositiveOnly;
         int unitType;
+
+        // GPU Compute resources
+        ComputeProgram computeProg;
+        GLuint evtParticlesSSBO;
+        GLuint outputDataSSBO;
+        GLuint countersSSBO;
+        bool computeInitialized;
+        std::string resourceDir;
+
+        std::shared_ptr<dv::io::MonoCameraRecording> liveStreamReader;
 };
 
 #endif // EVENT_DATA_H

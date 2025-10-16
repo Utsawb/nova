@@ -70,6 +70,10 @@ bool Program::init()
 	
 	// Create the program and link
 	pid = glCreateProgram();
+	if (pid == 0) {
+            cout << "Error creating shader program" << endl;
+            return false;
+        }
 	glAttachShader(pid, VS);
 	glAttachShader(pid, FS);
 	glLinkProgram(pid);
@@ -88,6 +92,10 @@ bool Program::init()
 
 void Program::bind()
 {
+if(pid == 0) {
+cout << "Error: program not initialized - cannot bind unitialized program" << endl;
+return;
+}
 	glUseProgram(pid);
 }
 
@@ -98,12 +106,32 @@ void Program::unbind()
 
 void Program::addAttribute(const string &name)
 {
-	attributes[name] = glGetAttribLocation(pid, name.c_str());
+        if (pid == 0) {
+            cout << "Error: program not initialized - cannot add attribute" << endl;
+            return;
+        }
+
+        GLint location = glGetAttribLocation(pid, name.c_str());
+        if (location < 0 && isVerbose()) {
+            cout << "Warning: attribute '" << name << "' not found in program" << endl;
+        }
+
+        attributes[name] = location;
 }
 
 void Program::addUniform(const string &name)
 {
-	uniforms[name] = glGetUniformLocation(pid, name.c_str());
+        if (pid == 0) {
+            cout << "Error: program not initialized - cannot add uniform" << endl;
+            return;
+        }
+
+        GLint location = glGetUniformLocation(pid, name.c_str());
+        if (location < 0 && isVerbose()) {
+            cout << "Warning: uniform '" << name << "' not found in program" << endl;
+        }
+
+	uniforms[name] = location;
 }
 
 GLint Program::getAttribute(const string &name) const
