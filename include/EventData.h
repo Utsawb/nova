@@ -16,6 +16,9 @@
 // opencv
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+
+class FontRenderer;
+
 /*
     We can treat the data processed from dv-processing as particles in 3D space
     where the x and y coordinates are the position in the image plane and the z
@@ -75,8 +78,9 @@ class EventData {
          * @param MV
          * @param P
          * @param progTexture
+         * @param fontRenderer Optional font renderer for displaying timestamps
          */
-        void drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture);
+        void drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture, FontRenderer* fontRenderer = nullptr);
 
         /**
          * @brief Draw the bounding box wireframe for the event data.

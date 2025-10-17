@@ -46,10 +46,13 @@ FILE *ffmpeg;
 vector<unsigned char> pixels;
 
 Mesh g_meshSphere;
-Program g_progBasic, g_progInst, g_progFrame, g_progTexture; // g_progTexture is texture shader
+Program g_progBasic, g_progInst, g_progFrame, g_progTexture, g_progText; // g_progTexture is texture shader
 
 glm::vec3 g_lightPos, g_lightCol;
 BPMaterial g_lightMat;
+
+// Font Renderer for text labels
+FontRenderer* g_fontRenderer = nullptr;
 
 // TODO: Maybe we want unique_ptr
 shared_ptr<EventData> g_eventData;
@@ -148,6 +151,12 @@ static void init() {
 
         // Texture shader
         g_progTexture = genTextureProg(g_resourceDir);
+    
+    // Text shader and Font Renderer
+    g_progText = genTextProg(g_resourceDir);
+    g_fontRenderer = new FontRenderer(g_resourceDir + "CascadiaCode.ttf");
+    g_fontRenderer->init();
+    g_fontRenderer->setProgram(&g_progText);
 
     // Initialize data + camera and set its center //
     initEvtDataAndCamera();
@@ -218,7 +227,7 @@ static void render() {
     // Draw frame data
     if (g_showFrameData && g_dataStreamed)
     {
-        g_eventData->drawFrameData(MV, P, g_progTexture);
+        g_eventData->drawFrameData(MV, P, g_progTexture, g_fontRenderer);
     }
 
     P.popMatrix();
@@ -419,6 +428,11 @@ int main(int argc, char** argv) {
     }
 
     // Cleanup //
+    if (g_fontRenderer) {
+        delete g_fontRenderer;
+        g_fontRenderer = nullptr;
+    }
+    
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

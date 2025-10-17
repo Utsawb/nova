@@ -327,7 +327,7 @@ void EventData::initParticlesEmpty() {
     printf("Loaded 0 particles\n");
 }
 
-void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture)
+void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progTexture, FontRenderer* fontRenderer)
 {
     
     // Draw frame data as textures
@@ -403,6 +403,37 @@ void EventData::drawFrameData(MatrixStack& MV, MatrixStack& P, Program& progText
 
         MV.popMatrix();
         progTexture.unbind();
+
+        // Draw timestamp label if FontRenderer is available
+        if (fontRenderer) {
+            // Position the text to the right of the image
+            glm::vec3 textPosition(
+                this->maxXYZ.x + 20.0f,  // Offset to the right of the image
+                this->maxXYZ.y,          // Top of the image
+                imageDataTimestamp       // Same z-position as the image
+            );
+            
+            // Normal vector pointing towards the camera (positive Z)
+            glm::vec3 textNormal(0.0f, 0.0f, 1.0f);
+            
+            // Format timestamp - convert from microseconds to milliseconds or seconds
+            char timestampStr[64];
+            float timeInSeconds = imageDataTimestamp / 1000000.0f;
+            float timeInMs = imageDataTimestamp / 1000.0f;
+            
+            // Choose appropriate unit based on magnitude
+            if (timeInSeconds < 1.0f) {
+                snprintf(timestampStr, sizeof(timestampStr), "%.2f ms", timeInMs);
+            } else {
+                snprintf(timestampStr, sizeof(timestampStr), "%.3f s", timeInSeconds);
+            }
+            
+            // Draw the timestamp text
+            float textScale = 0.15f;
+            glm::vec3 textColor(1.0f, 1.0f, 0.0f); // Yellow text for visibility
+            fontRenderer->drawText(std::string(timestampStr), textPosition, textNormal, 
+                                  textScale, textColor, P, MV);
+        }
 
         glDeleteVertexArrays(1, &textureVAO);
         glDeleteBuffers(1, &squareVBO);

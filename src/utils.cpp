@@ -209,6 +209,23 @@ Program genBasicProg(const string &resource_dir) {
     return prog;
 }
 
+Program genTextProg(const string &resource_dir) {
+    Program prog = Program();
+    prog.setShaderNames(resource_dir + "text.vsh", resource_dir + "text.fsh");
+    prog.setVerbose(true);
+    prog.init();
+
+    prog.addAttribute("aPos");
+    prog.addAttribute("aTexCoord");
+    
+    prog.addUniform("P");
+    prog.addUniform("MV");
+    prog.addUniform("textColor");
+    prog.addUniform("fontTexture");
+
+    return prog;
+}
+
 void sendToTextureShader(const Program& prog, const MatrixStack& P, const MatrixStack& MV)
 {
 

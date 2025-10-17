@@ -41,6 +41,7 @@
 #include "MainScene.h"
 #include "frameScene.h"
 #include "ContributionFunc.h"
+#include "FontRenderer.h"
 
 // UTILS //
 #include "utils.h"
