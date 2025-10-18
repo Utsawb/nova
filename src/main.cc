@@ -1,15 +1,26 @@
 #include "pch.hh"
 
-#include "AppContext.hh"
 #include "GUI.hh"
 #include "ParameterStore.hh"
+#include "RenderTarget.hh"
+#include "UploadBuffer.hh"
+#include "SpinningCube.hh"
 
+ParameterStore *g_parameter_store = nullptr;
+
+SDL_Window *g_window = nullptr;
+SDL_GPUDevice *g_gpu_device = nullptr;
+
+UploadBuffer *g_upload_buffer = nullptr;
+GUI *g_gui = nullptr;
+SpinningCube *g_spinning_cube = nullptr;
+
+std::unordered_map<std::string, RenderTarget> g_render_targets;
 
 // This function runs once at startup.
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    *appstate = new AppContext();
-    AppContext &app_context = **(AppContext **)appstate;
+    g_parameter_store = new ParameterStore();
 
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
@@ -18,70 +29,50 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     }
 
     // Create SDL window
-    float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
     SDL_WindowFlags window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_HIGH_PIXEL_DENSITY;
-    app_context.window = SDL_CreateWindow("Nova", (int)(1280 * main_scale), (int)(720 * main_scale), window_flags);
-    if (app_context.window == NULL)
+    g_window = SDL_CreateWindow("Nova", 1280, 720, window_flags);
+    if (g_window == nullptr)
     {
         SDL_Log("Couldn't create window: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
     // Create GPU Device
-    app_context.gpu_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
-    if (app_context.gpu_device == NULL)
+    g_gpu_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
+    if (g_gpu_device == nullptr)
     {
         SDL_Log("Couldn't create GPU device: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
     // Claim window for GPU Device
-    if (!SDL_ClaimWindowForGPUDevice(app_context.gpu_device, app_context.window))
+    if (!SDL_ClaimWindowForGPUDevice(g_gpu_device, g_window))
     {
         SDL_Log("Couldn't claim window for GPU device: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
-    SDL_SetGPUSwapchainParameters(app_context.gpu_device, app_context.window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+    SDL_SetGPUSwapchainParameters(g_gpu_device, g_window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
                                   SDL_GPU_PRESENTMODE_VSYNC);
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    g_upload_buffer = new UploadBuffer(g_gpu_device);
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    // if we have a single use upload, like uploading a static mesh, might as well do it here
+    SDL_GPUCommandBuffer *command_buffer = SDL_AcquireGPUCommandBuffer(g_gpu_device);
+    SDL_GPUCopyPass *copy_pass = SDL_BeginGPUCopyPass(command_buffer);
 
-    // Setup scaling
-    ImGuiStyle &style = ImGui::GetStyle();
-    style.ScaleAllSizes(main_scale);
-    style.FontScaleDpi = main_scale;
-    io.ConfigDpiScaleFonts = true;
-    io.ConfigDpiScaleViewports = true;
+    g_gui = new GUI(g_parameter_store, g_window, g_gpu_device);
 
-    // Setup Platform/Renderer backends
-    ImGui_ImplSDL3_InitForSDLGPU(app_context.window);
-    ImGui_ImplSDLGPU3_InitInfo init_info = {
-        .Device = app_context.gpu_device,
-        .ColorTargetFormat = SDL_GetGPUSwapchainTextureFormat(app_context.gpu_device, app_context.window),
-        .MSAASamples = SDL_GPU_SAMPLECOUNT_1,
-        .SwapchainComposition = SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
-        .PresentMode = SDL_GPU_PRESENTMODE_VSYNC};
-    ImGui_ImplSDLGPU3_Init(&init_info);
+    g_spinning_cube = new SpinningCube(g_gpu_device, g_upload_buffer, copy_pass, g_render_targets);
 
+    SDL_EndGPUCopyPass(copy_pass);
+    SDL_SubmitGPUCommandBuffer(command_buffer);
     return SDL_APP_CONTINUE;
 }
 
 /* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
-    AppContext &app_context = *(AppContext *)appstate;
-
-    ImGui_ImplSDL3_ProcessEvent(event);
+    g_gui->event_handler(event);
 
     if (event->type == SDL_EVENT_QUIT)
     {
@@ -93,48 +84,33 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    AppContext &app_context = *(AppContext *)appstate;
-
     // Skip rendering if window is minimized
-    if (SDL_GetWindowFlags(app_context.window) & SDL_WINDOW_MINIMIZED)
+    if (SDL_GetWindowFlags(g_window) & SDL_WINDOW_MINIMIZED)
     {
         SDL_Delay(10);
         return SDL_APP_CONTINUE;
     }
 
-    // Start the Dear ImGui frame
-    ImGui_ImplSDLGPU3_NewFrame();
-    ImGui_ImplSDL3_NewFrame();
-    ImGui::NewFrame();
+    // data aq hopefully is being done on another thread, if not do it here
 
-    // Create a simple demo window
-    ImGui::ShowDemoWindow();
+    SDL_GPUCommandBuffer *command_buffer = SDL_AcquireGPUCommandBuffer(g_gpu_device);
 
-    // Rendering
-    ImGui::Render();
-    ImDrawData *draw_data = ImGui::GetDrawData();
-    const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+    // event data needs to sync with the gpu, all points + images needs to be ready to go
+    // event_data.sync_to_gpu(...)
 
-    // End frame (required for proper ImGui frame lifecycle)
-    ImGui::EndFrame();
+    // now that data is ready on the cpu and gpu, we can do our main compute tasks
+    // 3dvisualizer->update(...) either cpu or gpu depending on how y'all structure this
+    // digital_shutter->update(...) the data is already ready from the event_data sync, so compute shader stuff now
 
-    // Update and Render additional Platform Windows
-    ImGuiIO &io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-    }
+    // 
 
-    SDL_GPUCommandBuffer *command_buffer = SDL_AcquireGPUCommandBuffer(app_context.gpu_device);
 
     SDL_GPUTexture *swapchain_texture;
-    SDL_WaitAndAcquireGPUSwapchainTexture(command_buffer, app_context.window, &swapchain_texture, nullptr, nullptr);
+    SDL_WaitAndAcquireGPUSwapchainTexture(command_buffer, g_window, &swapchain_texture, nullptr, nullptr);
 
-    if (swapchain_texture != nullptr && !is_minimized)
+    if (swapchain_texture != nullptr) // if this is nullptr, can't really render anything
     {
-        // This is mandatory: call ImGui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer!
-        ImGui_ImplSDLGPU3_PrepareDrawData(draw_data, command_buffer);
+        g_gui->prepare_to_render(command_buffer);
 
         // Setup and start a render pass
         SDL_GPUColorTargetInfo target_info = {};
@@ -147,9 +123,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         target_info.cycle = false;
         SDL_GPURenderPass *render_pass = SDL_BeginGPURenderPass(command_buffer, &target_info, 1, nullptr);
 
-        // Render ImGui
-        ImGui_ImplSDLGPU3_RenderDrawData(draw_data, command_buffer, render_pass);
 
+        g_gui->render(command_buffer, render_pass);
         SDL_EndGPURenderPass(render_pass);
     }
 
@@ -161,35 +136,13 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
 void SDL_AppQuit(void *appstate, SDL_AppResult result)
 {
-    AppContext &app_context = *(AppContext *)appstate;
+    delete g_spinning_cube;
+    delete g_gui;
+    delete g_upload_buffer;
 
-    // Wait for GPU to finish
-    if (app_context.gpu_device)
-    {
-        SDL_WaitForGPUIdle(app_context.gpu_device);
-    }
-
-    // Cleanup ImGui
-    ImGui_ImplSDL3_Shutdown();
-    ImGui_ImplSDLGPU3_Shutdown();
-    ImGui::DestroyContext();
-
-    // Cleanup SDL3 GPU
-    if (app_context.gpu_device && app_context.window)
-    {
-        SDL_ReleaseWindowFromGPUDevice(app_context.gpu_device, app_context.window);
-    }
-    if (app_context.gpu_device)
-    {
-        SDL_DestroyGPUDevice(app_context.gpu_device);
-    }
-
-    // Cleanup SDL
-    if (app_context.window)
-    {
-        SDL_DestroyWindow(app_context.window);
-    }
+    SDL_WaitForGPUIdle(g_gpu_device);
+    SDL_ReleaseWindowFromGPUDevice(g_gpu_device, g_window);
+    SDL_DestroyGPUDevice(g_gpu_device);
+    SDL_DestroyWindow(g_window);
     SDL_Quit();
-
-    delete (AppContext *)appstate;
 }
