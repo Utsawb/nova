@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.glsl": "glsl",
+        "unordered_map": "cpp"
+    }
+}
