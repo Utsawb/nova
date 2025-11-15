@@ -1,0 +1,8 @@
+<map id="Input reference" name="Input reference">
+<area shape="rect" id="node1" href="$group__buttons.html" title=" " alt="" coords="203,5,321,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,104,127,129"/>
+<area shape="rect" id="node3" href="$group__joysticks.html" title=" " alt="" coords="222,55,302,80"/>
+<area shape="rect" id="node4" href="$group__keys.html" title=" " alt="" coords="203,104,321,129"/>
+<area shape="rect" id="node5" href="$group__mods.html" title=" " alt="" coords="193,153,331,179"/>
+<area shape="rect" id="node6" href="$group__shapes.html" title=" " alt="" coords="175,203,349,228"/>
+</map>

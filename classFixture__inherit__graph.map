@@ -1,0 +1,4 @@
+<map id="Fixture" name="Fixture">
+<area shape="rect" id="node1" title=" " alt="" coords="21,79,88,104"/>
+<area shape="rect" id="node2" href="$classTest.html" title="This is a test class." alt="" coords="5,5,104,31"/>
+</map>

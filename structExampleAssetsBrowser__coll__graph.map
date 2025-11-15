@@ -1,0 +1,13 @@
+<map id="ExampleAssetsBrowser" name="ExampleAssetsBrowser">
+<area shape="rect" id="node1" title=" " alt="" coords="261,460,436,485"/>
+<area shape="rect" id="node2" href="$structImVector.html" title=" " alt="" coords="10,357,213,383"/>
+<area shape="rect" id="node3" href="$structExampleAsset.html" title=" " alt="" coords="53,269,167,295"/>
+<area shape="rect" id="node4" href="$structImGuiTableSortSpecs.html" title=" " alt="" coords="31,181,189,207"/>
+<area shape="rect" id="node5" href="$structImGuiTableColumnSortSpecs.html" title=" " alt="" coords="5,93,215,119"/>
+<area shape="rect" id="node6" href="$structExampleSelectionWithDeletion.html" title=" " alt="" coords="237,357,461,383"/>
+<area shape="rect" id="node7" href="$structImGuiSelectionBasicStorage.html" title=" " alt="" coords="245,269,452,295"/>
+<area shape="rect" id="node8" href="$structImGuiStorage.html" title=" " alt="" coords="293,181,404,207"/>
+<area shape="rect" id="node9" href="$structImVector.html" title=" " alt="" coords="239,93,461,119"/>
+<area shape="rect" id="node10" href="$structImGuiStoragePair.html" title=" " alt="" coords="283,5,417,31"/>
+<area shape="rect" id="node11" href="$structImVec2.html" title=" " alt="" coords="484,357,555,383"/>
+</map>

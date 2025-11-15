@@ -1,0 +1,11 @@
+<map id="ImGui_ImplWGPU_Data" name="ImGui_ImplWGPU_Data">
+<area shape="rect" id="node1" title=" " alt="" coords="199,372,375,397"/>
+<area shape="rect" id="node2" href="$structImGui__ImplWGPU__InitInfo.html" title=" " alt="" coords="5,284,196,309"/>
+<area shape="rect" id="node3" href="$structRenderResources.html" title=" " alt="" coords="220,284,355,309"/>
+<area shape="rect" id="node4" href="$structImGuiStorage.html" title=" " alt="" coords="231,196,341,221"/>
+<area shape="rect" id="node5" href="$structImVector.html" title=" " alt="" coords="165,93,388,119"/>
+<area shape="rect" id="node6" href="$structImGuiStoragePair.html" title=" " alt="" coords="209,5,344,31"/>
+<area shape="rect" id="node7" href="$structFrameResources.html" title=" " alt="" coords="381,284,511,309"/>
+<area shape="rect" id="node8" href="$structImDrawVert.html" title=" " alt="" coords="397,196,495,221"/>
+<area shape="rect" id="node9" href="$structImVec2.html" title=" " alt="" coords="412,93,483,119"/>
+</map>
