@@ -76,10 +76,21 @@ $(function() {
   <div class="headertitle"><div class="title">DataAcquisition Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class provides functions for getting event/frame data from an aedat4 file or an event imager.  
+ <a href="classDataAcquisition.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="DataAcquisition_8hh_source.html">DataAcquisition.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6b376dcd7794f88d090e4c543d2cbb9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataAcquisition.html#a6b376dcd7794f88d090e4c543d2cbb9b">clear_reader</a> ()</td></tr>
+<tr class="memitem:a219a57019cb7f899040d2d852790b0cf"><td class="memItemLeft" align="right" valign="top"><a id="a219a57019cb7f899040d2d852790b0cf" name="a219a57019cb7f899040d2d852790b0cf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DataAcquisition</b> ()</td></tr>
+<tr class="memdesc:a219a57019cb7f899040d2d852790b0cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, zero initializes all variables. <br /></td></tr>
+<tr class="separator:a219a57019cb7f899040d2d852790b0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b376dcd7794f88d090e4c543d2cbb9b"><td class="memItemLeft" align="right" valign="top"><a id="a6b376dcd7794f88d090e4c543d2cbb9b" name="a6b376dcd7794f88d090e4c543d2cbb9b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_reader</b> ()</td></tr>
+<tr class="memdesc:a6b376dcd7794f88d090e4c543d2cbb9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears member variables pertaining to reader, including reseting the data reader. <br /></td></tr>
 <tr class="separator:a6b376dcd7794f88d090e4c543d2cbb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb23006e1974f20c5b169115aff8e835"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataAcquisition.html#afb23006e1974f20c5b169115aff8e835">clear</a> ()</td></tr>
 <tr class="separator:afb23006e1974f20c5b169115aff8e835"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,7 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aadd186133822e7add8d0b73688ca2b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns frame camera height.  <br /></td></tr>
 <tr class="separator:aadd186133822e7add8d0b73688ca2b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class provides functions for getting event/frame data from an aedat4 file or an event imager. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="afb23006e1974f20c5b169115aff8e835" name="afb23006e1974f20c5b169115aff8e835"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afb23006e1974f20c5b169115aff8e835">&#9670;&#160;</a></span>clear()</h2>
 
@@ -137,32 +150,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6b376dcd7794f88d090e4c543d2cbb9b" name="a6b376dcd7794f88d090e4c543d2cbb9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b376dcd7794f88d090e4c543d2cbb9b">&#9670;&#160;</a></span>clear_reader()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DataAcquisition::clear_reader </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Clears member variables pertaining to reader. </p>
-
-</div>
-</div>
 <a id="aba50c689352a45d080b8eaf4fe023779" name="aba50c689352a45d080b8eaf4fe023779"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba50c689352a45d080b8eaf4fe023779">&#9670;&#160;</a></span>discover_cameras()</h2>
 
@@ -186,7 +173,7 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Scan for cameras and populate parameter store with <a class="el" href="classGUI.html">GUI</a> values to choose from. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Scan for cameras and populate parameter store with <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> values to choose from. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">param_store</td><td>Parameter store to populate. </td></tr>
   </table>
@@ -242,8 +229,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>For dynamic loading (streaming), gets a batch of event data. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html">EventData</a> object to populate with event/frame data </td></tr>
-    <tr><td class="paramname">param_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object with data from <a class="el" href="classGUI.html">GUI</a>. </td></tr>
+    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object to populate with event/frame data </td></tr>
+    <tr><td class="paramname">param_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object with data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -292,8 +279,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>For dynamic loading (streaming), gets a batch of frame data. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html">EventData</a> object to populate with event/frame data </td></tr>
-    <tr><td class="paramname">param_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object with data from <a class="el" href="classGUI.html">GUI</a>. </td></tr>
+    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object to populate with event/frame data </td></tr>
+    <tr><td class="paramname">param_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object with data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -354,7 +341,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Gives event camera resolution to event data. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html">EventData</a> object to give camera resolution to. </td></tr>
+    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object to give camera resolution to. </td></tr>
   </table>
   </dd>
 </dl>
@@ -442,7 +429,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Gives frame camera resolution to event data. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html">EventData</a> object to give camera resolution to. </td></tr>
+    <tr><td class="paramname">evt_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object to give camera resolution to. </td></tr>
   </table>
   </dd>
 </dl>

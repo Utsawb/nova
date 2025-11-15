@@ -150,7 +150,7 @@ work" doesn't mean it's valid. It just means that you were lucky. :-)</p>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md91"></a>
 Can I derive a test fixture from another?</h1>
 <p>Yes.</p>
-<p>Each test fixture has a corresponding and same named test suite. This means only one test suite can use a particular fixture. Sometimes, however, multiple test cases may want to use the same or slightly different fixtures. For example, you may want to make sure that all of a <a class="el" href="classGUI.html">GUI</a> library's test suites don't leak important system resources like fonts and brushes.</p>
+<p>Each test fixture has a corresponding and same named test suite. This means only one test suite can use a particular fixture. Sometimes, however, multiple test cases may want to use the same or slightly different fixtures. For example, you may want to make sure that all of a <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> library's test suites don't leak important system resources like fonts and brushes.</p>
 <p>In GoogleTest, you share a fixture among test suites by putting the shared logic in a base test fixture, then deriving from that base a separate fixture for each test suite that wants to use this common logic. You then use <code>TEST_F()</code> to write tests using each derived fixture.</p>
 <p>Typically, your code looks like this:</p>
 <div class="fragment"><div class="line"> {c++}</div>

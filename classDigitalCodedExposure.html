@@ -76,28 +76,166 @@ $(function() {
   <div class="headertitle"><div class="title">DigitalCodedExposure Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class is responsible for creating the necessary compute pipelines to create the digital coded exposure.  
+ <a href="classDigitalCodedExposure.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="DigitalCodedExposure_8hh_source.html">DigitalCodedExposure.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a96393eee709c5d0c0fffdd473f581eac"><td class="memItemLeft" align="right" valign="top"><a id="a96393eee709c5d0c0fffdd473f581eac" name="a96393eee709c5d0c0fffdd473f581eac"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DigitalCodedExposure</b> (<a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memitem:a96393eee709c5d0c0fffdd473f581eac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDigitalCodedExposure.html#a96393eee709c5d0c0fffdd473f581eac">DigitalCodedExposure</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_GPUCopyPass *<a class="el" href="classDigitalCodedExposure.html#aac0fc36b210a27ddb711ebd375cae674">copy_pass</a>)</td></tr>
+<tr class="memdesc:a96393eee709c5d0c0fffdd473f581eac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Initializes compute pipelines.  <br /></td></tr>
 <tr class="separator:a96393eee709c5d0c0fffdd473f581eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac90afba9232cd34d066587056fbf7086"><td class="memItemLeft" align="right" valign="top"><a id="ac90afba9232cd34d066587056fbf7086" name="ac90afba9232cd34d066587056fbf7086"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~DigitalCodedExposure</b> ()</td></tr>
+<tr class="memdesc:ac90afba9232cd34d066587056fbf7086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. Releases textures and pipelines related to Digital Coded Exposure. <br /></td></tr>
+<tr class="separator:ac90afba9232cd34d066587056fbf7086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a461fbfc16452b08fef5ef50990fab226"><td class="memItemLeft" align="right" valign="top"><a id="a461fbfc16452b08fef5ef50990fab226" name="a461fbfc16452b08fef5ef50990fab226"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>event_handler</b> (SDL_Event *event)</td></tr>
+<tr class="memdesc:a461fbfc16452b08fef5ef50990fab226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unimplemented event handler function for digital coded exposure. For future functionality. <br /></td></tr>
 <tr class="separator:a461fbfc16452b08fef5ef50990fab226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e1690103a840ee97604fde98ac14799"><td class="memItemLeft" align="right" valign="top"><a id="a5e1690103a840ee97604fde98ac14799" name="a5e1690103a840ee97604fde98ac14799"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>cpu_update</b> ()</td></tr>
+<tr class="memdesc:a5e1690103a840ee97604fde98ac14799"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to update Digital Coded Exposure every frame. Recreates texture should file change. <br /></td></tr>
 <tr class="separator:a5e1690103a840ee97604fde98ac14799"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac0fc36b210a27ddb711ebd375cae674"><td class="memItemLeft" align="right" valign="top"><a id="aac0fc36b210a27ddb711ebd375cae674" name="aac0fc36b210a27ddb711ebd375cae674"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copy_pass</b> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memdesc:aac0fc36b210a27ddb711ebd375cae674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unused copy pass. <br /></td></tr>
 <tr class="separator:aac0fc36b210a27ddb711ebd375cae674"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="memItemLeft" align="right" valign="top"><a id="a6f4275fc46ac56dfc71715fd1a08ef8c" name="a6f4275fc46ac56dfc71715fd1a08ef8c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>compute_pass</b> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
+<tr class="memitem:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDigitalCodedExposure.html#a6f4275fc46ac56dfc71715fd1a08ef8c">compute_pass</a> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
+<tr class="memdesc:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute pass. Dispatches compute shaders to calculate Digital Coded Exposure output.  <br /></td></tr>
 <tr class="separator:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82f761898eea90bdadc55815cd069108"><td class="memItemLeft" align="right" valign="top"><a id="a82f761898eea90bdadc55815cd069108" name="a82f761898eea90bdadc55815cd069108"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>render_pass</b> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
+<tr class="memdesc:a82f761898eea90bdadc55815cd069108"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unused render pass. <br /></td></tr>
 <tr class="separator:a82f761898eea90bdadc55815cd069108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class is responsible for creating the necessary compute pipelines to create the digital coded exposure. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a96393eee709c5d0c0fffdd473f581eac" name="a96393eee709c5d0c0fffdd473f581eac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96393eee709c5d0c0fffdd473f581eac">&#9670;&#160;</a></span>DigitalCodedExposure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DigitalCodedExposure::DigitalCodedExposure </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classParameterStore.html">ParameterStore</a> *&#160;</td>
+          <td class="paramname"><em>parameter_store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>render_targets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEventData.html">EventData</a> &amp;&#160;</td>
+          <td class="paramname"><em>event_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_Window *&#160;</td>
+          <td class="paramname"><em>window</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUDevice *&#160;</td>
+          <td class="paramname"><em>gpu_device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classUploadBuffer.html">UploadBuffer</a> *&#160;</td>
+          <td class="paramname"><em>upload_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScrubber.html">Scrubber</a> *&#160;</td>
+          <td class="paramname"><em>scrubber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>copy_pass</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. Initializes compute pipelines. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameter_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object containing data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> </td></tr>
+    <tr><td class="paramname">render_targets</td><td>Render targets of the program </td></tr>
+    <tr><td class="paramname">event_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object containing event/frame data </td></tr>
+    <tr><td class="paramname">window</td><td>SDL_Window to draw on </td></tr>
+    <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to create texture on </td></tr>
+    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html">UploadBuffer</a> object for uploading to gpu </td></tr>
+    <tr><td class="paramname">scrubber</td><td><a class="el" href="classScrubber.html">Scrubber</a> object with data to compute DCE on </td></tr>
+    <tr><td class="paramname">copy_pass</td><td>SDL_GPUCopyPass unused </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6f4275fc46ac56dfc71715fd1a08ef8c" name="a6f4275fc46ac56dfc71715fd1a08ef8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f4275fc46ac56dfc71715fd1a08ef8c">&#9670;&#160;</a></span>compute_pass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DigitalCodedExposure::compute_pass </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCommandBuffer *&#160;</td>
+          <td class="paramname"><em>command_buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute pass. Dispatches compute shaders to calculate Digital Coded Exposure output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command_buffer</td><td>GPU command buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="DigitalCodedExposure_8hh_source.html">DigitalCodedExposure.hh</a></li>
 </ul>

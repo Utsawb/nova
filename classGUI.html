@@ -77,45 +77,252 @@ $(function() {
   <div class="headertitle"><div class="title">GUI Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class provides functions to draw the <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>.  
+ <a href="classGUI.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="GUI_8hh_source.html">GUI.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a51f5e8900f6c87bc23a3f6b27a9e872c"><td class="memItemLeft" align="right" valign="top"><a id="a51f5e8900f6c87bc23a3f6b27a9e872c" name="a51f5e8900f6c87bc23a3f6b27a9e872c"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TIME</b> : uint8_t { <b>UNIT_S</b> = 0
+<tr class="memitem:a51f5e8900f6c87bc23a3f6b27a9e872c"><td class="memItemLeft" align="right" valign="top"><a id="a51f5e8900f6c87bc23a3f6b27a9e872c" name="a51f5e8900f6c87bc23a3f6b27a9e872c"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#a51f5e8900f6c87bc23a3f6b27a9e872c">TIME</a> : uint8_t { <b>UNIT_S</b> = 0
 , <b>UNIT_MS</b> = 1
 , <b>UNIT_US</b> = 2
  }</td></tr>
+<tr class="memdesc:a51f5e8900f6c87bc23a3f6b27a9e872c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents time units used by NOVA. <br /></td></tr>
 <tr class="separator:a51f5e8900f6c87bc23a3f6b27a9e872c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae265c962ca04b05ade45ba6de6f44350"><td class="memItemLeft" align="right" valign="top"><a id="ae265c962ca04b05ade45ba6de6f44350" name="ae265c962ca04b05ade45ba6de6f44350"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SHUTTER</b> { <b>TIME_BASED</b> = 0
+<tr class="memitem:ae265c962ca04b05ade45ba6de6f44350"><td class="memItemLeft" align="right" valign="top"><a id="ae265c962ca04b05ade45ba6de6f44350" name="ae265c962ca04b05ade45ba6de6f44350"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#ae265c962ca04b05ade45ba6de6f44350">SHUTTER</a> { <b>TIME_BASED</b> = 0
 , <b>EVENT_BASED</b> = 1
  }</td></tr>
+<tr class="memdesc:ae265c962ca04b05ade45ba6de6f44350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Two types of shutter (time or event based) <br /></td></tr>
 <tr class="separator:ae265c962ca04b05ade45ba6de6f44350"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9692874ab129ef6b524e99c93952f51"><td class="memItemLeft" align="right" valign="top"><a id="aa9692874ab129ef6b524e99c93952f51" name="aa9692874ab129ef6b524e99c93952f51"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>PROGRAM_STATE</b> : uint8_t { <b>IDLE</b> = 0
+<tr class="memitem:aa9692874ab129ef6b524e99c93952f51"><td class="memItemLeft" align="right" valign="top"><a id="aa9692874ab129ef6b524e99c93952f51" name="aa9692874ab129ef6b524e99c93952f51"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#aa9692874ab129ef6b524e99c93952f51">PROGRAM_STATE</a> : uint8_t { <b>IDLE</b> = 0
 , <b>FILE_STREAM</b> = 2
 , <b>CAMERA_STREAM</b> = 3
  }</td></tr>
+<tr class="memdesc:aa9692874ab129ef6b524e99c93952f51"><td class="mdescLeft">&#160;</td><td class="mdescRight">State the program is in. <br /></td></tr>
 <tr class="separator:aa9692874ab129ef6b524e99c93952f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aca0789fb431564b0ac8f3d1b8746f5d6"><td class="memItemLeft" align="right" valign="top"><a id="aca0789fb431564b0ac8f3d1b8746f5d6" name="aca0789fb431564b0ac8f3d1b8746f5d6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>GUI</b> (std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber)</td></tr>
+<tr class="memitem:aca0789fb431564b0ac8f3d1b8746f5d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#aca0789fb431564b0ac8f3d1b8746f5d6">GUI</a> (std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber)</td></tr>
+<tr class="memdesc:aca0789fb431564b0ac8f3d1b8746f5d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>.  <br /></td></tr>
 <tr class="separator:aca0789fb431564b0ac8f3d1b8746f5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c76e94d7b511f370d5aed23d3a453f2"><td class="memItemLeft" align="right" valign="top"><a id="a8c76e94d7b511f370d5aed23d3a453f2" name="a8c76e94d7b511f370d5aed23d3a453f2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>event_handler</b> (SDL_Event *event)</td></tr>
+<tr class="memitem:ac9cae2328dcb5d83bdfaeca49a2eb695"><td class="memItemLeft" align="right" valign="top"><a id="ac9cae2328dcb5d83bdfaeca49a2eb695" name="ac9cae2328dcb5d83bdfaeca49a2eb695"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~GUI</b> ()</td></tr>
+<tr class="memdesc:ac9cae2328dcb5d83bdfaeca49a2eb695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. Cleans up IMGUI. <br /></td></tr>
+<tr class="separator:ac9cae2328dcb5d83bdfaeca49a2eb695"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c76e94d7b511f370d5aed23d3a453f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#a8c76e94d7b511f370d5aed23d3a453f2">event_handler</a> (SDL_Event *event)</td></tr>
+<tr class="memdesc:a8c76e94d7b511f370d5aed23d3a453f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">IMGUI event handler.  <br /></td></tr>
 <tr class="separator:a8c76e94d7b511f370d5aed23d3a453f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97abfb1a43124db376a3486b39f26f09"><td class="memItemLeft" align="right" valign="top"><a id="a97abfb1a43124db376a3486b39f26f09" name="a97abfb1a43124db376a3486b39f26f09"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>prepare_to_render</b> (SDL_GPUCommandBuffer *command_buffer, float fps)</td></tr>
+<tr class="memitem:a97abfb1a43124db376a3486b39f26f09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#a97abfb1a43124db376a3486b39f26f09">prepare_to_render</a> (SDL_GPUCommandBuffer *command_buffer, float fps)</td></tr>
+<tr class="memdesc:a97abfb1a43124db376a3486b39f26f09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares to renders the <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> in current frame. This is mandatory: call ImGui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer!  <br /></td></tr>
 <tr class="separator:a97abfb1a43124db376a3486b39f26f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2e5f0397af70ff217b2d528322b85c1"><td class="memItemLeft" align="right" valign="top"><a id="ae2e5f0397af70ff217b2d528322b85c1" name="ae2e5f0397af70ff217b2d528322b85c1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>render</b> (SDL_GPUCommandBuffer *command_buffer, SDL_GPURenderPass *render_pass)</td></tr>
+<tr class="memitem:ae2e5f0397af70ff217b2d528322b85c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGUI.html#ae2e5f0397af70ff217b2d528322b85c1">render</a> (SDL_GPUCommandBuffer *command_buffer, SDL_GPURenderPass *render_pass)</td></tr>
+<tr class="memdesc:ae2e5f0397af70ff217b2d528322b85c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the current <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> frame.  <br /></td></tr>
 <tr class="separator:ae2e5f0397af70ff217b2d528322b85c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa465fc9ac089b7026dc068da92e3635f"><td class="memItemLeft" align="right" valign="top"><a id="aa465fc9ac089b7026dc068da92e3635f" name="aa465fc9ac089b7026dc068da92e3635f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>render_viewports</b> ()</td></tr>
 <tr class="separator:aa465fc9ac089b7026dc068da92e3635f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b6a60e9b8dfab1beb4a0ebff69163e7"><td class="memItemLeft" align="right" valign="top"><a id="a8b6a60e9b8dfab1beb4a0ebff69163e7" name="a8b6a60e9b8dfab1beb4a0ebff69163e7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset_layout_with_dockbuilder</b> ()</td></tr>
+<tr class="memdesc:a8b6a60e9b8dfab1beb4a0ebff69163e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> layout back to default. <br /></td></tr>
 <tr class="separator:a8b6a60e9b8dfab1beb4a0ebff69163e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class provides functions to draw the <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aca0789fb431564b0ac8f3d1b8746f5d6" name="aca0789fb431564b0ac8f3d1b8746f5d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0789fb431564b0ac8f3d1b8746f5d6">&#9670;&#160;</a></span>GUI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GUI::GUI </td>
+          <td>(</td>
+          <td class="paramtype">std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>render_targets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classParameterStore.html">ParameterStore</a> *&#160;</td>
+          <td class="paramname"><em>parameter_store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_Window *&#160;</td>
+          <td class="paramname"><em>window</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUDevice *&#160;</td>
+          <td class="paramname"><em>gpu_device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScrubber.html">Scrubber</a> *&#160;</td>
+          <td class="paramname"><em>scrubber</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor for <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">render_targets</td><td>Render targets of the program </td></tr>
+    <tr><td class="paramname">parameter_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object containing data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> </td></tr>
+    <tr><td class="paramname">window</td><td>SDL_Window to draw on </td></tr>
+    <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to create texture on </td></tr>
+    <tr><td class="paramname">scrubber</td><td><a class="el" href="classScrubber.html">Scrubber</a> object with data to compute DCE on </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8c76e94d7b511f370d5aed23d3a453f2" name="a8c76e94d7b511f370d5aed23d3a453f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c76e94d7b511f370d5aed23d3a453f2">&#9670;&#160;</a></span>event_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GUI::event_handler </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Event *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>IMGUI event handler. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event</td><td>SDL event to process. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a97abfb1a43124db376a3486b39f26f09" name="a97abfb1a43124db376a3486b39f26f09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97abfb1a43124db376a3486b39f26f09">&#9670;&#160;</a></span>prepare_to_render()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GUI::prepare_to_render </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCommandBuffer *&#160;</td>
+          <td class="paramname"><em>command_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>fps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prepares to renders the <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> in current frame. This is mandatory: call ImGui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer! </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command_buffer</td><td>GPU command buffer. </td></tr>
+    <tr><td class="paramname">fps</td><td>Calculated fps in current frame. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae2e5f0397af70ff217b2d528322b85c1" name="ae2e5f0397af70ff217b2d528322b85c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2e5f0397af70ff217b2d528322b85c1">&#9670;&#160;</a></span>render()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GUI::render </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCommandBuffer *&#160;</td>
+          <td class="paramname"><em>command_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPURenderPass *&#160;</td>
+          <td class="paramname"><em>render_pass</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders the current <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> frame. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command_buffer</td><td>GPU command buffer. </td></tr>
+    <tr><td class="paramname">render_pass</td><td>Render pass. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="GUI_8hh_source.html">GUI.hh</a></li>
 </ul>

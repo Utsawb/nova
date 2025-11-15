@@ -76,14 +76,23 @@ $(function() {
   <div class="headertitle"><div class="title">DataWriter Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class provides functionality to write event and frame data to an output aedat4 file. Works on a worker queue model.  
+ <a href="classDataWriter.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="DataWriter_8hh_source.html">DataWriter.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ac6b773a3e07c3047b54cdd96d1ed2f93"><td class="memItemLeft" align="right" valign="top"><a id="ac6b773a3e07c3047b54cdd96d1ed2f93" name="ac6b773a3e07c3047b54cdd96d1ed2f93"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DataWriter</b> ()</td></tr>
+<tr class="memdesc:ac6b773a3e07c3047b54cdd96d1ed2f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, zero initializes all values. <br /></td></tr>
+<tr class="separator:ac6b773a3e07c3047b54cdd96d1ed2f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2420dc25377ec17aa8863f007adf21ab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#a2420dc25377ec17aa8863f007adf21ab">get_writing_frame_data</a> ()</td></tr>
-<tr class="memdesc:a2420dc25377ec17aa8863f007adf21ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for writing_frame_data.  <br /></td></tr>
+<tr class="memdesc:a2420dc25377ec17aa8863f007adf21ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for writing_frame_data. <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> should use to determine if writing frame data or not.  <br /></td></tr>
 <tr class="separator:a2420dc25377ec17aa8863f007adf21ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaae50da131bf87c1620a9006898f9c16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#aaae50da131bf87c1620a9006898f9c16">get_writing_event_data</a> ()</td></tr>
-<tr class="memdesc:aaae50da131bf87c1620a9006898f9c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for writing_event_data.  <br /></td></tr>
+<tr class="memdesc:aaae50da131bf87c1620a9006898f9c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for writing_event_data. <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> should use to determine if writing event data or not.  <br /></td></tr>
 <tr class="separator:aaae50da131bf87c1620a9006898f9c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a981f07ee540220cd145be6a190fc6d67"><td class="memItemLeft" align="right" valign="top"><a id="a981f07ee540220cd145be6a190fc6d67" name="a981f07ee540220cd145be6a190fc6d67"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
@@ -107,7 +116,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_frame_data</b> (d
 <tr class="memdesc:a2d9f3b9a2d15dbdff99d188c5058441b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops an frame data from queue and writes it to persistent storage.  <br /></td></tr>
 <tr class="separator:a2d9f3b9a2d15dbdff99d188c5058441b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class provides functionality to write event and frame data to an output aedat4 file. Works on a worker queue model. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaae50da131bf87c1620a9006898f9c16" name="aaae50da131bf87c1620a9006898f9c16"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaae50da131bf87c1620a9006898f9c16">&#9670;&#160;</a></span>get_writing_event_data()</h2>
 
@@ -131,8 +142,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_frame_data</b> (d
 </table>
 </div><div class="memdoc">
 
-<p>Getter for writing_event_data. </p>
-<dl class="section return"><dt>Returns</dt><dd>value of writing_event_data </dd></dl>
+<p>Getter for writing_event_data. <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> should use to determine if writing event data or not. </p>
+<dl class="section return"><dt>Returns</dt><dd>value of writing_event_data (is the object writing event data or not) </dd></dl>
 
 </div>
 </div>
@@ -159,8 +170,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_frame_data</b> (d
 </table>
 </div><div class="memdoc">
 
-<p>Getter for writing_frame_data. </p>
-<dl class="section return"><dt>Returns</dt><dd>value of writing_frame_data </dd></dl>
+<p>Getter for writing_frame_data. <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> should use to determine if writing frame data or not. </p>
+<dl class="section return"><dt>Returns</dt><dd>value of writing_frame_data (is the object writing frame data or not) </dd></dl>
 
 </div>
 </div>

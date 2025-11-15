@@ -8,8 +8,9 @@ var searchData=
   ['oneshotunaryfunctor_5',['OneShotUnaryFunctor',['../structtesting_1_1gmock__more__actions__test_1_1OneShotUnaryFunctor.html',1,'testing::gmock_more_actions_test']]],
   ['ontheflyprimetable_6',['OnTheFlyPrimeTable',['../classOnTheFlyPrimeTable.html',1,'']]],
   ['open_7',['open',['../structcmd_8h.html#a2c4414339f388561554c2deab11a1a07',1,'structcmd.h']]],
-  ['osstacktracegetter_8',['OsStackTraceGetter',['../classtesting_1_1internal_1_1OsStackTraceGetter.html',1,'testing::internal']]],
-  ['osstacktracegetterinterface_9',['OsStackTraceGetterInterface',['../classtesting_1_1internal_1_1OsStackTraceGetterInterface.html',1,'testing::internal']]],
-  ['overload_5ftest_10',['Overload_Test',['../classOverload__Test.html',1,'']]],
-  ['overloadedmockmethodtest_11',['OverloadedMockMethodTest',['../classtesting_1_1gmock__function__mocker__test_1_1OverloadedMockMethodTest.html',1,'testing::gmock_function_mocker_test']]]
+  ['operator_5b_5d_8',['operator[]',['../classEventData_1_1MappedEventBuffer.html#a1fa6d8c7a0e400bd0fa3d3922c44dbb0',1,'EventData::MappedEventBuffer::operator[](std::size_t index)'],['../classEventData_1_1MappedEventBuffer.html#ab1c2864066ed114db1749bef8cf421c4',1,'EventData::MappedEventBuffer::operator[](std::size_t index) const']]],
+  ['osstacktracegetter_9',['OsStackTraceGetter',['../classtesting_1_1internal_1_1OsStackTraceGetter.html',1,'testing::internal']]],
+  ['osstacktracegetterinterface_10',['OsStackTraceGetterInterface',['../classtesting_1_1internal_1_1OsStackTraceGetterInterface.html',1,'testing::internal']]],
+  ['overload_5ftest_11',['Overload_Test',['../classOverload__Test.html',1,'']]],
+  ['overloadedmockmethodtest_12',['OverloadedMockMethodTest',['../classtesting_1_1gmock__function__mocker__test_1_1OverloadedMockMethodTest.html',1,'testing::gmock_function_mocker_test']]]
 ];

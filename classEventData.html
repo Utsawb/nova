@@ -77,6 +77,11 @@ $(function() {
   <div class="headertitle"><div class="title">EventData Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> is responsible for intaking event and frame data from <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> and presenting it to the drawing code in a convenient format.  
+ <a href="classEventData.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="EventData_8hh_source.html">EventData.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -85,6 +90,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEventData_1_1FrameDatum.html">FrameDatum</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData_1_1MappedEventBuffer.html">MappedEventBuffer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secondary storage mapped event buffer. Stores event data in second storage and provides access to it like a standard random access std::vector object.  <a href="classEventData_1_1MappedEventBuffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -114,16 +120,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 <tr class="memitem:aa689da14a96ad08cadf2511006dd1c00"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#aa689da14a96ad08cadf2511006dd1c00">get_camera_frame_resolution</a> ()</td></tr>
 <tr class="separator:aa689da14a96ad08cadf2511006dd1c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab85472e6d72619e049303a851c5c5d3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#ab85472e6d72619e049303a851c5c5d3e">write_evt_data</a> (<a class="el" href="structEventData_1_1EventDatum.html">EventDatum</a> raw_evt_data)</td></tr>
-<tr class="memdesc:ab85472e6d72619e049303a851c5c5d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts event data into the event data vector with relative timestamps (absolute timestamp - absolute earliest timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0.  <br /></td></tr>
+<tr class="memdesc:ab85472e6d72619e049303a851c5c5d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts event data into the event data vector with relative timestamps (absolute timestamp - absolute earliest event timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0.  <br /></td></tr>
 <tr class="separator:ab85472e6d72619e049303a851c5c5d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95844b90674df9e8027b6f415bfa79f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#a95844b90674df9e8027b6f415bfa79f2">write_frame_data</a> (<a class="el" href="structEventData_1_1FrameDatum.html">FrameDatum</a> raw_frame_data)</td></tr>
-<tr class="memdesc:a95844b90674df9e8027b6f415bfa79f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts frame data into the frame data vector with relative timestamps (absolute timestamp - absolute earliest timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0.  <br /></td></tr>
+<tr class="memdesc:a95844b90674df9e8027b6f415bfa79f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts frame data into the frame data vector with relative timestamps (absolute timestamp - absolute earliest event timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0.  <br /></td></tr>
 <tr class="separator:a95844b90674df9e8027b6f415bfa79f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d92ba9871490efe37cc00e54ec959c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classEventData_1_1MappedEventBuffer.html">MappedEventBuffer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#a05d92ba9871490efe37cc00e54ec959c">get_evt_vector_ref</a> () const</td></tr>
-<tr class="memdesc:a05d92ba9871490efe37cc00e54ec959c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes event data with relative timestamp as a vector of glm::vec4. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors.  <br /></td></tr>
+<tr class="memdesc:a05d92ba9871490efe37cc00e54ec959c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes event data with relative timestamp (absolute timestamp - earliest event timestamp) as a vector of glm::vec4. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors.  <br /></td></tr>
 <tr class="separator:a05d92ba9871490efe37cc00e54ec959c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe945611cd0d8b1a00cc506292fcb5d4"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::pair&lt; cv::Mat, float &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#abe945611cd0d8b1a00cc506292fcb5d4">get_frame_vector_ref</a> ()</td></tr>
-<tr class="memdesc:abe945611cd0d8b1a00cc506292fcb5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes frame data with relative timestamp as a vector of pairs containing image data and timestamp. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors.  <br /></td></tr>
+<tr class="memdesc:abe945611cd0d8b1a00cc506292fcb5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes frame data with relative timestamp (absolute timestamp - earliest event timestamp) as a vector of pairs containing image data and timestamp. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors.  <br /></td></tr>
 <tr class="separator:abe945611cd0d8b1a00cc506292fcb5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35a39ae143c6e243452eda696e20b35e"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#a35a39ae143c6e243452eda696e20b35e">get_earliest_evt_timestamp</a> ()</td></tr>
 <tr class="memdesc:a35a39ae143c6e243452eda696e20b35e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the earliest event timestamp.  <br /></td></tr>
@@ -132,7 +138,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 <tr class="memdesc:a0fd9d586ed5f5ef1c48d84a5feb2a704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets index of first event data in relative event data vector with timestamp that is equal or greater than provided timestamp.  <br /></td></tr>
 <tr class="separator:a0fd9d586ed5f5ef1c48d84a5feb2a704"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> is responsible for intaking event and frame data from <a class="el" href="classDataAcquisition.html" title="This class provides functions for getting event/frame data from an aedat4 file or an event imager.">DataAcquisition</a> and presenting it to the drawing code in a convenient format. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a99eaae0733dd7fc16f1da463153745a0" name="a99eaae0733dd7fc16f1da463153745a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99eaae0733dd7fc16f1da463153745a0">&#9670;&#160;</a></span>get_camera_event_resolution()</h2>
 
@@ -244,7 +252,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>-1 if relative event data vector is empty, index otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>-1 if relative event data vector is empty or index not found, index otherwise. </dd></dl>
 
 </div>
 </div>
@@ -271,13 +279,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 </table>
 </div><div class="memdoc">
 
-<p>Exposes event data with relative timestamp as a vector of glm::vec4. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">relative</td><td>If true, returns data with relative timestamps (earliest timestamp subtracted from all timestamps). Otherwise regular timestamps. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Exposes event data with relative timestamp (absolute timestamp - earliest event timestamp) as a vector of glm::vec4. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors. </p>
 <dl class="section return"><dt>Returns</dt><dd>const reference to internal event data vector. </dd></dl>
 
 </div>
@@ -305,13 +307,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 </table>
 </div><div class="memdoc">
 
-<p>Exposes frame data with relative timestamp as a vector of pairs containing image data and timestamp. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">relative</td><td>If true, returns data with relative timestamps (earliest timestamp subtracted from all timestamps). Otherwise regular timestamps. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Exposes frame data with relative timestamp (absolute timestamp - earliest event timestamp) as a vector of pairs containing image data and timestamp. IMPORTANT: Caller must have called <a class="el" href="classEventData.html#a6fcb0bb54a92fe89587501ad82c593ad" title="Locks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned referenc...">lock_data_vectors()</a>. Call <a class="el" href="classEventData.html#a95ba6371deda8f7f5063c73a7e95b3d2" title="Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned refere...">unlock_data_vectors()</a> when done working with the data vectors. </p>
 <dl class="section return"><dt>Returns</dt><dd>const reference to internal frame data vector. </dd></dl>
 
 </div>
@@ -426,7 +422,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 </table>
 </div><div class="memdoc">
 
-<p>Inserts event data into the event data vector with relative timestamps (absolute timestamp - absolute earliest timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0. </p>
+<p>Inserts event data into the event data vector with relative timestamps (absolute timestamp - absolute earliest event timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">raw_evt_data</td><td>Raw event data to add. </td></tr>
@@ -460,7 +456,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 </table>
 </div><div class="memdoc">
 
-<p>Inserts frame data into the frame data vector with relative timestamps (absolute timestamp - absolute earliest timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0. </p>
+<p>Inserts frame data into the frame data vector with relative timestamps (absolute timestamp - absolute earliest event timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">raw_frame_data</td><td>Raw frame data to add. </td></tr>
