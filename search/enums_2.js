@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globenum_0',['GlobEnum',['../autolink_8cpp.html#a656d63cf384d2a6f23c2c18523a7bc5e',1,'autolink.cpp']]]
+  ['time_0',['TIME',['../classGUI.html#a51f5e8900f6c87bc23a3f6b27a9e872c',1,'GUI']]]
 ];

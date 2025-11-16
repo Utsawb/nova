@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['javadoc_5ftest_0',['Javadoc_Test',['../classJavadoc__Test.html',1,'Javadoc_Test'],['../classJavadoc__Test.html#a17313327932ae97596b0a455ba8342cc',1,'Javadoc_Test::Javadoc_Test()']]],
-  ['joysticks_1',['Joysticks',['../group__joysticks.html',1,'']]]
+  ['operator_5b_5d_0',['operator[]',['../classEventData_1_1MappedEventBuffer.html#a1fa6d8c7a0e400bd0fa3d3922c44dbb0',1,'EventData::MappedEventBuffer::operator[](std::size_t index)'],['../classEventData_1_1MappedEventBuffer.html#ab1c2864066ed114db1749bef8cf421c4',1,'EventData::MappedEventBuffer::operator[](std::size_t index) const']]]
 ];

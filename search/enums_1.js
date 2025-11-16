@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['enumtype_0',['EnumType',['../classAfterdoc__Test.html#adab0cd7ad3b4875e245ca8f6238a388a',1,'Afterdoc_Test']]],
-  ['etype_1',['EType',['../classAutolink__Test.html#aeb611627c332d067bded1806b1bb45c2',1,'Autolink_Test']]]
+  ['scrubbermode_0',['ScrubberMode',['../classScrubber.html#ac6972d821c79db8aba8dcd06a627b9ce',1,'Scrubber']]],
+  ['scrubbertype_1',['ScrubberType',['../classScrubber.html#a86b868a31acfe6d3ebaa9089b6f67efb',1,'Scrubber']]],
+  ['shutter_2',['SHUTTER',['../classGUI.html#ae265c962ca04b05ade45ba6de6f44350',1,'GUI']]]
 ];

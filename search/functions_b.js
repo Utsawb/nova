@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['main_0',['main',['../manual_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'manual.c']]],
-  ['main_1',['Main',['../namespacegmock__test__utils.html#ad79dc6aea3727ee23b5f5c454ef0d78a',1,'gmock_test_utils.Main()'],['../namespacegtest__test__utils.html#a5361b42d9c6843b5b117ead4d1c58cc5',1,'gtest_test_utils.Main()']]],
-  ['mappedeventbuffer_2',['MappedEventBuffer',['../classEventData_1_1MappedEventBuffer.html#a104bdef1240c2acd27e212280366abb3',1,'EventData::MappedEventBuffer']]],
-  ['max_5fsize_3',['max_size',['../classEventData_1_1MappedEventBuffer.html#a495657cb0465deeb7860825f998e26c1',1,'EventData::MappedEventBuffer']]],
-  ['member_4',['member',['../classAfterdoc__Test.html#a57ba94e9039ee90a1b191ae0009a05dd',1,'Afterdoc_Test::member()'],['../classAutolink__Test.html#a393ea281f235a2f603d98daf72b0d411',1,'Autolink_Test::member(int)'],['../classAutolink__Test.html#acf783a43c2b4b6cc9dd2361784eca2e1',1,'Autolink_Test::member(int, int)'],['../classFn__Test.html#a823b5c9726bb8f6ece50e57ac8e3092c',1,'Fn_Test::member()']]]
+  ['render_0',['render',['../classGUI.html#ae2e5f0397af70ff217b2d528322b85c1',1,'GUI']]],
+  ['render_5fpass_1',['render_pass',['../classVisualizer.html#a07b9d9de1e56d6bdfc617b87d6f4e073',1,'Visualizer']]],
+  ['reset_5flayout_5fwith_5fdockbuilder_2',['reset_layout_with_dockbuilder',['../classGUI.html#a8b6a60e9b8dfab1beb4a0ebff69163e7',1,'GUI']]]
 ];

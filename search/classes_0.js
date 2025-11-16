@@ -1,25 +1,4 @@
 var searchData=
 [
-  ['a_0',['A',['../classA.html',1,'']]],
-  ['action_1',['Action',['../classtesting_1_1Action.html',1,'testing']]],
-  ['action_3c_20originalfunction_20_3e_2',['Action&lt; OriginalFunction &gt;',['../classtesting_1_1Action.html',1,'testing']]],
-  ['action_3c_20r_28args_2e_2e_2e_29_3e_3',['Action&lt; R(Args...)&gt;',['../classtesting_1_1Action_3_01R_07Args_8_8_8_08_4.html',1,'testing']]],
-  ['actionimpl_4',['ActionImpl',['../structtesting_1_1internal_1_1ActionImpl.html',1,'testing::internal']]],
-  ['actionimpl_3c_20r_28args_2e_2e_2e_29_2c_20impl_20_3e_5',['ActionImpl&lt; R(Args...), Impl &gt;',['../structtesting_1_1internal_1_1ActionImpl_3_01R_07Args_8_8_8_08_00_01Impl_01_4.html',1,'testing::internal']]],
-  ['actioninterface_6',['ActionInterface',['../classtesting_1_1ActionInterface.html',1,'testing']]],
-  ['afterdoc_5ftest_7',['Afterdoc_Test',['../classAfterdoc__Test.html',1,'']]],
-  ['ahashtable_8',['AHashTable',['../structAHashTable.html',1,'']]],
-  ['allowsgenericstreaming_9',['AllowsGenericStreaming',['../classtesting_1_1gtest__printers__test_1_1AllowsGenericStreaming.html',1,'testing::gtest_printers_test']]],
-  ['allowsgenericstreamingandimplicitconversiontemplate_10',['AllowsGenericStreamingAndImplicitConversionTemplate',['../classtesting_1_1gtest__printers__test_1_1AllowsGenericStreamingAndImplicitConversionTemplate.html',1,'testing::gtest_printers_test']]],
-  ['allowsgenericstreamingtemplate_11',['AllowsGenericStreamingTemplate',['../classtesting_1_1gtest__printers__test_1_1AllowsGenericStreamingTemplate.html',1,'testing::gtest_printers_test']]],
-  ['alternatecallable_12',['AlternateCallable',['../structtesting_1_1gmock__function__mocker__test_1_1AlternateCallable.html',1,'testing::gmock_function_mocker_test']]],
-  ['appdelegate_13',['AppDelegate',['../interfaceAppDelegate.html',1,'']]],
-  ['appview_14',['AppView',['../interfaceAppView.html',1,'']]],
-  ['appviewcontroller_15',['AppViewController',['../interfaceAppViewController.html',1,'']]],
-  ['appviewcontroller_28_29_16',['AppViewController()',['../categoryAppViewController_07_08.html',1,'']]],
-  ['arraysynthbase_17',['ArraySynthBase',['../classimgui__lldb_1_1ArraySynthBase.html',1,'imgui_lldb']]],
-  ['asserthelper_18',['AssertHelper',['../classtesting_1_1internal_1_1AssertHelper.html',1,'testing::internal']]],
-  ['assertionresult_19',['AssertionResult',['../classmy__namespace_1_1testing_1_1AssertionResult.html',1,'my_namespace::testing']]],
-  ['assignaction_20',['AssignAction',['../classtesting_1_1internal_1_1AssignAction.html',1,'testing::internal']]],
-  ['autolink_5ftest_21',['Autolink_Test',['../classAutolink__Test.html',1,'']]]
+  ['camera_0',['Camera',['../classCamera.html',1,'']]]
 ];

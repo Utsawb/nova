@@ -108,7 +108,7 @@ $(function() {
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_class" href="classParameterStore.html">ParameterStore</a> *parameter_store;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        SDL_Window *window = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        SDL_GPUDevice *gpu_device = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <a class="code hl_struct" href="structImDrawData.html">ImDrawData</a> *draw_data = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        ImDrawData *draw_data = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_class" href="classScrubber.html">Scrubber</a> *scrubber = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">const</span> std::string time_units[] = {<span class="stringliteral">&quot;(s)&quot;</span>, <span class="stringliteral">&quot;(ms)&quot;</span>, <span class="stringliteral">&quot;(us)&quot;</span>};</div>
@@ -369,7 +369,7 @@ $(function() {
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            ImGui::Text(<span class="stringliteral">&quot;Max FPS: %.1f&quot;</span>, max_fps);</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            ImGui::Separator();</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            ImGui::PlotLines(<span class="stringliteral">&quot;##FPS History&quot;</span>, fps_history_buf.data(), <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(fps_history_buf.size()),</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                             <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(fps_buf_index), <span class="keyword">nullptr</span>, 0.0f, max_fps + 10.0f, <a class="code hl_struct" href="structImVec2.html">ImVec2</a>(0, 80));</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                             <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(fps_buf_index), <span class="keyword">nullptr</span>, 0.0f, max_fps + 10.0f, ImVec2(0, 80));</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            ImGui::Separator();</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            <span class="keywordflow">if</span> (ImGui::Button(<span class="stringliteral">&quot;Reset Layout&quot;</span>))</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            {</div>
@@ -599,7 +599,7 @@ $(function() {
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                <span class="keywordflow">if</span> (texture)</div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                {</div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                    <span class="comment">// Get the available pane size</span></div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> pane_size = ImGui::GetContentRegionAvail();</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                    ImVec2 pane_size = ImGui::GetContentRegionAvail();</div>
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span> </div>
 <div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                    <span class="comment">// Get texture dimensions to calculate aspect ratio</span></div>
 <div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                    Uint32 tex_w, tex_h;</div>
@@ -607,7 +607,7 @@ $(function() {
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                                       (float)render_targets.at(<span class="stringliteral">&quot;VisualizerColor&quot;</span>).height;</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span> </div>
 <div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                    <span class="comment">// Calculate display size to fit the pane while maintaining aspect ratio</span></div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> display_size = pane_size;</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                    ImVec2 display_size = pane_size;</div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                    <span class="keywordtype">float</span> pane_aspect = pane_size.x / pane_size.y;</div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span> </div>
 <div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                    <span class="keywordflow">if</span> (tex_aspect &gt; pane_aspect)</div>
@@ -911,7 +911,7 @@ $(function() {
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>                <span class="keywordflow">if</span> (texture)</div>
 <div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>                {</div>
 <div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>                    <span class="comment">// Get the available pane size</span></div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> pane_size = ImGui::GetContentRegionAvail();</div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>                    ImVec2 pane_size = ImGui::GetContentRegionAvail();</div>
 <div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span> </div>
 <div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>                    <span class="comment">// Get texture dimensions to calculate aspect ratio</span></div>
 <div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>                    Uint32 tex_w, tex_h;</div>
@@ -919,7 +919,7 @@ $(function() {
 <div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>                                       (float)render_targets.at(<span class="stringliteral">&quot;DigitalCodedExposure&quot;</span>).height;</div>
 <div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span> </div>
 <div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>                    <span class="comment">// Calculate display size to fit the pane while maintaining aspect ratio</span></div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> display_size = pane_size;</div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>                    ImVec2 display_size = pane_size;</div>
 <div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>                    <span class="keywordtype">float</span> pane_aspect = pane_size.x / pane_size.y;</div>
 <div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span> </div>
 <div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>                    <span class="keywordflow">if</span> (tex_aspect &gt; pane_aspect)</div>
@@ -968,7 +968,7 @@ $(function() {
 <div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>                <span class="keywordflow">if</span> (texture)</div>
 <div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>                {</div>
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>                    <span class="comment">// Get the available pane size</span></div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> pane_size = ImGui::GetContentRegionAvail();</div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>                    ImVec2 pane_size = ImGui::GetContentRegionAvail();</div>
 <div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span> </div>
 <div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>                    <span class="comment">// Get texture dimensions to calculate aspect ratio</span></div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>                    Uint32 tex_w, tex_h;</div>
@@ -976,7 +976,7 @@ $(function() {
 <div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>                                       (float)render_targets.at(<span class="stringliteral">&quot;SpinningCubeColor&quot;</span>).height;</div>
 <div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span> </div>
 <div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>                    <span class="comment">// Calculate display size to fit the pane while maintaining aspect ratio</span></div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>                    <a class="code hl_struct" href="structImVec2.html">ImVec2</a> display_size = pane_size;</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>                    ImVec2 display_size = pane_size;</div>
 <div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>                    <span class="keywordtype">float</span> pane_aspect = pane_size.x / pane_size.y;</div>
 <div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span> </div>
 <div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>                    <span class="keywordflow">if</span> (tex_aspect &gt; pane_aspect)</div>
@@ -1043,7 +1043,7 @@ $(function() {
 <div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>            <span class="comment">// Setup Dear ImGui context</span></div>
 <div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>            IMGUI_CHECKVERSION();</div>
 <div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>            ImGui::CreateContext();</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>            <a class="code hl_struct" href="structImGuiIO.html">ImGuiIO</a> &amp;io = ImGui::GetIO();</div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>            ImGuiIO &amp;io = ImGui::GetIO();</div>
 <div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>            (void)io;</div>
 <div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>            io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; <span class="comment">// Enable Keyboard Controls</span></div>
 <div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;</div>
@@ -1057,7 +1057,7 @@ $(function() {
 <div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span> </div>
 <div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>            <span class="comment">// Setup scaling</span></div>
 <div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>            <span class="keywordtype">float</span> scaling_factor = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>            <a class="code hl_struct" href="structImGuiStyle.html">ImGuiStyle</a> &amp;style = ImGui::GetStyle();</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>            ImGuiStyle &amp;style = ImGui::GetStyle();</div>
 <div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>            style.ScaleAllSizes(scaling_factor);</div>
 <div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>            style.FontScaleDpi = scaling_factor;</div>
 <div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>            io.ConfigDpiScaleFonts = <span class="keyword">true</span>;</div>
@@ -1065,7 +1065,7 @@ $(function() {
 <div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span> </div>
 <div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>            <span class="comment">// Setup Platform/Renderer backends</span></div>
 <div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>            ImGui_ImplSDL3_InitForSDLGPU(window);</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>            <a class="code hl_struct" href="structImGui__ImplSDLGPU3__InitInfo.html">ImGui_ImplSDLGPU3_InitInfo</a> init_info = {.Device = gpu_device,</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>            ImGui_ImplSDLGPU3_InitInfo init_info = {.Device = gpu_device,</div>
 <div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>                                                    .ColorTargetFormat =</div>
 <div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>                                                        SDL_GetGPUSwapchainTextureFormat(gpu_device, window),</div>
 <div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>                                                    .MSAASamples = SDL_GPU_SAMPLECOUNT_1,</div>
@@ -1244,11 +1244,6 @@ $(function() {
 <div class="ttc" id="aclassScrubber_html"><div class="ttname"><a href="classScrubber.html">Scrubber</a></div><div class="ttdoc">Provides functionality for scrubbing through subsets of event data.</div><div class="ttdef"><b>Definition:</b> Scrubber.hh:20</div></div>
 <div class="ttc" id="aclassScrubber_html_a86b868a31acfe6d3ebaa9089b6f67efb"><div class="ttname"><a href="classScrubber.html#a86b868a31acfe6d3ebaa9089b6f67efb">Scrubber::ScrubberType</a></div><div class="ttdeci">ScrubberType</div><div class="ttdoc">Two types of data scrubbing, event based or time based.</div><div class="ttdef"><b>Definition:</b> Scrubber.hh:26</div></div>
 <div class="ttc" id="aclassScrubber_html_ac6972d821c79db8aba8dcd06a627b9ce"><div class="ttname"><a href="classScrubber.html#ac6972d821c79db8aba8dcd06a627b9ce">Scrubber::ScrubberMode</a></div><div class="ttdeci">ScrubberMode</div><div class="ttdoc">Three modes of data scrubbing. Paused is good for scrubbing through data. Playing is good for recreat...</div><div class="ttdef"><b>Definition:</b> Scrubber.hh:38</div></div>
-<div class="ttc" id="astructImDrawData_html"><div class="ttname"><a href="structImDrawData.html">ImDrawData</a></div><div class="ttdef"><b>Definition:</b> imgui.h:3527</div></div>
-<div class="ttc" id="astructImGuiIO_html"><div class="ttname"><a href="structImGuiIO.html">ImGuiIO</a></div><div class="ttdef"><b>Definition:</b> imgui.h:2457</div></div>
-<div class="ttc" id="astructImGuiStyle_html"><div class="ttname"><a href="structImGuiStyle.html">ImGuiStyle</a></div><div class="ttdef"><b>Definition:</b> imgui.h:2343</div></div>
-<div class="ttc" id="astructImGui__ImplSDLGPU3__InitInfo_html"><div class="ttname"><a href="structImGui__ImplSDLGPU3__InitInfo.html">ImGui_ImplSDLGPU3_InitInfo</a></div><div class="ttdef"><b>Definition:</b> imgui_impl_sdlgpu3.h:33</div></div>
-<div class="ttc" id="astructImVec2_html"><div class="ttname"><a href="structImVec2.html">ImVec2</a></div><div class="ttdef"><b>Definition:</b> imgui.h:297</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

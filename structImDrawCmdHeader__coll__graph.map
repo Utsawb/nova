@@ -1,8 +1,0 @@
-<map id="ImDrawCmdHeader" name="ImDrawCmdHeader">
-<area shape="rect" id="node1" title=" " alt="" coords="9,361,160,387"/>
-<area shape="rect" id="node2" href="$structImVec4.html" title=" " alt="" coords="5,273,76,299"/>
-<area shape="rect" id="node3" href="$structImTextureRef.html" title=" " alt="" coords="101,273,210,299"/>
-<area shape="rect" id="node4" href="$structImTextureData.html" title=" " alt="" coords="96,185,215,211"/>
-<area shape="rect" id="node5" href="$structImTextureRect.html" title=" " alt="" coords="97,5,213,31"/>
-<area shape="rect" id="node6" href="$structImVector.html" title=" " alt="" coords="240,95,444,121"/>
-</map>
