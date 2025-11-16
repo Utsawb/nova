@@ -198,7 +198,7 @@ $(function() {
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            vertex_buffer_create_info.usage = SDL_GPU_BUFFERUSAGE_VERTEX;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            vertex_buffer_create_info.size = <span class="keyword">sizeof</span>(cubeVertices);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            vertex_buffer = SDL_CreateGPUBuffer(gpu_device, &amp;vertex_buffer_create_info);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            upload_buffer-&gt;upload_to_gpu(copy_pass, vertex_buffer, cubeVertices, <span class="keyword">sizeof</span>(cubeVertices));</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            upload_buffer-&gt;<a class="code hl_function" href="classUploadBuffer.html#ad91c89f79e66f134b4ff44ca7d0ef30e">upload_to_gpu</a>(copy_pass, vertex_buffer, cubeVertices, <span class="keyword">sizeof</span>(cubeVertices));</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="comment">// create the graphics pipeline, this is the pipeline that will be used to render the vertex data</span></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
@@ -402,7 +402,8 @@ $(function() {
 <div class="ttc" id="aclassCamera_html_a3bb21fdfb8bd8974c880a33741a549df"><div class="ttname"><a href="classCamera.html#a3bb21fdfb8bd8974c880a33741a549df">Camera::getProjectionMatrix</a></div><div class="ttdeci">glm::mat4 getProjectionMatrix() const</div><div class="ttdoc">Get the projection matrix.</div><div class="ttdef"><b>Definition:</b> Camera.hh:82</div></div>
 <div class="ttc" id="aclassCamera_html_a96d300da335234059e602591070ba009"><div class="ttname"><a href="classCamera.html#a96d300da335234059e602591070ba009">Camera::processMouseMovement</a></div><div class="ttdeci">void processMouseMovement(float xoffset, float yoffset)</div><div class="ttdoc">Process mouse movement for orbital camera rotation.</div><div class="ttdef"><b>Definition:</b> Camera.hh:101</div></div>
 <div class="ttc" id="aclassSpinningCube_html"><div class="ttname"><a href="classSpinningCube.html">SpinningCube</a></div><div class="ttdef"><b>Definition:</b> SpinningCube.hh:16</div></div>
-<div class="ttc" id="aclassUploadBuffer_html"><div class="ttname"><a href="classUploadBuffer.html">UploadBuffer</a></div><div class="ttdef"><b>Definition:</b> UploadBuffer.hh:9</div></div>
+<div class="ttc" id="aclassUploadBuffer_html"><div class="ttname"><a href="classUploadBuffer.html">UploadBuffer</a></div><div class="ttdoc">Class for uploading data to the GPU.</div><div class="ttdef"><b>Definition:</b> UploadBuffer.hh:12</div></div>
+<div class="ttc" id="aclassUploadBuffer_html_ad91c89f79e66f134b4ff44ca7d0ef30e"><div class="ttname"><a href="classUploadBuffer.html#ad91c89f79e66f134b4ff44ca7d0ef30e">UploadBuffer::upload_to_gpu</a></div><div class="ttdeci">void upload_to_gpu(SDL_GPUCopyPass *pass, SDL_GPUBuffer *dst, const void *src, size_t nbyte)</div><div class="ttdoc">Uploads buffer data to GPU.</div><div class="ttdef"><b>Definition:</b> UploadBuffer.hh:47</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

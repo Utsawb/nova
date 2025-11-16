@@ -8,6 +8,6 @@ var searchData=
   ['clear_5freader_5',['clear_reader',['../classDataAcquisition.html#a6b376dcd7794f88d090e4c543d2cbb9b',1,'DataAcquisition']]],
   ['close_6',['close',['../structcmd_8h.html#ae152484c890a24e4d9b4980e7b965be0',1,'structcmd.h']]],
   ['compute_5fpass_7',['compute_pass',['../classDigitalCodedExposure.html#a6f4275fc46ac56dfc71715fd1a08ef8c',1,'DigitalCodedExposure']]],
-  ['copy_5fpass_8',['copy_pass',['../classDigitalCodedExposure.html#aac0fc36b210a27ddb711ebd375cae674',1,'DigitalCodedExposure']]],
-  ['cpu_5fupdate_9',['cpu_update',['../classDigitalCodedExposure.html#a5e1690103a840ee97604fde98ac14799',1,'DigitalCodedExposure']]]
+  ['copy_5fpass_8',['copy_pass',['../classScrubber.html#a0341e56f761340a05eda04605223f8a8',1,'Scrubber::copy_pass()'],['../classVisualizer.html#ac8f2076c1053844df6287ccaabf9b4b4',1,'Visualizer::copy_pass()']]],
+  ['cpu_5fupdate_9',['cpu_update',['../classDigitalCodedExposure.html#a5e1690103a840ee97604fde98ac14799',1,'DigitalCodedExposure::cpu_update()'],['../classScrubber.html#a4423aa4c775cebf003eb1b33f3ea183d',1,'Scrubber::cpu_update()'],['../classVisualizer.html#a3244f59736e141724d0a48030c273fe4',1,'Visualizer::cpu_update()']]]
 ];

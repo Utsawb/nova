@@ -34,9 +34,11 @@ var searchData=
   ['unprintableinfoo_31',['UnprintableInFoo',['../classfoo_1_1UnprintableInFoo.html',1,'foo']]],
   ['unprintabletemplateinglobal_32',['UnprintableTemplateInGlobal',['../classUnprintableTemplateInGlobal.html',1,'']]],
   ['unstreamable_33',['Unstreamable',['../classUnstreamable.html',1,'']]],
-  ['uploadbuffer_34',['UploadBuffer',['../classUploadBuffer.html',1,'']]],
-  ['userconstructortag_35',['UserConstructorTag',['../structtesting_1_1internal_1_1DoAllAction_3_01FinalAction_01_4_1_1UserConstructorTag.html',1,'testing::internal::DoAllAction&lt; FinalAction &gt;::UserConstructorTag'],['../structtesting_1_1internal_1_1DoAllAction_3_01InitialAction_00_01OtherActions_8_8_8_01_4_1_1UserConstructorTag.html',1,'testing::internal::DoAllAction&lt; InitialAction, OtherActions... &gt;::UserConstructorTag']]],
-  ['using_20googletest_20from_20various_20build_20systems_36',['Using GoogleTest from various build systems',['../md_external_googletest_docs_pkgconfig.html',1,'']]],
-  ['usynergycontext_37',['uSynergyContext',['../structuSynergyContext.html',1,'']]],
-  ['usynergycookie_38',['uSynergyCookie',['../structuSynergyCookie.html',1,'']]]
+  ['upload_5fcv_5fmat_34',['upload_cv_mat',['../classUploadBuffer.html#a30f47e30fd875ff4b172e8af83408b3e',1,'UploadBuffer']]],
+  ['upload_5fto_5fgpu_35',['upload_to_gpu',['../classUploadBuffer.html#ad91c89f79e66f134b4ff44ca7d0ef30e',1,'UploadBuffer']]],
+  ['uploadbuffer_36',['UploadBuffer',['../classUploadBuffer.html',1,'UploadBuffer'],['../classUploadBuffer.html#aae1fc3fc6d1dea7f44b2ac4f6d6b1147',1,'UploadBuffer::UploadBuffer()']]],
+  ['userconstructortag_37',['UserConstructorTag',['../structtesting_1_1internal_1_1DoAllAction_3_01FinalAction_01_4_1_1UserConstructorTag.html',1,'testing::internal::DoAllAction&lt; FinalAction &gt;::UserConstructorTag'],['../structtesting_1_1internal_1_1DoAllAction_3_01InitialAction_00_01OtherActions_8_8_8_01_4_1_1UserConstructorTag.html',1,'testing::internal::DoAllAction&lt; InitialAction, OtherActions... &gt;::UserConstructorTag']]],
+  ['using_20googletest_20from_20various_20build_20systems_38',['Using GoogleTest from various build systems',['../md_external_googletest_docs_pkgconfig.html',1,'']]],
+  ['usynergycontext_39',['uSynergyContext',['../structuSynergyContext.html',1,'']]],
+  ['usynergycookie_40',['uSynergyCookie',['../structuSynergyCookie.html',1,'']]]
 ];

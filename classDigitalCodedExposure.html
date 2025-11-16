@@ -84,7 +84,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a96393eee709c5d0c0fffdd473f581eac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDigitalCodedExposure.html#a96393eee709c5d0c0fffdd473f581eac">DigitalCodedExposure</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_GPUCopyPass *<a class="el" href="classDigitalCodedExposure.html#aac0fc36b210a27ddb711ebd375cae674">copy_pass</a>)</td></tr>
+<tr class="memitem:a96393eee709c5d0c0fffdd473f581eac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDigitalCodedExposure.html#a96393eee709c5d0c0fffdd473f581eac">DigitalCodedExposure</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> *parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_GPUCopyPass *copy_pass)</td></tr>
 <tr class="memdesc:a96393eee709c5d0c0fffdd473f581eac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Initializes compute pipelines.  <br /></td></tr>
 <tr class="separator:a96393eee709c5d0c0fffdd473f581eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac90afba9232cd34d066587056fbf7086"><td class="memItemLeft" align="right" valign="top"><a id="ac90afba9232cd34d066587056fbf7086" name="ac90afba9232cd34d066587056fbf7086"></a>
@@ -101,14 +101,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>cpu_update</b> ()</td
 <tr class="separator:a5e1690103a840ee97604fde98ac14799"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac0fc36b210a27ddb711ebd375cae674"><td class="memItemLeft" align="right" valign="top"><a id="aac0fc36b210a27ddb711ebd375cae674" name="aac0fc36b210a27ddb711ebd375cae674"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copy_pass</b> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
-<tr class="memdesc:aac0fc36b210a27ddb711ebd375cae674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unused copy pass. <br /></td></tr>
 <tr class="separator:aac0fc36b210a27ddb711ebd375cae674"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDigitalCodedExposure.html#a6f4275fc46ac56dfc71715fd1a08ef8c">compute_pass</a> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
 <tr class="memdesc:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute pass. Dispatches compute shaders to calculate Digital Coded Exposure output.  <br /></td></tr>
 <tr class="separator:a6f4275fc46ac56dfc71715fd1a08ef8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82f761898eea90bdadc55815cd069108"><td class="memItemLeft" align="right" valign="top"><a id="a82f761898eea90bdadc55815cd069108" name="a82f761898eea90bdadc55815cd069108"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>render_pass</b> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
-<tr class="memdesc:a82f761898eea90bdadc55815cd069108"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unused render pass. <br /></td></tr>
 <tr class="separator:a82f761898eea90bdadc55815cd069108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -192,8 +190,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>render_pass</b> (SDL_
     <tr><td class="paramname">event_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object containing event/frame data </td></tr>
     <tr><td class="paramname">window</td><td>SDL_Window to draw on </td></tr>
     <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to create texture on </td></tr>
-    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html">UploadBuffer</a> object for uploading to gpu </td></tr>
-    <tr><td class="paramname">scrubber</td><td><a class="el" href="classScrubber.html">Scrubber</a> object with data to compute DCE on </td></tr>
+    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html" title="Class for uploading data to the GPU.">UploadBuffer</a> object for uploading data to GPU </td></tr>
+    <tr><td class="paramname">scrubber</td><td><a class="el" href="classScrubber.html" title="Provides functionality for scrubbing through subsets of event data.">Scrubber</a> object with data to compute DCE on </td></tr>
     <tr><td class="paramname">copy_pass</td><td>SDL_GPUCopyPass unused </td></tr>
   </table>
   </dd>

@@ -112,12 +112,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
 <tr class="memdesc:a95ba6371deda8f7f5063c73a7e95b3d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks event data vectors. If a thread calls get_*_vector_ref functions and uses the returned reference to vectors, the thread must call this after it is done using the data vectors. Any use of the reference vector must be inside a critical section for thread-safety. <br /></td></tr>
 <tr class="separator:a95ba6371deda8f7f5063c73a7e95b3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af87b0a1a752feb37305a6d99a9c9c84f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#af87b0a1a752feb37305a6d99a9c9c84f">set_camera_event_resolution</a> (int32_t width, int32_t height)</td></tr>
+<tr class="memdesc:af87b0a1a752feb37305a6d99a9c9c84f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets camera resolution for event data.  <br /></td></tr>
 <tr class="separator:af87b0a1a752feb37305a6d99a9c9c84f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4fea6753e08a600d039db383ce92b43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#aa4fea6753e08a600d039db383ce92b43">set_camera_frame_resolution</a> (int32_t width, int32_t height)</td></tr>
+<tr class="memdesc:aa4fea6753e08a600d039db383ce92b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets camera resolution for frame data.  <br /></td></tr>
 <tr class="separator:aa4fea6753e08a600d039db383ce92b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99eaae0733dd7fc16f1da463153745a0"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#a99eaae0733dd7fc16f1da463153745a0">get_camera_event_resolution</a> ()</td></tr>
+<tr class="memdesc:a99eaae0733dd7fc16f1da463153745a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets event camera resolution.  <br /></td></tr>
 <tr class="separator:a99eaae0733dd7fc16f1da463153745a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa689da14a96ad08cadf2511006dd1c00"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#aa689da14a96ad08cadf2511006dd1c00">get_camera_frame_resolution</a> ()</td></tr>
+<tr class="memdesc:aa689da14a96ad08cadf2511006dd1c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets frame camera resolution.  <br /></td></tr>
 <tr class="separator:aa689da14a96ad08cadf2511006dd1c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab85472e6d72619e049303a851c5c5d3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEventData.html#ab85472e6d72619e049303a851c5c5d3e">write_evt_data</a> (<a class="el" href="structEventData_1_1EventDatum.html">EventDatum</a> raw_evt_data)</td></tr>
 <tr class="memdesc:ab85472e6d72619e049303a851c5c5d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts event data into the event data vector with relative timestamps (absolute timestamp - absolute earliest event timestamp). Following documentation of the AEDAT formats (<a href="https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf">https://docs.inivation.com/_static/inivation-docs_2025-08-05.pdf</a> page 163), data is assumed to be read in as monotonically increasing timestamps. If a decreasing timestamp is detected, as per documentation, a camera reset/syncronization is assumed where timestamps are reset to 0.  <br /></td></tr>
@@ -163,7 +167,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Gets event camera resolution. </p><dl class="section return"><dt>Returns</dt><dd>event camera resolution as glm::vec2 (width, height). </dd></dl>
+
+<p>Gets event camera resolution. </p>
+<dl class="section return"><dt>Returns</dt><dd>event camera resolution as glm::vec2 (width, height). </dd></dl>
 
 </div>
 </div>
@@ -189,7 +195,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Gets frame camera resolution. </p><dl class="section return"><dt>Returns</dt><dd>frame camera resolution as glm::vec2 (width, height). </dd></dl>
+
+<p>Gets frame camera resolution. </p>
+<dl class="section return"><dt>Returns</dt><dd>frame camera resolution as glm::vec2 (width, height). </dd></dl>
 
 </div>
 </div>
@@ -345,7 +353,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Sets camera resolution for event data. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Sets camera resolution for event data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">width</td><td>Width of camera. </td></tr>
     <tr><td class="paramname">height</td><td>Height of camera. </td></tr>
@@ -388,7 +398,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unlock_data_vectors</
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Sets camera resolution for frame data. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Sets camera resolution for frame data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">width</td><td>Width of camera. </td></tr>
     <tr><td class="paramname">height</td><td>Height of camera. </td></tr>

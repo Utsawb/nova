@@ -77,55 +77,392 @@ $(function() {
   <div class="headertitle"><div class="title">Scrubber Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Provides functionality for scrubbing through subsets of event data.  
+ <a href="classScrubber.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Scrubber_8hh_source.html">Scrubber.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a86b868a31acfe6d3ebaa9089b6f67efb"><td class="memItemLeft" align="right" valign="top"><a id="a86b868a31acfe6d3ebaa9089b6f67efb" name="a86b868a31acfe6d3ebaa9089b6f67efb"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ScrubberType</b> : std::uint8_t { <b>EVENT</b>
+<tr class="memitem:a86b868a31acfe6d3ebaa9089b6f67efb"><td class="memItemLeft" align="right" valign="top"><a id="a86b868a31acfe6d3ebaa9089b6f67efb" name="a86b868a31acfe6d3ebaa9089b6f67efb"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a86b868a31acfe6d3ebaa9089b6f67efb">ScrubberType</a> : std::uint8_t { <b>EVENT</b>
 , <b>TIME</b>
  }</td></tr>
+<tr class="memdesc:a86b868a31acfe6d3ebaa9089b6f67efb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Two types of data scrubbing, event based or time based. <br /></td></tr>
 <tr class="separator:a86b868a31acfe6d3ebaa9089b6f67efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6972d821c79db8aba8dcd06a627b9ce"><td class="memItemLeft" align="right" valign="top"><a id="ac6972d821c79db8aba8dcd06a627b9ce" name="ac6972d821c79db8aba8dcd06a627b9ce"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ScrubberMode</b> : std::uint8_t { <b>PAUSED</b>
+<tr class="memitem:ac6972d821c79db8aba8dcd06a627b9ce"><td class="memItemLeft" align="right" valign="top"><a id="ac6972d821c79db8aba8dcd06a627b9ce" name="ac6972d821c79db8aba8dcd06a627b9ce"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#ac6972d821c79db8aba8dcd06a627b9ce">ScrubberMode</a> : std::uint8_t { <b>PAUSED</b>
 , <b>PLAYING</b>
 , <b>LATEST</b>
  }</td></tr>
+<tr class="memdesc:ac6972d821c79db8aba8dcd06a627b9ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three modes of data scrubbing. Paused is good for scrubbing through data. Playing is good for recreating streaming from past data. Latest is good for seeing data as it is streamed. <br /></td></tr>
 <tr class="separator:ac6972d821c79db8aba8dcd06a627b9ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a218bfbf10e76cc22a1b5b1914d201ba3"><td class="memItemLeft" align="right" valign="top"><a id="a218bfbf10e76cc22a1b5b1914d201ba3" name="a218bfbf10e76cc22a1b5b1914d201ba3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Scrubber</b> (<a class="el" href="classParameterStore.html">ParameterStore</a> &amp;parameter_store, <a class="el" href="classEventData.html">EventData</a> *event_data, SDL_GPUDevice *gpu_device)</td></tr>
+<tr class="memitem:a218bfbf10e76cc22a1b5b1914d201ba3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a218bfbf10e76cc22a1b5b1914d201ba3">Scrubber</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> &amp;parameter_store, <a class="el" href="classEventData.html">EventData</a> *event_data, SDL_GPUDevice *gpu_device)</td></tr>
+<tr class="memdesc:a218bfbf10e76cc22a1b5b1914d201ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Initializes <a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> with necessary variables.  <br /></td></tr>
 <tr class="separator:a218bfbf10e76cc22a1b5b1914d201ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d06aac78f230f8e1087794c290244bd"><td class="memItemLeft" align="right" valign="top"><a id="a9d06aac78f230f8e1087794c290244bd" name="a9d06aac78f230f8e1087794c290244bd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~Scrubber</b> ()</td></tr>
+<tr class="memdesc:a9d06aac78f230f8e1087794c290244bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. Releases event points buffer. <br /></td></tr>
+<tr class="separator:a9d06aac78f230f8e1087794c290244bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4423aa4c775cebf003eb1b33f3ea183d"><td class="memItemLeft" align="right" valign="top"><a id="a4423aa4c775cebf003eb1b33f3ea183d" name="a4423aa4c775cebf003eb1b33f3ea183d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>cpu_update</b> ()</td></tr>
+<tr class="memdesc:a4423aa4c775cebf003eb1b33f3ea183d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates what event data is being captured by scrubber every frame. <br /></td></tr>
 <tr class="separator:a4423aa4c775cebf003eb1b33f3ea183d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0341e56f761340a05eda04605223f8a8"><td class="memItemLeft" align="right" valign="top"><a id="a0341e56f761340a05eda04605223f8a8" name="a0341e56f761340a05eda04605223f8a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>copy_pass</b> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memitem:a0341e56f761340a05eda04605223f8a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a0341e56f761340a05eda04605223f8a8">copy_pass</a> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memdesc:a0341e56f761340a05eda04605223f8a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies relevant event data and frame data into buffer on GPU to be drawn and processed by DCE.  <br /></td></tr>
 <tr class="separator:a0341e56f761340a05eda04605223f8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad762e62c3ad0c111c787d9d8c2ef4a44"><td class="memItemLeft" align="right" valign="top"><a id="ad762e62c3ad0c111c787d9d8c2ef4a44" name="ad762e62c3ad0c111c787d9d8c2ef4a44"></a>
-SDL_GPUBuffer *&#160;</td><td class="memItemRight" valign="bottom"><b>get_points_buffer</b> ()</td></tr>
+<tr class="memitem:ad762e62c3ad0c111c787d9d8c2ef4a44"><td class="memItemLeft" align="right" valign="top">SDL_GPUBuffer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#ad762e62c3ad0c111c787d9d8c2ef4a44">get_points_buffer</a> ()</td></tr>
+<tr class="memdesc:ad762e62c3ad0c111c787d9d8c2ef4a44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the points buffer, pointer to buffer in GPU memory containing event data points to be drawn.  <br /></td></tr>
 <tr class="separator:ad762e62c3ad0c111c787d9d8c2ef4a44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7e137ab5d7941c4c91adb934c041c7"><td class="memItemLeft" align="right" valign="top"><a id="a3a7e137ab5d7941c4c91adb934c041c7" name="a3a7e137ab5d7941c4c91adb934c041c7"></a>
-SDL_GPUTexture *&#160;</td><td class="memItemRight" valign="bottom"><b>get_frames_texture</b> ()</td></tr>
+<tr class="memitem:a3a7e137ab5d7941c4c91adb934c041c7"><td class="memItemLeft" align="right" valign="top">SDL_GPUTexture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a3a7e137ab5d7941c4c91adb934c041c7">get_frames_texture</a> ()</td></tr>
+<tr class="memdesc:a3a7e137ab5d7941c4c91adb934c041c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the frames texture.  <br /></td></tr>
 <tr class="separator:a3a7e137ab5d7941c4c91adb934c041c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a168d06d00879afb5e9bacb42c5eec4b7"><td class="memItemLeft" align="right" valign="top"><a id="a168d06d00879afb5e9bacb42c5eec4b7" name="a168d06d00879afb5e9bacb42c5eec4b7"></a>
-std::array&lt; float, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_frames_timestamps</b> ()</td></tr>
+<tr class="memitem:a168d06d00879afb5e9bacb42c5eec4b7"><td class="memItemLeft" align="right" valign="top">std::array&lt; float, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a168d06d00879afb5e9bacb42c5eec4b7">get_frames_timestamps</a> ()</td></tr>
+<tr class="memdesc:a168d06d00879afb5e9bacb42c5eec4b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get timestamps of the two frames that are being interpolated in scrubber.  <br /></td></tr>
 <tr class="separator:a168d06d00879afb5e9bacb42c5eec4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af877fde4031e32670f6eab5974b44e82"><td class="memItemLeft" align="right" valign="top"><a id="af877fde4031e32670f6eab5974b44e82" name="af877fde4031e32670f6eab5974b44e82"></a>
-std::array&lt; std::size_t, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_frame_dimensions</b> ()</td></tr>
+<tr class="memitem:af877fde4031e32670f6eab5974b44e82"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::size_t, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#af877fde4031e32670f6eab5974b44e82">get_frame_dimensions</a> ()</td></tr>
+<tr class="memdesc:af877fde4031e32670f6eab5974b44e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get dimensions of frames being drawn by scrubber.  <br /></td></tr>
 <tr class="separator:af877fde4031e32670f6eab5974b44e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d04f258af008a0777ee32880de55bea"><td class="memItemLeft" align="right" valign="top"><a id="a9d04f258af008a0777ee32880de55bea" name="a9d04f258af008a0777ee32880de55bea"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_points_buffer_size</b> ()</td></tr>
+<tr class="memitem:a9d04f258af008a0777ee32880de55bea"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a9d04f258af008a0777ee32880de55bea">get_points_buffer_size</a> ()</td></tr>
+<tr class="memdesc:a9d04f258af008a0777ee32880de55bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of the points buffer, size of buffer in GPU memory containing event data as points to be drawn.  <br /></td></tr>
 <tr class="separator:a9d04f258af008a0777ee32880de55bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42d894a34b17685194806af6cdd252b9"><td class="memItemLeft" align="right" valign="top"><a id="a42d894a34b17685194806af6cdd252b9" name="a42d894a34b17685194806af6cdd252b9"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>get_lower_depth</b> ()</td></tr>
+<tr class="memitem:a42d894a34b17685194806af6cdd252b9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a42d894a34b17685194806af6cdd252b9">get_lower_depth</a> ()</td></tr>
+<tr class="memdesc:a42d894a34b17685194806af6cdd252b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns lower time bound of scrubber window.  <br /></td></tr>
 <tr class="separator:a42d894a34b17685194806af6cdd252b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a473f15c0a1c985eb2e8633054e640461"><td class="memItemLeft" align="right" valign="top"><a id="a473f15c0a1c985eb2e8633054e640461" name="a473f15c0a1c985eb2e8633054e640461"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>get_upper_depth</b> ()</td></tr>
+<tr class="memitem:a473f15c0a1c985eb2e8633054e640461"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a473f15c0a1c985eb2e8633054e640461">get_upper_depth</a> ()</td></tr>
+<tr class="memdesc:a473f15c0a1c985eb2e8633054e640461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns upper time bound of scrubber window.  <br /></td></tr>
 <tr class="separator:a473f15c0a1c985eb2e8633054e640461"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"><td class="memItemLeft" align="right" valign="top"><a id="a0f7915b3f0e2dd2e14bfd8d9a7e0a43c" name="a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"></a>
-glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>get_camera_resolution</b> ()</td></tr>
+<tr class="memitem:a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScrubber.html#a0f7915b3f0e2dd2e14bfd8d9a7e0a43c">get_camera_resolution</a> ()</td></tr>
+<tr class="memdesc:a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the event camera resolution.  <br /></td></tr>
 <tr class="separator:a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Provides functionality for scrubbing through subsets of event data. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a218bfbf10e76cc22a1b5b1914d201ba3" name="a218bfbf10e76cc22a1b5b1914d201ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a218bfbf10e76cc22a1b5b1914d201ba3">&#9670;&#160;</a></span>Scrubber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Scrubber::Scrubber </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classParameterStore.html">ParameterStore</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameter_store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEventData.html">EventData</a> *&#160;</td>
+          <td class="paramname"><em>event_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUDevice *&#160;</td>
+          <td class="paramname"><em>gpu_device</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. Initializes <a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> with necessary variables. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameter_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object containing data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> </td></tr>
+    <tr><td class="paramname">event_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object containing event/frame data </td></tr>
+    <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to upload event data points to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0341e56f761340a05eda04605223f8a8" name="a0341e56f761340a05eda04605223f8a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0341e56f761340a05eda04605223f8a8">&#9670;&#160;</a></span>copy_pass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Scrubber::copy_pass </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classUploadBuffer.html">UploadBuffer</a> *&#160;</td>
+          <td class="paramname"><em>upload_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>copy_pass</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copies relevant event data and frame data into buffer on GPU to be drawn and processed by DCE. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html" title="Class for uploading data to the GPU.">UploadBuffer</a> object for uploading data to gpu </td></tr>
+    <tr><td class="paramname">copy_pass</td><td>SDL_GPUCopyPass for copying data to GPU </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0f7915b3f0e2dd2e14bfd8d9a7e0a43c" name="a0f7915b3f0e2dd2e14bfd8d9a7e0a43c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f7915b3f0e2dd2e14bfd8d9a7e0a43c">&#9670;&#160;</a></span>get_camera_resolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::vec2 Scrubber::get_camera_resolution </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the event camera resolution. </p>
+<dl class="section return"><dt>Returns</dt><dd>event camera resolution. </dd></dl>
+
+</div>
+</div>
+<a id="af877fde4031e32670f6eab5974b44e82" name="af877fde4031e32670f6eab5974b44e82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af877fde4031e32670f6eab5974b44e82">&#9670;&#160;</a></span>get_frame_dimensions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; std::size_t, 2 &gt; Scrubber::get_frame_dimensions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get dimensions of frames being drawn by scrubber. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::array containing width and height of frames being drawn by scrubber. </dd></dl>
+
+</div>
+</div>
+<a id="a3a7e137ab5d7941c4c91adb934c041c7" name="a3a7e137ab5d7941c4c91adb934c041c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a7e137ab5d7941c4c91adb934c041c7">&#9670;&#160;</a></span>get_frames_texture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_GPUTexture * Scrubber::get_frames_texture </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the frames texture. </p>
+<dl class="section return"><dt>Returns</dt><dd>pointer to texture in GPU memory containing frames that are inside scrubber window. </dd></dl>
+
+</div>
+</div>
+<a id="a168d06d00879afb5e9bacb42c5eec4b7" name="a168d06d00879afb5e9bacb42c5eec4b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a168d06d00879afb5e9bacb42c5eec4b7">&#9670;&#160;</a></span>get_frames_timestamps()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; float, 2 &gt; Scrubber::get_frames_timestamps </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get timestamps of the two frames that are being interpolated in scrubber. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::array of timestamps of two frames being interpolated in scrubber. </dd></dl>
+
+</div>
+</div>
+<a id="a42d894a34b17685194806af6cdd252b9" name="a42d894a34b17685194806af6cdd252b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42d894a34b17685194806af6cdd252b9">&#9670;&#160;</a></span>get_lower_depth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Scrubber::get_lower_depth </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns lower time bound of scrubber window. </p>
+<dl class="section return"><dt>Returns</dt><dd>lower time bound of scrubber window. </dd></dl>
+
+</div>
+</div>
+<a id="ad762e62c3ad0c111c787d9d8c2ef4a44" name="ad762e62c3ad0c111c787d9d8c2ef4a44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad762e62c3ad0c111c787d9d8c2ef4a44">&#9670;&#160;</a></span>get_points_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_GPUBuffer * Scrubber::get_points_buffer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the points buffer, pointer to buffer in GPU memory containing event data points to be drawn. </p>
+<dl class="section return"><dt>Returns</dt><dd>pointer to buffer in GPU memory containing event data points that are inside scrubber window. </dd></dl>
+
+</div>
+</div>
+<a id="a9d04f258af008a0777ee32880de55bea" name="a9d04f258af008a0777ee32880de55bea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d04f258af008a0777ee32880de55bea">&#9670;&#160;</a></span>get_points_buffer_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Scrubber::get_points_buffer_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the size of the points buffer, size of buffer in GPU memory containing event data as points to be drawn. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of elements in the points buffer. </dd></dl>
+
+</div>
+</div>
+<a id="a473f15c0a1c985eb2e8633054e640461" name="a473f15c0a1c985eb2e8633054e640461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a473f15c0a1c985eb2e8633054e640461">&#9670;&#160;</a></span>get_upper_depth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Scrubber::get_upper_depth </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns upper time bound of scrubber window. </p>
+<dl class="section return"><dt>Returns</dt><dd>upper time bound of scrubber window. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="Scrubber_8hh_source.html">Scrubber.hh</a></li>
 </ul>

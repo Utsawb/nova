@@ -76,19 +76,184 @@ $(function() {
   <div class="headertitle"><div class="title">UploadBuffer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class for uploading data to the GPU.  
+ <a href="classUploadBuffer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="UploadBuffer_8hh_source.html">UploadBuffer.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aae1fc3fc6d1dea7f44b2ac4f6d6b1147"><td class="memItemLeft" align="right" valign="top"><a id="aae1fc3fc6d1dea7f44b2ac4f6d6b1147" name="aae1fc3fc6d1dea7f44b2ac4f6d6b1147"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UploadBuffer</b> (SDL_GPUDevice *gpu_device)</td></tr>
+<tr class="memitem:aae1fc3fc6d1dea7f44b2ac4f6d6b1147"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUploadBuffer.html#aae1fc3fc6d1dea7f44b2ac4f6d6b1147">UploadBuffer</a> (SDL_GPUDevice *gpu_device)</td></tr>
+<tr class="memdesc:aae1fc3fc6d1dea7f44b2ac4f6d6b1147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Initializes GPUTransferBuffer for transferring data to GPU.  <br /></td></tr>
 <tr class="separator:aae1fc3fc6d1dea7f44b2ac4f6d6b1147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad91c89f79e66f134b4ff44ca7d0ef30e"><td class="memItemLeft" align="right" valign="top"><a id="ad91c89f79e66f134b4ff44ca7d0ef30e" name="ad91c89f79e66f134b4ff44ca7d0ef30e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>upload_to_gpu</b> (SDL_GPUCopyPass *pass, SDL_GPUBuffer *dst, const void *src, size_t nbyte)</td></tr>
+<tr class="memitem:aa2f3ad4997b3b566e4648eede02d8417"><td class="memItemLeft" align="right" valign="top"><a id="aa2f3ad4997b3b566e4648eede02d8417" name="aa2f3ad4997b3b566e4648eede02d8417"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~UploadBuffer</b> ()</td></tr>
+<tr class="memdesc:aa2f3ad4997b3b566e4648eede02d8417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. Releases data buffer on GPU. <br /></td></tr>
+<tr class="separator:aa2f3ad4997b3b566e4648eede02d8417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad91c89f79e66f134b4ff44ca7d0ef30e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUploadBuffer.html#ad91c89f79e66f134b4ff44ca7d0ef30e">upload_to_gpu</a> (SDL_GPUCopyPass *pass, SDL_GPUBuffer *dst, const void *src, size_t nbyte)</td></tr>
+<tr class="memdesc:ad91c89f79e66f134b4ff44ca7d0ef30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uploads buffer data to GPU.  <br /></td></tr>
 <tr class="separator:ad91c89f79e66f134b4ff44ca7d0ef30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30f47e30fd875ff4b172e8af83408b3e"><td class="memItemLeft" align="right" valign="top"><a id="a30f47e30fd875ff4b172e8af83408b3e" name="a30f47e30fd875ff4b172e8af83408b3e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>upload_cv_mat</b> (SDL_GPUCopyPass *pass, SDL_GPUTexture *texture, const cv::Mat &amp;mat, uint32_t layer=0)</td></tr>
+<tr class="memitem:a30f47e30fd875ff4b172e8af83408b3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUploadBuffer.html#a30f47e30fd875ff4b172e8af83408b3e">upload_cv_mat</a> (SDL_GPUCopyPass *pass, SDL_GPUTexture *texture, const cv::Mat &amp;mat, uint32_t layer=0)</td></tr>
+<tr class="memdesc:a30f47e30fd875ff4b172e8af83408b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uploads texture to GPU.  <br /></td></tr>
 <tr class="separator:a30f47e30fd875ff4b172e8af83408b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class for uploading data to the GPU. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aae1fc3fc6d1dea7f44b2ac4f6d6b1147" name="aae1fc3fc6d1dea7f44b2ac4f6d6b1147"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae1fc3fc6d1dea7f44b2ac4f6d6b1147">&#9670;&#160;</a></span>UploadBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">UploadBuffer::UploadBuffer </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUDevice *&#160;</td>
+          <td class="paramname"><em>gpu_device</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. Initializes GPUTransferBuffer for transferring data to GPU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to upload data to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a30f47e30fd875ff4b172e8af83408b3e" name="a30f47e30fd875ff4b172e8af83408b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30f47e30fd875ff4b172e8af83408b3e">&#9670;&#160;</a></span>upload_cv_mat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UploadBuffer::upload_cv_mat </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>pass</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUTexture *&#160;</td>
+          <td class="paramname"><em>texture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>mat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>layer</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Uploads texture to GPU. </p>
+<p>This function will make a lot of assumptions first is that the SDL_GPUTexture is the same resolution as the cv::Mat second is that they have the same number of bits per channel third is that the texture was created with rgba8 unorm format </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pass</td><td>SDL_GPUCopyPass for copying data to GPU. </td></tr>
+    <tr><td class="paramname">texture</td><td>SDL_GPUTexture texture destination to upload texture to. </td></tr>
+    <tr><td class="paramname">mat</td><td>Texture information as cv::Mat to upload. </td></tr>
+    <tr><td class="paramname">layer</td><td>Texture layers. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad91c89f79e66f134b4ff44ca7d0ef30e" name="ad91c89f79e66f134b4ff44ca7d0ef30e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad91c89f79e66f134b4ff44ca7d0ef30e">&#9670;&#160;</a></span>upload_to_gpu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UploadBuffer::upload_to_gpu </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>pass</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUBuffer *&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nbyte</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Uploads buffer data to GPU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pass</td><td>SDL_GPUCopyPass for copying data to GPU. </td></tr>
+    <tr><td class="paramname">dst</td><td>Destination of data to be copied to GPU. </td></tr>
+    <tr><td class="paramname">src</td><td>Source data buffer to be copied. </td></tr>
+    <tr><td class="paramname">nbyte</td><td>Number of bytes to copy from src to GPU. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="UploadBuffer_8hh_source.html">UploadBuffer.hh</a></li>
 </ul>

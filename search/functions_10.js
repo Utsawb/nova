@@ -6,7 +6,7 @@ var searchData=
   ['removereportheaderandfooter_3',['RemoveReportHeaderAndFooter',['../namespacegmock__output__test.html#a2ebfc0abfb0ed307021ecaa9da465c55',1,'gmock_output_test']]],
   ['removetestnamesofleakedmocks_4',['RemoveTestNamesOfLeakedMocks',['../namespacegmock__output__test.html#ac0628c5630d869dae45601df9d909638',1,'gmock_output_test']]],
   ['render_5',['render',['../classGUI.html#ae2e5f0397af70ff217b2d528322b85c1',1,'GUI']]],
-  ['render_5fpass_6',['render_pass',['../classDigitalCodedExposure.html#a82f761898eea90bdadc55815cd069108',1,'DigitalCodedExposure']]],
+  ['render_5fpass_6',['render_pass',['../classVisualizer.html#a07b9d9de1e56d6bdfc617b87d6f4e073',1,'Visualizer']]],
   ['reset_5flayout_5fwith_5fdockbuilder_7',['reset_layout_with_dockbuilder',['../classGUI.html#a8b6a60e9b8dfab1beb4a0ebff69163e7',1,'GUI']]],
   ['run_8',['Run',['../classgoogletest-fail-if-no-test-linked-test_1_1GTestFailIfNoTestLinkedTest.html#ae64fb09bb05b2ba0e58426b6dd5e74ef',1,'googletest-fail-if-no-test-linked-test.GTestFailIfNoTestLinkedTest.Run()'],['../classgoogletest-fail-if-no-test-selected-test_1_1GTestFailIfNoTestSelectedTest.html#a033ef2d57e0d3c318822d962a7cd06c6',1,'googletest-fail-if-no-test-selected-test.GTestFailIfNoTestSelectedTest.Run()']]],
   ['run_5fwith_5fflag_9',['run_with_flag',['../namespacegtest__help__test.html#a6917879ca916ed59ffbbbda5be41d498',1,'gtest_help_test']]],

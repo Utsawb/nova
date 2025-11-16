@@ -16,7 +16,7 @@ var searchData=
   ['removereportheaderandfooter_13',['RemoveReportHeaderAndFooter',['../namespacegmock__output__test.html#a2ebfc0abfb0ed307021ecaa9da465c55',1,'gmock_output_test']]],
   ['removetestnamesofleakedmocks_14',['RemoveTestNamesOfLeakedMocks',['../namespacegmock__output__test.html#ac0628c5630d869dae45601df9d909638',1,'gmock_output_test']]],
   ['render_15',['render',['../classGUI.html#ae2e5f0397af70ff217b2d528322b85c1',1,'GUI']]],
-  ['render_5fpass_16',['render_pass',['../classDigitalCodedExposure.html#a82f761898eea90bdadc55815cd069108',1,'DigitalCodedExposure']]],
+  ['render_5fpass_16',['render_pass',['../classVisualizer.html#a07b9d9de1e56d6bdfc617b87d6f4e073',1,'Visualizer']]],
   ['renderresources_17',['RenderResources',['../structRenderResources.html',1,'']]],
   ['rendertarget_18',['RenderTarget',['../structRenderTarget.html',1,'']]],
   ['reset_5flayout_5fwith_5fdockbuilder_19',['reset_layout_with_dockbuilder',['../classGUI.html#a8b6a60e9b8dfab1beb4a0ebff69163e7',1,'GUI']]],

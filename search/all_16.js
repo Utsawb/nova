@@ -16,6 +16,6 @@ var searchData=
   ['vertex_5fconstant_5fbuffer_5fdx11_13',['VERTEX_CONSTANT_BUFFER_DX11',['../structVERTEX__CONSTANT__BUFFER__DX11.html',1,'']]],
   ['vertex_5fconstant_5fbuffer_5fdx12_14',['VERTEX_CONSTANT_BUFFER_DX12',['../structVERTEX__CONSTANT__BUFFER__DX12.html',1,'']]],
   ['veryloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooogname_15',['VeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooogName',['../classVeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo72732a7a8cd04f0ab9551a6aaa86a0c2.html',1,'']]],
-  ['visualizer_16',['Visualizer',['../classVisualizer.html',1,'']]],
+  ['visualizer_16',['Visualizer',['../classVisualizer.html',1,'Visualizer'],['../classVisualizer.html#a82894b5da3854a35d454b60dffa43f62',1,'Visualizer::Visualizer()']]],
   ['vulkan_20reference_17',['Vulkan reference',['../group__vulkan.html',1,'']]]
 ];

@@ -77,28 +77,243 @@ $(function() {
   <div class="headertitle"><div class="title">Visualizer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Provides functions for rendering the 3<a class="el" href="classD.html">D</a> event data particle plot visualization (3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window).  
+ <a href="classVisualizer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Visualizer_8hh_source.html">Visualizer.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a82894b5da3854a35d454b60dffa43f62"><td class="memItemLeft" align="right" valign="top"><a id="a82894b5da3854a35d454b60dffa43f62" name="a82894b5da3854a35d454b60dffa43f62"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Visualizer</b> (<a class="el" href="classParameterStore.html">ParameterStore</a> &amp;parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memitem:a82894b5da3854a35d454b60dffa43f62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a82894b5da3854a35d454b60dffa43f62">Visualizer</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> &amp;parameter_store, std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;render_targets, <a class="el" href="classEventData.html">EventData</a> &amp;event_data, <a class="el" href="classScrubber.html">Scrubber</a> *scrubber, SDL_Window *window, SDL_GPUDevice *gpu_device, <a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *<a class="el" href="classVisualizer.html#ac8f2076c1053844df6287ccaabf9b4b4">copy_pass</a>)</td></tr>
+<tr class="memdesc:a82894b5da3854a35d454b60dffa43f62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Initializes render target of 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> and GridRenderer, PointsRenderer, TextRenderer, and FramesRenderer objects.  <br /></td></tr>
 <tr class="separator:a82894b5da3854a35d454b60dffa43f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25a00a205a0dcab736f6720dd97c39dc"><td class="memItemLeft" align="right" valign="top"><a id="a25a00a205a0dcab736f6720dd97c39dc" name="a25a00a205a0dcab736f6720dd97c39dc"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>event_handler</b> (SDL_Event *event)</td></tr>
+<tr class="memitem:a013ec3101407fbe4805f289bc32d1265"><td class="memItemLeft" align="right" valign="top"><a id="a013ec3101407fbe4805f289bc32d1265" name="a013ec3101407fbe4805f289bc32d1265"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~Visualizer</b> ()</td></tr>
+<tr class="memdesc:a013ec3101407fbe4805f289bc32d1265"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor, release necessary resources. <br /></td></tr>
+<tr class="separator:a013ec3101407fbe4805f289bc32d1265"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a00a205a0dcab736f6720dd97c39dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a25a00a205a0dcab736f6720dd97c39dc">event_handler</a> (SDL_Event *event)</td></tr>
+<tr class="memdesc:a25a00a205a0dcab736f6720dd97c39dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event handler to allow mouse dragging rotation around 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window.  <br /></td></tr>
 <tr class="separator:a25a00a205a0dcab736f6720dd97c39dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3244f59736e141724d0a48030c273fe4"><td class="memItemLeft" align="right" valign="top"><a id="a3244f59736e141724d0a48030c273fe4" name="a3244f59736e141724d0a48030c273fe4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>cpu_update</b> ()</td></tr>
+<tr class="memdesc:a3244f59736e141724d0a48030c273fe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates information used to draw 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window on a frame including time axis units. <br /></td></tr>
 <tr class="separator:a3244f59736e141724d0a48030c273fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8f2076c1053844df6287ccaabf9b4b4"><td class="memItemLeft" align="right" valign="top"><a id="ac8f2076c1053844df6287ccaabf9b4b4" name="ac8f2076c1053844df6287ccaabf9b4b4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>copy_pass</b> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memitem:ac8f2076c1053844df6287ccaabf9b4b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ac8f2076c1053844df6287ccaabf9b4b4">copy_pass</a> (<a class="el" href="classUploadBuffer.html">UploadBuffer</a> *upload_buffer, SDL_GPUCopyPass *copy_pass)</td></tr>
+<tr class="memdesc:ac8f2076c1053844df6287ccaabf9b4b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls copy_pass of grid_renderer, points_renderer, text_renderer, and frames_renderer. Basically uploading pertinent data to GPU.  <br /></td></tr>
 <tr class="separator:ac8f2076c1053844df6287ccaabf9b4b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b3127306934b5631dc409ba7e2bcf68"><td class="memItemLeft" align="right" valign="top"><a id="a6b3127306934b5631dc409ba7e2bcf68" name="a6b3127306934b5631dc409ba7e2bcf68"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>compute_pass</b> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
 <tr class="separator:a6b3127306934b5631dc409ba7e2bcf68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07b9d9de1e56d6bdfc617b87d6f4e073"><td class="memItemLeft" align="right" valign="top"><a id="a07b9d9de1e56d6bdfc617b87d6f4e073" name="a07b9d9de1e56d6bdfc617b87d6f4e073"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>render_pass</b> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
+<tr class="memitem:a07b9d9de1e56d6bdfc617b87d6f4e073"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a07b9d9de1e56d6bdfc617b87d6f4e073">render_pass</a> (SDL_GPUCommandBuffer *command_buffer)</td></tr>
+<tr class="memdesc:a07b9d9de1e56d6bdfc617b87d6f4e073"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window (event data particle plot).  <br /></td></tr>
 <tr class="separator:a07b9d9de1e56d6bdfc617b87d6f4e073"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Provides functions for rendering the 3<a class="el" href="classD.html">D</a> event data particle plot visualization (3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window). </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a82894b5da3854a35d454b60dffa43f62" name="a82894b5da3854a35d454b60dffa43f62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82894b5da3854a35d454b60dffa43f62">&#9670;&#160;</a></span>Visualizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Visualizer::Visualizer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classParameterStore.html">ParameterStore</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameter_store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_map&lt; std::string, <a class="el" href="structRenderTarget.html">RenderTarget</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>render_targets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEventData.html">EventData</a> &amp;&#160;</td>
+          <td class="paramname"><em>event_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScrubber.html">Scrubber</a> *&#160;</td>
+          <td class="paramname"><em>scrubber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_Window *&#160;</td>
+          <td class="paramname"><em>window</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUDevice *&#160;</td>
+          <td class="paramname"><em>gpu_device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classUploadBuffer.html">UploadBuffer</a> *&#160;</td>
+          <td class="paramname"><em>upload_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>copy_pass</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. Initializes render target of 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> and GridRenderer, PointsRenderer, TextRenderer, and FramesRenderer objects. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameter_store</td><td><a class="el" href="classParameterStore.html" title="A type-safe, heterogeneous key-value store.">ParameterStore</a> object containing data from <a class="el" href="classGUI.html" title="This class provides functions to draw the GUI.">GUI</a> </td></tr>
+    <tr><td class="paramname">render_targets</td><td>Render targets of the program </td></tr>
+    <tr><td class="paramname">event_data</td><td><a class="el" href="classEventData.html" title="EventData is responsible for intaking event and frame data from DataAcquisition and presenting it to ...">EventData</a> object containing event/frame data </td></tr>
+    <tr><td class="paramname">scrubber</td><td><a class="el" href="classScrubber.html" title="Provides functionality for scrubbing through subsets of event data.">Scrubber</a> object with data to compute DCE on </td></tr>
+    <tr><td class="paramname">window</td><td>SDL_Window to draw on </td></tr>
+    <tr><td class="paramname">gpu_device</td><td>SDL_GPUDevice to create texture on </td></tr>
+    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html" title="Class for uploading data to the GPU.">UploadBuffer</a> object for uploading data to gpu </td></tr>
+    <tr><td class="paramname">copy_pass</td><td>SDL_GPUCopyPass unused </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac8f2076c1053844df6287ccaabf9b4b4" name="ac8f2076c1053844df6287ccaabf9b4b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8f2076c1053844df6287ccaabf9b4b4">&#9670;&#160;</a></span>copy_pass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Visualizer::copy_pass </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classUploadBuffer.html">UploadBuffer</a> *&#160;</td>
+          <td class="paramname"><em>upload_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_GPUCopyPass *&#160;</td>
+          <td class="paramname"><em>copy_pass</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calls copy_pass of grid_renderer, points_renderer, text_renderer, and frames_renderer. Basically uploading pertinent data to GPU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">upload_buffer</td><td><a class="el" href="classUploadBuffer.html" title="Class for uploading data to the GPU.">UploadBuffer</a> object for uploading data to GPU. </td></tr>
+    <tr><td class="paramname">copy_pass</td><td>GPU copy pass. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a25a00a205a0dcab736f6720dd97c39dc" name="a25a00a205a0dcab736f6720dd97c39dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25a00a205a0dcab736f6720dd97c39dc">&#9670;&#160;</a></span>event_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Visualizer::event_handler </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Event *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Event handler to allow mouse dragging rotation around 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event</td><td>The recorded event to act on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if event was handled. Otherwise false. </dd></dl>
+
+</div>
+</div>
+<a id="a07b9d9de1e56d6bdfc617b87d6f4e073" name="a07b9d9de1e56d6bdfc617b87d6f4e073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07b9d9de1e56d6bdfc617b87d6f4e073">&#9670;&#160;</a></span>render_pass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Visualizer::render_pass </td>
+          <td>(</td>
+          <td class="paramtype">SDL_GPUCommandBuffer *&#160;</td>
+          <td class="paramname"><em>command_buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders the 3<a class="el" href="classD.html">D</a> <a class="el" href="classVisualizer.html" title="Provides functions for rendering the 3D event data particle plot visualization (3D Visualizer window)...">Visualizer</a> window (event data particle plot). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command_buffer</td><td>GPU command buffer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="Visualizer_8hh_source.html">Visualizer.hh</a></li>
 </ul>
