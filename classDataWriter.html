@@ -101,13 +101,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr
 <tr class="memitem:ac7e66a0d97920f44fbfcb0eed5542bf0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#ac7e66a0d97920f44fbfcb0eed5542bf0">init_data_writer</a> (const std::string &amp;file_name, int32_t _camera_event_width, int32_t _camera_event_height, int32_t _camera_frame_width, int32_t _camera_frame_height, bool event_data, bool frame_data, <a class="el" href="classParameterStore.html">ParameterStore</a> &amp;param_store)</td></tr>
 <tr class="memdesc:ac7e66a0d97920f44fbfcb0eed5542bf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes writer with DAVIS camera configs (event, frame, and IMU data).  <br /></td></tr>
 <tr class="separator:ac7e66a0d97920f44fbfcb0eed5542bf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ff575e5a3d8b6bc1400781b4d9d4c51"><td class="memItemLeft" align="right" valign="top"><a id="a2ff575e5a3d8b6bc1400781b4d9d4c51" name="a2ff575e5a3d8b6bc1400781b4d9d4c51"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>add_event_store</b> (dv::EventStore evt_store)</td></tr>
-<tr class="memdesc:a2ff575e5a3d8b6bc1400781b4d9d4c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds event data store to queue. <br /></td></tr>
+<tr class="memitem:a2ff575e5a3d8b6bc1400781b4d9d4c51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#a2ff575e5a3d8b6bc1400781b4d9d4c51">add_event_store</a> (dv::EventStore evt_store)</td></tr>
+<tr class="memdesc:a2ff575e5a3d8b6bc1400781b4d9d4c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds event data store to queue.  <br /></td></tr>
 <tr class="separator:a2ff575e5a3d8b6bc1400781b4d9d4c51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a975008e834fe41313011d94ec1aea47a"><td class="memItemLeft" align="right" valign="top"><a id="a975008e834fe41313011d94ec1aea47a" name="a975008e834fe41313011d94ec1aea47a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>add_frame_data</b> (dv::Frame frame_data)</td></tr>
-<tr class="memdesc:a975008e834fe41313011d94ec1aea47a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds frame data to queue. <br /></td></tr>
+<tr class="memitem:a975008e834fe41313011d94ec1aea47a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#a975008e834fe41313011d94ec1aea47a">add_frame_data</a> (dv::Frame frame_data)</td></tr>
+<tr class="memdesc:a975008e834fe41313011d94ec1aea47a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds frame data to queue.  <br /></td></tr>
 <tr class="separator:a975008e834fe41313011d94ec1aea47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9045facecdde31c7eda235833110ab5f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDataWriter.html#a9045facecdde31c7eda235833110ab5f">write_event_store</a> (<a class="el" href="classParameterStore.html">ParameterStore</a> &amp;param_store)</td></tr>
 <tr class="memdesc:a9045facecdde31c7eda235833110ab5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops an event data store from queue and writes it to persistent storage.  <br /></td></tr>
@@ -119,6 +117,74 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_frame_data</b> (d
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class provides functionality to write event and frame data to an output aedat4 file. Works on a worker queue model. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2ff575e5a3d8b6bc1400781b4d9d4c51" name="a2ff575e5a3d8b6bc1400781b4d9d4c51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ff575e5a3d8b6bc1400781b4d9d4c51">&#9670;&#160;</a></span>add_event_store()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DataWriter::add_event_store </td>
+          <td>(</td>
+          <td class="paramtype">dv::EventStore&#160;</td>
+          <td class="paramname"><em>evt_store</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds event data store to queue. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt_store</td><td>dv::EventStore object containing event data to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a975008e834fe41313011d94ec1aea47a" name="a975008e834fe41313011d94ec1aea47a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a975008e834fe41313011d94ec1aea47a">&#9670;&#160;</a></span>add_frame_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DataWriter::add_frame_data </td>
+          <td>(</td>
+          <td class="paramtype">dv::Frame&#160;</td>
+          <td class="paramname"><em>frame_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds frame data to queue. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame_data</td><td>dv::Frame object containing frame data to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aaae50da131bf87c1620a9006898f9c16" name="aaae50da131bf87c1620a9006898f9c16"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaae50da131bf87c1620a9006898f9c16">&#9670;&#160;</a></span>get_writing_event_data()</h2>
 
