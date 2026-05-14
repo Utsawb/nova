@@ -1,3 +1,9 @@
+# NOVA PHASE 3 05/13/2026
+Development of NOVA continued into PHASE 3, 
+checkout their progress here: [NOVA PHASE 3](https://github.com/ashlxyzhang/nova)
+
+---
+
 # NOVA PHASE 2
 Neuromorphic Optics and Visualization Application.
 Welcome to phase 2 of NOVA. This phase includes a rewrite of NOVA that follows a more modular architectural paradigm with streaming support from a file or iniVation Neuromorphic camera.
